@@ -1,0 +1,108 @@
+import React, { useEffect, useState } from 'react';
+import user_img from '../assets/img/user_img.png';
+import { Link } from 'react-router-dom';
+import FadeUpOnScroll from './FadeUpOnScroll';
+import { FiMenu, FiX } from 'react-icons/fi';
+import { getThreatLogs, getCurrentUser } from '../api';
+
+function ThreatAlerts() {
+  const [userData, setUserData] = useState(null);
+  const [logs, setLogs] = useState([]);
+  const [error, setError] = useState('');
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const result = await getCurrentUser();
+        setUserData(result);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUser();
+  }, []);
+
+  useEffect(() => {
+    const fetchThreats = async () => {
+      try {
+        const res = await getThreatLogs();
+        if (res.logs && res.logs.length > 0) {
+          setLogs(res.logs);
+          console.log(res);
+        } else {
+          setError("No Threats Detected Today for your API.");
+        }
+      } catch (exc) {
+        console.error("Error -> ", exc);
+        setError("No Threats Detected Today for your API.");
+      }
+    };
+    fetchThreats();
+  }, [])
+
+
+  let logsdata;
+  if (error) {
+    logsdata = <p>{error}</p>;
+  } else {
+    logsdata = (
+      <>
+        {logs.map((app, i) => (
+          <div class="threat-alert-box" key={i}>
+            <h4>Threats Detected for API: <strong>{app.apiname}</strong></h4>
+            {app.threats.map((log, j) => (
+              <div class="alert-log">
+                <div className="alert-entry" key={j}>
+                  <p>{log}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        ))}
+
+      </>
+    );
+  }
+  return (
+    <FadeUpOnScroll>
+      <main className='dashboard'>
+        <div className="hamburger-icon" onClick={() => setMenuOpen(!menuOpen)}>
+          {menuOpen ? <FiX size={30} /> : <FiMenu size={30} />}
+        </div>
+
+        <div className={`dashboard-container ${menuOpen ? 'sidebar-open' : ''}`}>
+          <div className={`dash-sidebar ${menuOpen ? 'show' : ''}`}>
+            <div className='sidebar-userprofile'>
+              <img src={user_img} alt='User' />
+              <p>{userData ? userData.fullname : "Loading..."}</p>
+            </div>
+            <div className='sidebar-navigations' onClick={() => setMenuOpen(false)}>
+              <Link to="/firewall_rules"><h3>Firewall Rules</h3></Link>
+              <Link to="/threat_alerts"><h3>Threat Alerts</h3></Link>
+              <h3>Traffic Monitor</h3>
+              <h3>Application Insights</h3>
+              <h3>Rate Limiting & Flood Control</h3>
+              <Link to="/reportlogs"><h3>Report & Logs</h3></Link>
+              <Link to="/api"><h3>API</h3></Link>
+              <h3>Settings</h3>
+              <Link to="/"><h3>Home</h3></Link>
+            </div>
+          </div>
+
+          <div className="dash-dataContainer">
+            <h2 id="logs-heading">Threat Logs</h2>
+            <p>You can view today's threat logs for your generated API requests along with detected threat details here.</p>
+            <div class="threat-alert-box">
+              {logsdata}
+            </div>
+
+          </div>
+        </div>
+      </main>
+    </FadeUpOnScroll>
+  );
+}
+
+export default ThreatAlerts;

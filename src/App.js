@@ -1,0 +1,191 @@
+import './App.css';
+import Nav from './components/Nav';
+import { useEffect, useRef, useState } from 'react';
+import Index from './components/Index';
+import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
+import Action from './components/Action';
+import Panel from './components/Panel';
+import APIPage from './components/APIPage';
+import { validateActiveUser } from './api';
+import EthixionRules from './components/EthixionRules';
+import ThreatAlerts from './components/ThreatAlerts';
+import ReportLogs from './components/ReportLogs';
+import AboutEthixion from './components/AboutEthixion';
+import TrafficMonitorPage from './components/TrafficMonitorPage';
+import APISettings from './components/APISettings';
+import VerifyAccount from './components/VerifyAccount';
+
+
+function RouteSecurityHandler({ children }) {
+  const [isValidated, setIsValidated] = useState(null);
+  const alertedRef = useRef(false);
+
+  useEffect(() => {
+    const validate = async () => {
+      try {
+        const isValid = await validateActiveUser();
+        setIsValidated(isValid);
+        if (!isValid && !alertedRef.current) {
+          alert("No active user found! Kindly login...");
+          alertedRef.current = true;
+        }
+      } catch (err) {
+        console.error("Validation error:", err);
+        alert("Unable to validate session. Please log in.");
+        setIsValidated(false);
+      }
+    };
+
+    validate();
+  }, []);
+
+  if (isValidated === null) {
+    return <div>Loading...</div>;
+  }
+
+  if (!isValidated) {
+    return <Navigate to="/action" replace />;
+  }
+
+  return children;
+}
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: (
+      <>
+
+        <Nav />
+        <Index />
+      </>
+    ),
+  },
+  {
+    path: "/action",
+    element: (
+      <>
+        <Nav />
+        <Action />
+      </>
+    ),
+  },
+  {
+    path: "/dashboard",
+    element: (
+      <RouteSecurityHandler>
+        <Panel />
+      </RouteSecurityHandler>
+    ),
+  },
+  {
+    path: "/api",
+    element: (
+      <RouteSecurityHandler>
+        <Nav />
+        <APIPage />
+      </RouteSecurityHandler>
+    ),
+  },
+  {
+    path: "/firewall_rules",
+    element: (
+      <RouteSecurityHandler>
+        <EthixionRules />
+      </RouteSecurityHandler>
+    )
+  },
+  {
+    path: "/threat_alerts",
+    element: (
+      <RouteSecurityHandler>
+        <ThreatAlerts />
+      </RouteSecurityHandler>
+    )
+  },
+  {
+    path: "/reportlogs",
+    element: (
+      <RouteSecurityHandler>
+        <ReportLogs />
+      </RouteSecurityHandler>
+    )
+  },
+  {
+    path: "/documentation",
+    element: (
+      <RevealDocumentation />
+    )
+  },
+  {
+    path: "/SDK",
+    element: (
+      <DownloadEthixionSDK />
+    )
+  },
+  {
+    path: "/traffic_insights",
+    element: (
+      <TrafficMonitorPage />
+    )
+  },
+  {
+    path: "/trends_status",
+    element: (
+      <TrafficMonitorPage />
+    )
+  },
+  {
+    path: "/api_settings",
+    element: (
+      <APISettings />
+    )
+  },
+  {
+    path: "/about",
+    element: (
+      <>
+        <Nav />
+        <AboutEthixion />
+      </>
+    )
+  }, {
+    path: "/verify_user",
+    element: (
+      <>
+        <Nav />
+        <VerifyAccount />
+      </>
+    )
+  }
+]);
+
+function App() {
+  return (
+    <div className="App">
+      <RouterProvider router={router} />
+    </div>
+  );
+}
+
+function RevealDocumentation() {
+  useEffect(() => {
+    window.open('/documentation/Ethixion_WAF_Documentation.pdf', '_self');
+  }, []);
+  return <Navigate to="/" replace />
+}
+
+function DownloadEthixionSDK() {
+  useEffect(() => {
+    const link = document.createElement('a');
+    link.href = '/SDK/Ethixion-SDK.zip';
+    link.download = 'Ethixion_SDK.zip';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }, []);
+
+  return <Navigate to="/" replace />;
+}
+
+export default App;
