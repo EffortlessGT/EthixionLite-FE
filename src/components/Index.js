@@ -10,7 +10,7 @@ function Index() {
         <div className="hero">
           <div className="main-container">
             <div className="desc-container">
-              <h1>Ethix<span>ion</span> Lite - A Lite version of WAF.</h1>
+              <h1>Ethix<span>ion</span> Lite - Silent Walls, Loud Prtection!</h1>
               <p>
                 Ethixion is a next-generation firewall solution designed to safeguard networks with
                 precision, transparency, and ethical control. It empowers administrators to monitor,
@@ -92,7 +92,7 @@ function Index() {
         </div>
         <FadeUpOnScroll>
           <div className="why-ethixion-ul">
-            <h2>Why <span>Ethixion</span>?</h2>
+            <h2>Why <span>Ethixion</span> Lite?</h2>
             <ul>
               <li><i className="fas fa-bolt"></i> Blazing-fast performance powered by Rust, ensuring minimal latency and maximum security.</li>
               <li><i className="fas fa-brain"></i> Intelligent threat filtering that adapts to evolving attack patterns.</li>

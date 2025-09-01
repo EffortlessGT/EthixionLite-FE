@@ -1,4 +1,4 @@
-const addr = "http://127.0.0.1:2400";
+const addr = "https://ethixionlite.up.railway.app/";
 export const loginForm = async (data) => {
   const resp = await fetch(`${addr}/login`, {
     method: "POST",

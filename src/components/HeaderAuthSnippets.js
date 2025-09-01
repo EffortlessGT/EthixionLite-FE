@@ -7,6 +7,7 @@ const HeaderAuthSnippets = () => {
   const [apiKey, setApiKey] = useState("ethixdssnsdvk0124840");
   const [targetUrl, setTargeUrl] = useState("https://your-app.com/target");
   const [redirectUrl, setRedirectUrl] = useState("https://your-app.com/fallback");
+  const [bodies, SetBodies] = useState("Ganesh Telore is a developer.");
   const [language, setLanguage] = useState("bash");
   const [snippet, setSnippet] = useState("");
 
@@ -25,13 +26,13 @@ const HeaderAuthSnippets = () => {
 
     return {
       bash: `curl -X GET ${escapeShell(url)} \\
-  -H "x-api-name: ${escapeShell(name)}" \\
+  -H "x-app-name: ${escapeShell(name)}" \\
   -H "x-api-key: ${escapeShell(key)}"${redir ? ` \\\n  -H "x-redirect-url: ${escapeShell(redir)}"` : ""}`,
 
       javascript: `fetch("${escapeJS(url)}", {
   method: "GET",
   headers: {
-    "x-api-name": "${escapeJS(name)}",
+    "x-app-name": "${escapeJS(name)}",
     "x-api-key": "${escapeJS(key)}"${redir ? `,\n    "x-redirect-url": "${escapeJS(redir)}"` : ""}
   }
 }).then(async (r) => {
@@ -43,7 +44,7 @@ const HeaderAuthSnippets = () => {
 
 axios.get("${escapeJS(url)}", {
   headers: {
-    "x-api-name": "${escapeJS(name)}",
+    "x-app-name": "${escapeJS(name)}",
     "x-api-key": "${escapeJS(key)}"${redir ? `,\n    "x-redirect-url": "${escapeJS(redir)}"` : ""}
   },
 }).then(res => {
@@ -55,7 +56,7 @@ axios.get("${escapeJS(url)}", {
       python: `import requests
 
 headers = {
-  "x-api-name": "${escapeQuotes(name)}",
+  "x-app-name": "${escapeQuotes(name)}",
   "x-api-key": "${escapeQuotes(key)}"${redir ? `,\n  "x-redirect-url": "${escapeQuotes(redir)}"` : ""}
 }
 resp = requests.get("${escapeQuotes(url)}", headers=headers)
@@ -71,7 +72,7 @@ import (
 
 func main() {
   req, _ := http.NewRequest("GET", "${url}", nil)
-  req.Header.Set("x-api-name", "${name}")
+  req.Header.Set("x-app-name", "${name}")
   req.Header.Set("x-api-key", "${key}")${redir ? `\n  req.Header.Set("x-redirect-url", "${redir}")` : ""}
 
   resp, err := http.DefaultClient.Do(req)
@@ -87,7 +88,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let client = Client::new();
     let resp = client
         .get("${url}")
-        .header("x-api-name", "${name}")
+        .header("x-app-name", "${name}")
         .header("x-api-key", "${key}")${redir ? `\n        .header("x-redirect-url", "${redir}")` : ""}
         .send()?;
 
@@ -105,7 +106,7 @@ public class Main {
     HttpClient client = HttpClient.newHttpClient();
     HttpRequest req = HttpRequest.newBuilder()
       .uri(URI.create("${escapeJava(url)}"))
-      .header("x-api-name", "${escapeJava(name)}")
+      .header("x-app-name", "${escapeJava(name)}")
       .header("x-api-key", "${escapeJava(key)}")${redir ? `\n      .header("x-redirect-url", "${escapeJava(redir)}")` : ""}
       .GET()
       .build();
@@ -123,7 +124,7 @@ class Program {
   static async Task Main() {
     using var http = new HttpClient();
     var req = new HttpRequestMessage(HttpMethod.Get, "${escapeCSharp(url)}");
-    req.Headers.Add("x-api-name", "${escapeCSharp(name)}");
+    req.Headers.Add("x-app-name", "${escapeCSharp(name)}");
     req.Headers.Add("x-api-key", "${escapeCSharp(key)}");${redir ? `\n    req.Headers.Add("x-redirect-url", "${escapeCSharp(redir)}");` : ""}
     var resp = await http.SendAsync(req);
     var body = await resp.Content.ReadAsStringAsync();
@@ -134,7 +135,7 @@ class Program {
       php: `<?php
 $ch = curl_init("${escapePHP(url)}");
 $headers = [
-  "x-api-name: ${escapePHP(name)}",
+  "x-app-name: ${escapePHP(name)}",
   "x-api-key: ${escapePHP(key)}"${redir ? `,\n  "x-redirect-url: ${escapePHP(redir)}"` : ""}
 ];
 curl_setopt_array($ch, [
@@ -152,7 +153,7 @@ require "uri"
 
 uri = URI.parse("${url}")
 req = Net::HTTP::Get.new(uri)
-req["x-api-name"] = "${name}"
+req["x-app-name"] = "${name}"
 req["x-api-key"]  = "${key}"${redir ? `\nreq["x-redirect-url"] = "${redir}"` : ""}
 
 res = Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == "https") do |http|
@@ -197,7 +198,7 @@ puts "#{res.code} #{res.body}"`
         </thead>
         <tbody>
           <tr>
-            <td><code className="k">x-api-name</code></td>
+            <td><code className="k">x-app-name</code></td>
             <td>Your registered API name</td>
           </tr>
           <tr>
@@ -256,6 +257,11 @@ puts "#{res.code} #{res.body}"`
           <label>API Key</label>
           <input value={apiKey} onChange={(e) => setApiKey(e.target.value)} disabled />
           <p className="hint">Hint: Form Input name attribute - apikey</p>
+        </div>
+        <div className="inp">
+          <label>Payload Data</label>
+          <input value={bodies} onChange={(e) => setApiKey(e.target.value)} disabled />
+          <p className="hint">Hint: Form Input name attribute - bodies(can be used multiple attributes with same name)</p>
         </div>
         <div className="inp">
           <label>Target URL</label>

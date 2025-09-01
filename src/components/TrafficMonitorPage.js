@@ -515,11 +515,9 @@ function TrafficMonitorPage() {
                             <Link to="/firewall_rules"><h3>Firewall Rules</h3></Link>
                             <Link to="/threat_alerts"><h3>Threat Alerts</h3></Link>
                             <Link to="/traffic_insights"><h3>Traffic Monitor</h3></Link>
-                            <h3>Application Insights</h3>
-                            <h3>Rate Limiting & Flood Control</h3>
                             <Link to="/reportlogs"><h3>Report & Logs</h3></Link>
                             <Link to="/api"><h3>API</h3></Link>
-                            <h3>Settings</h3>
+                            <Link to="/api_settings"><h3>Settings</h3></Link>
                             <Link to="/"><h3>Home</h3></Link>
                         </div>
                     </div>
