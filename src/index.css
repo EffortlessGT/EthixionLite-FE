@@ -2589,4 +2589,12 @@ textarea::placeholder {
   footer {
     height: 120px;
   }
+
+  .api-IdeaContainer .imgcontainer {
+    width: 100%;
+  }
+
+  .api-IdeaContainer .desccontainer {
+    width: 100%;
+  }
 }
