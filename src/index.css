@@ -2597,4 +2597,12 @@ textarea::placeholder {
   .api-IdeaContainer .desccontainer {
     width: 100%;
   }
+
+  .apisteps-container {
+    flex-direction: column;
+  }
+
+  .apisteps-container .box {
+    width: 100%;
+  }
 }
