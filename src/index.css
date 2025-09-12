@@ -2604,5 +2604,6 @@ textarea::placeholder {
 
   .apisteps-container .box {
     width: 100%;
+    height: auto;
   }
 }
