@@ -191,7 +191,7 @@ export const getCurrentUser = async () => {
 
 export const setEthixionRules = async (data) => {
   try {
-    const resp = await fetch(`${addr} / setethixrules`, {
+    const resp = await fetch(`${addr}/setethixrules`, {
       method: "POST",
       headers: {
         'Content-Type': 'application/json',
@@ -212,7 +212,7 @@ export const setEthixionRules = async (data) => {
 }
 
 export const getThreatLogs = async () => {
-  const resp = await fetch(`${addr} / get_todays_threat_logs`, {
+  const resp = await fetch(`${addr}/get_todays_threat_logs`, {
     method: "POST",
     headers: {
       'Content-Type': 'application/json',
@@ -230,7 +230,7 @@ export const getThreatLogs = async () => {
 };
 
 export const getDashboardData = async () => {
-  const resp = await fetch(`${addr} / dashboard_data`, {
+  const resp = await fetch(`${addr}/dashboard_data`, {
     method: "POST",
     headers: {
       'Content-Type': 'application/json',
@@ -252,7 +252,7 @@ export const getDashboardData = async () => {
 }
 
 export const getReportLogs = async () => {
-  const resp = await fetch(`${addr} / reportlogs`, {
+  const resp = await fetch(`${addr}/reportlogs`, {
     method: "POST",
     headers: {
       'Content-Type': 'application/json',
@@ -275,7 +275,7 @@ export const getReportLogs = async () => {
 }
 
 export const getDashboardSecurityDetails = async () => {
-  const resp = await fetch(`${addr} / security_details`, {
+  const resp = await fetch(`${addr}/security_details`, {
     method: "POST",
     headers: {
       'Content-Type': 'application/json',
@@ -293,7 +293,7 @@ export const getDashboardSecurityDetails = async () => {
 }
 
 export const getDashboardTrendsDetails = async () => {
-  const resp = await fetch(`${addr} / trends_details`, {
+  const resp = await fetch(`${addr}/trends_details`, {
     method: "POST",
     headers: {
       'Content-Type': 'application/json',
@@ -311,7 +311,7 @@ export const getDashboardTrendsDetails = async () => {
 }
 
 export const getDashboardTrendsStatusDetails = async () => {
-  const resp = await fetch(`${addr} / trends_status`, {
+  const resp = await fetch(`${addr}/trends_status`, {
     method: "POST",
     headers: {
       'Content-Type': 'application/json',
@@ -329,7 +329,7 @@ export const getDashboardTrendsStatusDetails = async () => {
 }
 
 export const getDashboardAdvanceMonitorsDetails = async () => {
-  const resp = await fetch(`${addr} / advance_monitors`, {
+  const resp = await fetch(`${addr}/advance_monitors`, {
     method: "POST",
     headers: {
       'Content-Type': 'application/json',
@@ -347,7 +347,7 @@ export const getDashboardAdvanceMonitorsDetails = async () => {
 }
 
 export const getAPIData = async () => {
-  const resp = await fetch(`${addr} / api_overview`, {
+  const resp = await fetch(`${addr}/api_overview`, {
     method: "POST",
     headers: {
       'Content-Type': 'application/json',
@@ -365,7 +365,7 @@ export const getAPIData = async () => {
 }
 
 export const APIDisableResp = async (data) => {
-  const resp = await fetch(`${addr} / disable_API`, {
+  const resp = await fetch(`${addr}/disable_API`, {
     method: "POST",
     headers: {
       'Content-Type': 'application/json',
@@ -383,7 +383,7 @@ export const APIDisableResp = async (data) => {
 }
 
 export const APIEnableResp = async (data) => {
-  const resp = await fetch(`${addr} / enable_API`, {
+  const resp = await fetch(`${addr}/enable_API`, {
     method: "POST",
     headers: {
       'Content-Type': 'application/json',
@@ -401,7 +401,7 @@ export const APIEnableResp = async (data) => {
 }
 
 export const APIDeleteResp = async (data) => {
-  const resp = await fetch(`${addr} / delete_API`, {
+  const resp = await fetch(`${addr}/delete_API`, {
     method: "POST",
     headers: {
       'Content-Type': 'application/json',
@@ -419,7 +419,7 @@ export const APIDeleteResp = async (data) => {
 }
 
 export const APIRegenerateResp = async (data) => {
-  const resp = await fetch(`${addr} / regenerate_api_key`, {
+  const resp = await fetch(`${addr}/regenerate_api_key`, {
     method: "POST",
     headers: {
       'Content-Type': 'application/json',
@@ -437,7 +437,7 @@ export const APIRegenerateResp = async (data) => {
 }
 
 export const APIRegeneratedKeyResp = async (data) => {
-  const resp = await fetch(`${addr} / fetch_regenerated_api_key`, {
+  const resp = await fetch(`${addr}/fetch_regenerated_api_key`, {
     method: "POST",
     headers: {
       'Content-Type': 'application/json',
@@ -455,7 +455,7 @@ export const APIRegeneratedKeyResp = async (data) => {
 }
 
 export const APIAlertsDataResp = async (data) => {
-  const resp = await fetch(`${addr} / retrieve_api_alerts`, {
+  const resp = await fetch(`${addr}/retrieve_api_alerts`, {
     method: "POST",
     headers: {
       'Content-Type': 'application/json',
