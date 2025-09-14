@@ -1,4 +1,4 @@
-const addr = "https://ethixionlite-be-production.up.railway.app";
+const addr = "https://ethixion-lite-col3.shuttle.app";
 export const loginForm = async (data) => {
   const resp = await fetch(`${addr}/login`, {
     method: "POST",
