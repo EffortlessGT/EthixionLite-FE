@@ -1,4 +1,4 @@
-const addr = "https://ethixion-lite-col3.shuttle.app";
+const addr = "https://ethixionlite-v706.onrender.com";
 export const loginForm = async (data) => {
   const resp = await fetch(`${addr}/login`, {
     method: "POST",
