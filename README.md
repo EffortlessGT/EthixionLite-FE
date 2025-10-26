@@ -1,70 +1,94 @@
-# Getting Started with Create React App
+# Ethixion Lite
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Ethixion Lite is a lightweight Web Application Firewall (WAF) and API Access Security Layer built to protect web applications and microservices from malicious requests and unauthorized access. It stands between clients and backend services, validating and inspecting every request before forwarding it to the actual application server.
 
-## Available Scripts
+Ethixion Lite focuses on simplicity, performance, and reliability, making it suitable for small to medium-scale applications and developer environments.
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## Purpose
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- Protect APIs and web applications from unauthorized access.
+- Detect and block common web attacks such as:
+  - SQL Injection
+  - Cross-Site Scripting (XSS)
+  - Path Traversal
+  - Header Manipulation
+- Provide a controlled access mechanism using API Key and API ID.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Ethixion Lite ensures that no internal API or service endpoint is directly exposed to the internet without authentication and inspection.
 
-### `npm test`
+---
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## How It Works
 
-### `npm run build`
+1. A developer registers their application in Ethixion Lite.
+2. Ethixion generates a unique API Key and API ID.
+3. The client accessing the protected API must include these credentials in the request headers.
+4. Ethixion validates:
+   - API Key and API ID
+   - Request integrity
+   - Suspicious payload patterns
+5. If validation succeeds, the request is forwarded to the actual backend.
+6. If validation fails, the request is blocked.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+---
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Features
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- API-level authentication using API Key and API ID.
+- Request integrity checks.
+- Protection against common injection and scripting attacks.
+- Centralized application and key management.
+- Lightweight inspection logic for minimal performance overhead.
+- Easy integration without modifying backend application code.
 
-### `npm run eject`
+---
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Architecture Overview
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+| Layer | Role |
+|------|------|
+| API Authentication | Ensures only registered clients send requests |
+| Threat Detection | Blocks harmful payloads before they reach backend |
+| Forwarding Layer | Routes valid traffic to protected servers |
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+---
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Tech Stack
 
-## Learn More
+| Component | Technology |
+|----------|------------|
+| Language | Rust |
+| Framework | Rocket |
+| Database | PostgreSQL |
+| Deployment Target | Linux / Docker / VM environments |
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Rust ensures memory safety, speed, and high concurrency—making Ethixion Lite secure and efficient.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+---
 
-### Code Splitting
+## Suitable Use Cases
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+- Protecting personal and hobby web services.
+- Securing internal APIs and backend endpoints.
+- Teaching and demonstration of practical API security.
+- Lightweight WAF protection for SaaS and microservice deployments.
 
-### Analyzing the Bundle Size
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## Roadmap
 
-### Making a Progressive Web App
+| Feature | Status |
+|--------|--------|
+| Dashboard for app/key management | In Progress |
+| Rate Limiting | Planned |
+| Event Logging and Monitoring | Planned |
+| Threat Signature Database | Planned |
+| Upgrade Path to Reverse Proxy WAF (Ethixion Pro) | Upcoming |
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+---
 
-### Advanced Configuration
+## Vision
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Ethixion Lite serves as the foundation layer for the broader Ethixion Security Suite. It aims to provide developers and small teams with a secure-by-default API protection system that can be scaled and upgraded over time. The long-term goal is to evolve Ethixion Lite into Ethixion Pro, a full-scale reverse-proxy WAF with dynamic routing and intelligent threat prevention.
