@@ -1,4 +1,6 @@
-const addr = "https://ethixionlite-be-production.up.railway.app";
+import { toast } from 'react-toastify';
+
+const addr = "http://127.0.0.1:8000";
 export const loginForm = async (data) => {
   const resp = await fetch(`${addr}/login`, {
     method: "POST",
@@ -15,7 +17,7 @@ export const loginForm = async (data) => {
     //alert('Valid Credentials.');
     window.location = '/dashboard';
   } else {
-    alert('Invalid Username or Password!');
+    toast.error('Invalid Username or Password!');
   }
 
   if (!resp.ok) {
@@ -39,7 +41,7 @@ export const loginFormII = async (data) => {
   if (resp.ok && rs.status) {
     window.location = '/dashboard';
   } else {
-    alert('Invalid Username!');
+    toast.error('No user found, Kindly register yourself first!');
   }
 
   if (!resp.ok) {
@@ -106,15 +108,51 @@ export const apiForm = async (data) => {
   }
 
   if (resp.ok && res.status === "NoActiveUserError") {
-    alert('No Active user session found. Kindly login again!');
+    toast.error('No Active user session found. Kindly login again!');
     window.location = '/action';
   }
 
   if (resp.ok && res.status === "done") {
-    alert("API Creation Successful. Kindly head to dashboard to manage API.");
+    toast.success("API Creation Successful. Kindly head to dashboard to manage API.");
     console.log("API Created with API Name & Key ->", res.apiname, res.apikey);
   } else {
-    alert("Failure Occured due to " + (res.message ? `: ${res.message}` : "."));
+    toast.error("Failure Occured due to " + (res.message ? `: ${res.message}` : "."));
+  }
+
+  if (!resp.ok) {
+    throw new Error("Network response was not ok");
+  }
+
+  return res;
+};
+export const wafapiForm = async (data) => {
+  const resp = await fetch(`${addr}/waf_api_handler`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    body: JSON.stringify(data),
+  });
+
+  let res = {};
+  try {
+    const text = await resp.text();
+    res = text ? JSON.parse(text) : {};
+  } catch (err) {
+    console.error("Failed to parse JSON:", err);
+  }
+
+  if (resp.ok && res.status === "NoActiveUserError") {
+    toast.error('No Active user session found. Kindly login again!');
+    window.location = '/action';
+  }
+
+  if (resp.ok && res.status === "success") {
+    toast.success("Ethixion WAF API Creation Successful. Kindly head to dashboard to manage API.");
+    console.log("API Created with API Name & Key ->", res.apiname, res.apikey);
+  } else {
+    toast.error("Failure Occured due to " + (res.message ? `: ${res.message}` : "."));
   }
 
   if (!resp.ok) {
@@ -146,11 +184,37 @@ export const validateActiveUser = async (data) => {
     }
   } catch (err) {
     console.error("Error checking session:", err);
-    alert("Something went wrong while validating session.");
+    toast.error("Something went wrong while validating session.");
     return false;
   }
 };
 
+export const validateActiveWAFUser = async (data) => {
+  try {
+    const usertoken = "current_user";
+    const resp = await fetch(`${addr}/validate_active_waf_user`, {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ key: usertoken }),
+      credentials: "include",
+    });
+
+    const res = await resp.json();
+
+    if (resp.ok && res.status) {
+      return true;
+    } else {
+      //alert("No active user found! Kindly login...");
+      return false;
+    }
+  } catch (err) {
+    console.error("Error checking session:", err);
+    toast.error("Something went wrong while validating session.");
+    return false;
+  }
+};
 
 export const ethixionapi = async (data) => {
   try {
@@ -164,7 +228,7 @@ export const ethixionapi = async (data) => {
     });
 
     const rs = await resp.json();
-    alert(rs.msg);
+    toast(rs.msg);
   } catch (e) {
     console.error("Error ->", e);
   }
@@ -173,6 +237,24 @@ export const ethixionapi = async (data) => {
 
 export const getCurrentUser = async () => {
   const resp = await fetch(`${addr}/getcurrentuserinfo`, {
+    method: "POST",
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ key: "current_user" }),
+    credentials: "include",
+  });
+
+  const res = await resp.json();
+  if (resp.ok) {
+    return res;
+  } else {
+    throw new Error(res.error || "Failed to fetch user data");
+  }
+};
+
+export const getCurrentWAFUser = async () => {
+  const resp = await fetch(`${addr}/getcurrentwafuserinfo`, {
     method: "POST",
     headers: {
       'Content-Type': 'application/json',
@@ -200,7 +282,7 @@ export const setEthixionRules = async (data) => {
       credentials: 'include',
     });
     const rs = await resp.json();
-    alert(rs.msg);
+    toast(rs.msg);
     if (rs.status === "NoActiveUserError") {
       //alert(rs.msg);
       window.location = "/action";
@@ -229,27 +311,27 @@ export const getThreatLogs = async () => {
   }
 };
 
-export const getDashboardData = async () => {
-  const resp = await fetch(`${addr}/dashboard_data`, {
-    method: "POST",
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({}),
-    credentials: 'include',
-  });
-  const rs = await resp.json();
-  //console.log("Backend response:", rs, "HTTP status:", resp.status);
-  if (resp.ok && rs.status === "success" && rs.ReqData) {
-    return rs.ReqData;
+  export const getDashboardData = async () => {
+    const resp = await fetch(`${addr}/dashboard_data`, {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({}),
+      credentials: 'include',
+    });
+    const rs = await resp.json();
+    //console.log("Backend response:", rs, "HTTP status:", resp.status);
+    if (resp.ok && rs.status === "success" && rs.ReqData) {
+      return rs.ReqData;
+    }
+    else if (rs.status === "failed") {
+      return rs.msg;
+    } else {
+      //console.error(rs.error);
+      throw new Error(resp.error || "Failed to fetch todays request count data.");
+    }
   }
-  else if (rs.status === "failed") {
-    return rs.msg;
-  } else {
-    //console.error(rs.error);
-    throw new Error(resp.error || "Failed to fetch todays request count data.");
-  }
-}
 
 export const getReportLogs = async () => {
   const resp = await fetch(`${addr}/reportlogs`, {
@@ -469,5 +551,28 @@ export const APIAlertsDataResp = async (data) => {
     return rs;
   } else {
     throw new Error("Error => ", resp.error);
+  }
+}
+
+
+export const getWAFDashboardData = async () => {
+  const resp = await fetch(`${addr}/waf_dashboard_insights`, {
+    method: "POST",
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({}),
+    credentials: 'include',
+  });
+  const rs = await resp.json();
+  //console.log("Backend response:", rs, "HTTP status:", resp.status);
+  if (resp.ok && rs.status === "success" && rs.data && rs.waf_details) {
+    return rs;
+  }
+  else if (rs.status === "failed") {
+    return rs.msg;
+  } else {
+    //console.error(rs.error);
+    throw new Error(resp.error || "Failed to fetch todays request count data.");
   }
 }

@@ -6,7 +6,7 @@ import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom'
 import Action from './components/Action';
 import Panel from './components/Panel';
 import APIPage from './components/APIPage';
-import { validateActiveUser } from './api';
+import { validateActiveUser, validateActiveWAFUser } from './api';
 import EthixionRules from './components/EthixionRules';
 import ThreatAlerts from './components/ThreatAlerts';
 import ReportLogs from './components/ReportLogs';
@@ -14,6 +14,10 @@ import AboutEthixion from './components/AboutEthixion';
 import TrafficMonitorPage from './components/TrafficMonitorPage';
 import APISettings from './components/APISettings';
 import VerifyAccount from './components/VerifyAccount';
+import WAFPanel from './components/WAFPanel';
+import WAFAPIPage from './components/WAFAPIPage';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 function RouteSecurityHandler({ children }) {
@@ -26,12 +30,46 @@ function RouteSecurityHandler({ children }) {
         const isValid = await validateActiveUser();
         setIsValidated(isValid);
         if (!isValid && !alertedRef.current) {
-          alert("No active user found! Kindly login...");
+          toast.error("No active user found! Kindly login...");
           alertedRef.current = true;
         }
       } catch (err) {
         console.error("Validation error:", err);
-        alert("Unable to validate session. Please log in.");
+        toast.error("Unable to validate session. Please log in.");
+        setIsValidated(false);
+      }
+    };
+
+    validate();
+  }, []);
+
+  if (isValidated === null) {
+    return <div>Loading...</div>;
+  }
+
+  if (!isValidated) {
+    return <Navigate to="/action" replace />;
+  }
+
+  return children;
+}
+
+function WAFRoutesSecurityHandler({ children }) {
+  const [isValidated, setIsValidated] = useState(null);
+  const alertedRef = useRef(false);
+
+  useEffect(() => {
+    const validate = async () => {
+      try {
+        const isValid = await validateActiveWAFUser();
+        setIsValidated(isValid);
+        if (!isValid && !alertedRef.current) {
+          toast.error("No active user found! Kindly login...");
+          alertedRef.current = true;
+        }
+      } catch (err) {
+        console.error("Validation error:", err);
+        toast.error("Unable to validate session. Please log in.");
         setIsValidated(false);
       }
     };
@@ -79,6 +117,14 @@ const router = createBrowserRouter([
     ),
   },
   {
+    path: "/waf_dashboard",
+    element: (
+      <WAFRoutesSecurityHandler>
+        <WAFPanel />
+      </WAFRoutesSecurityHandler>
+    ),
+  },
+  {
     path: "/api",
     element: (
       <RouteSecurityHandler>
@@ -86,6 +132,15 @@ const router = createBrowserRouter([
         <APIPage />
       </RouteSecurityHandler>
     ),
+  },
+  {
+    path: "/waf_api",
+    element: (
+      <WAFRoutesSecurityHandler>
+        <Nav/>
+        <WAFAPIPage/>
+      </WAFRoutesSecurityHandler>
+    )
   },
   {
     path: "/firewall_rules",
@@ -164,6 +219,7 @@ function App() {
   return (
     <div className="App">
       <RouterProvider router={router} />
+      <ToastContainer />
     </div>
   );
 }

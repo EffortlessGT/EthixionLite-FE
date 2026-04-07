@@ -1367,6 +1367,170 @@ input[type=number]::-webkit-outer-spin-button {
   color: #0a192f;
 }
 
+/* WAF API Page CSS --------------------------------------------------------------------------*/
+.waf-intro {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+  align-items: center;
+  padding: 2rem 5%;
+}
+
+.waf-intro img {
+  width: 100%;
+  max-width: 450px;
+  border-radius: 10px;
+}
+
+.desccontainer {
+  flex: 1;
+  color: #0a192f;
+  text-align: justify;
+}
+
+.desccontainer h2 {
+  color: #64ffda;
+  font-size: 30px;
+}
+
+.desccontainer ul {
+  list-style: none;
+  padding: 0;
+}
+
+.waf-steps {
+  text-align: center;
+  margin-top: 3rem;
+}
+
+.steps-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.steps-container .box {
+  background: #0a192f;
+  color: #fff;
+  width: 280px;
+  border-radius: 10px;
+  padding: 1rem;
+  transition: 0.3s;
+}
+
+.steps-container .box:hover {
+  transform: translateY(-5px);
+}
+
+.waf-form {
+  background: #0a192f;
+  color: #fff;
+  padding: 2rem;
+  border-radius: 12px;
+  margin: 3rem 5%;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.waf-form form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.form-box {
+  flex: 1 1 calc(50% - 1rem);
+  display: flex;
+  flex-direction: column;
+}
+
+.form-box label {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #64ffda;
+}
+
+.form-box input,
+.form-box textarea,
+.form-box select {
+  background: #112240;
+  border: 1px solid #233554;
+  border-radius: 8px;
+  padding: 0.75rem;
+  color: #fff;
+}
+
+.submit-btn {
+  width: 100%;
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.submit-btn button {
+  background: transparent;
+  border: 2px solid #64ffda;
+  color: #64ffda;
+  padding: 0.75rem 2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.submit-btn button:hover {
+  background: #64ffda;
+  color: #0a192f;
+}
+
+.WAFCredentials {
+  display: none;
+  background: #112240;
+  color: #fff;
+  border-radius: 10px;
+  padding: 2rem;
+  text-align: center;
+  margin: 3rem 10%;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.WAFCredentials button {
+  background: transparent;
+  border: 1px solid #64ffda;
+  color: #64ffda;
+  padding: 0.6rem 1.5rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+  transition: 0.3s;
+}
+
+.WAFCredentials button:hover {
+  background: #64ffda;
+  color: #0a192f;
+}
+
+.form-box input:focus,
+.form-box textarea:focus,
+.form-box input:hover,
+.form-box textarea:hover {
+  border-color: #64ffda;
+  color: #fff;
+  outline: none;
+}
+
+
+@media (max-width: 768px) {
+  .form-box {
+    flex: 1 1 100%;
+  }
+
+  .steps-container {
+    flex-direction: column;
+  }
+
+  .desccontainer h2 {
+    font-size: 24px;
+  }
+}
+
 /* Traffic Page CSS --------------------------------------------------------------------------*/
 .monitor-tabs {
   display: flex;
@@ -2314,6 +2478,110 @@ textarea::placeholder {
   background: linear-gradient(135deg, #00c3ff, #00f2ff);
   transform: scale(1.05);
   box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+}
+/* ===== WAF INFO GRID ===== */
+.waf-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  margin-top: 15px;
+}
+
+.waf-card {
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 15px;
+  border-radius: 10px;
+  backdrop-filter: blur(6px);
+  transition: all 0.3s ease;
+  color: #fff;
+  background-color: #1e3a8a;
+}
+
+.waf-card:hover {
+  transform: translateY(-4px);
+  border-color: #00ff9d;
+}
+
+.waf-card h4 {
+  font-size: 14px;
+  margin-bottom: 6px;
+  opacity: 0.7;
+}
+
+.waf-card p {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+/* Status Highlight */
+.status-active {
+  color: #00ff9d;
+  font-weight: 600;
+}
+
+
+/* ===== QUICK STATS ===== */
+.quick-stats {
+  margin-top: 15px;
+}
+
+.quick-stats ul {
+  list-style: none;
+  padding: 0;
+}
+
+.quick-stats li {
+  padding: 8px 0;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+  font-size: 15px;
+}
+
+.quick-stats li:last-child {
+  border-bottom: none;
+}
+
+
+/* ===== CHART GRID ===== */
+.chart-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  margin-top: 25px;
+  gap: 20px;
+}
+
+/* Chart container */
+.chart-box {
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  padding: 15px;
+  backdrop-filter: blur(6px);
+  transition: all 0.3s ease;
+}
+
+.chart-box:hover {
+  border-color: #00ff9d;
+  transform: translateY(-3px);
+}
+
+.chart-box h3 {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+
+/* ===== RESPONSIVE TWEAKS ===== */
+@media (max-width: 768px) {
+  .waf-card {
+    padding: 12px;
+  }
+
+  .chart-box {
+    padding: 12px;
+  }
+
+  .quick-stats li {
+    font-size: 14px;
+  }
 }
 
 /* Animations */

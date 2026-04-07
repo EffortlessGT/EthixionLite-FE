@@ -22,6 +22,7 @@ function Nav() {
             <li><Link to="/" onClick={closeMenu}>Home</Link></li>
             <li><Link to="/action" onClick={closeMenu}>Login</Link></li>
             <li><Link to="/dashboard" onClick={closeMenu}>Dashboard</Link></li>
+            <li><Link to="/waf_dashboard" onClick={closeMenu}>WAF Dashboard</Link></li>
             <li><Link to="/SDK" onClick={closeMenu}>SDK</Link></li>
             <li><Link to="/documentation" onClick={closeMenu}>Documentation</Link></li>
             <li><Link to="/about" onClick={closeMenu}>About us</Link></li>

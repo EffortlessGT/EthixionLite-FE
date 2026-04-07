@@ -3,6 +3,7 @@ import api_img from '../assets/img/api_img.png';
 import Footer from './Footer';
 import { apiForm } from '../api';
 import FadeUpOnScroll from './FadeUpOnScroll';
+import { toast } from 'react-toastify';
 
 function APIPage() {
   const [apiname, setApiname] = useState('');
@@ -42,23 +43,23 @@ function APIPage() {
 
 
     if (!apinamePatt.test(apiname)) {
-      alert("Please enter a valid API name.");
+      toast.error("Please enter a valid API name.");
       return;
     }
     if (!apidescPatt.test(apidesc)) {
-      alert("Please enter a valid API description.");
+      toast.error("Please enter a valid API description.");
       return;
     }
     if (!endpointUrlPatt.test(endpointUrl)) {
-      alert("Please enter a valid endpoint URL.");
+      toast.error("Please enter a valid endpoint URL.");
       return;
     }
     if (!allowedIpPatt.test(allowedIp)) {
-      alert("Please enter a valid allowed IP address or list of IPs.");
+      toast.error("Please enter a valid allowed IP address or list of IPs.");
       return;
     }
     if (!rateLimitPatt.test(rateLimit)) {
-      alert("Please enter a valid rate limit number.");
+      toast.error("Please enter a valid rate limit number.");
       return;
     }
 

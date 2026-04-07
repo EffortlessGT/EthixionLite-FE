@@ -7,6 +7,7 @@ import { FiMenu, FiX } from 'react-icons/fi';
 import PopupNotificationWrapper from './PopUpNotificationWrapper';
 import EthixionAlert from './EthixionAlert';
 import HeaderAuthSnippets from './HeaderAuthSnippets';
+import { toast } from 'react-toastify';
 
 function APISettings() {
     const [userData, setUserData] = useState(null);
@@ -64,7 +65,7 @@ function APISettings() {
         try {
             const resp = await APIDisableResp(apiname);
             if (resp) {
-                alert("API Service Disable request processed successfully.");
+                toast.success("API Service Disable request processed successfully.");
                 window.location.reload();
             }
         } catch (Err) {
@@ -76,7 +77,7 @@ function APISettings() {
         try {
             const resp = await APIEnableResp(apiname);
             if (resp) {
-                alert("API Service Enabled request processed successfully.");
+                toast.success("API Service Enabled request processed successfully.");
                 window.location.reload();
             }
         } catch (Err) {
@@ -88,7 +89,7 @@ function APISettings() {
         try {
             const resp = await APIDeleteResp(apiname);
             if (resp) {
-                alert("API Service deleted successfully.");
+                toast.success("API Service deleted successfully.");
                 window.location.reload();
             }
         } catch (Err) {

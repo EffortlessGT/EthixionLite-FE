@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import FadeUpOnScroll from './FadeUpOnScroll';
 import { FiMenu, FiX } from 'react-icons/fi';
 import { getCurrentUser, setEthixionRules } from '../api';
+import { toast } from 'react-toastify';
 
 function EthixionRules() {
   const [userData, setUserData] = useState(null);
@@ -40,7 +41,7 @@ function EthixionRules() {
     };
     const apinamePatt = /^[a-zA-Z0-9_-]{3,50}$/;
     if (!apinamePatt.test(apiname)) {
-      alert("Please enter a valid API name.");
+      toast.error("Please enter a valid API name.");
       return;
     }
     try {

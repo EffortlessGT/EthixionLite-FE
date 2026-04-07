@@ -4,6 +4,7 @@ import FadeUpOnScroll from './FadeUpOnScroll';
 import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
 import EthixionAlert from './EthixionAlert';
+import { toast } from 'react-toastify';
 
 function Action() {
   const [isFlipped, setIsFlipped] = useState(false);
@@ -26,12 +27,12 @@ function Action() {
     const strongPwdPatt = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/;
 
     if (!emailPatt.test(data.username)) {
-      alert("Please enter a valid email address.");
+      toast.error("Please enter a valid email address.");
       return;
     }
 
     if (!strongPwdPatt.test(data.password)) {
-      alert("Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.");
+      toast.error("Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.");
       return;
     }
 
@@ -55,22 +56,22 @@ function Action() {
     const strongPwdPatt = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/;
 
     if (!fullnamePatt.test(data.fullname)) {
-      alert('Only characters allowed in full name.');
+      toast.error('Only characters allowed in full name.');
       return;
     }
 
     if (!emailPatt.test(data.email)) {
-      alert("Please enter a valid email address.");
+      toast.error("Please enter a valid email address.");
       return;
     }
 
     if (!strongPwdPatt.test(data.mypwd)) {
-      alert("Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.");
+      toast.error("Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.");
       return;
     }
 
     if (data.mypwd !== data.mypwdII) {
-      alert('Both passwords do not match.');
+      toast.error('Both passwords do not match.');
       return;
     }
 
@@ -89,7 +90,7 @@ function Action() {
       const email = decoded.email;
       const response = await loginFormII({ email, googleLogin: true });
     } catch (err) {
-      alert("This email is not registered. Please sign up first.");
+      toast.error("This email is not registered. Please sign up first.");
       console.log("Google Sign-In error:", err);
     }
   };
@@ -128,7 +129,7 @@ function Action() {
             <div className="horizontal-rule"></div>
             <GoogleLogin
               onSuccess={handleGoogleLogin}
-              onError={() => alert("Google Sign-In Failed")}
+              onError={() => toast.error("Google Sign-In Failed")}
             />
           </form>
         </div>
