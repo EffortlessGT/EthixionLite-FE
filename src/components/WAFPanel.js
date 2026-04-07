@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import user_img from '../assets/img/user_img.png';
 import { Link } from 'react-router-dom';
-import { getWAFDashboardData, getCurrentWAFUser } from '../api';
+import { getWAFDashboardData, getCurrentWAFUser, getWAFSecurityTipOfDay } from '../api';
 import FadeUpOnScroll from './FadeUpOnScroll';
 import { FiMenu, FiX } from 'react-icons/fi';
 
@@ -16,6 +16,7 @@ import {
   Tooltip,
   ResponsiveContainer
 } from 'recharts';
+import { desc, s, title } from 'framer-motion/client';
 
 function WAFPanel() {
 
@@ -29,14 +30,14 @@ function WAFPanel() {
     suspicious: 0
   });
 
-  const [wafInfo, setWafInfo] = useState({
-    wafName: "Ethixion Shield",
-    domain: "api.example.com",
-    status: "Active",
-    inspection: "Deep Inspection",
-    proxy: "proxy.ethixion.net",
-    apiKey: "Active"
-  });
+  const [wafInfo, setWafInfo] = useState([]);
+
+  const [dailySecurityTips, setDailySecurityTips] = useState({
+  title: "",
+  description: "",
+  category: "",
+  severity: ""
+});
 
   // Fetch user
   useEffect(() => {
@@ -51,30 +52,59 @@ function WAFPanel() {
     fetchUser();
   }, []);
 
-  // Fetch dashboard stats
+  // Fetch dashboard data
   useEffect(() => {
     const fetchDashboard = async () => {
       try {
         const response = await getWAFDashboardData();
-
+      
         if (response) {
+          // Stats
           setStats({
-            total: response.data.total_requests,
-            allowed: response.data.allowed_requests,
-            blocked: response.data.blocked_requests,
-            suspicious: response.data.suspicious_requests
+            total: response.data?.total_requests || 0,
+            allowed: response.data?.allowed_requests || 0,
+            blocked: response.data?.blocked_requests || 0,
+            suspicious: response.data?.suspicious_requests || 0
           });
-          setWafInfo({
-            wafName: response.waf_details.waf_name,
-            domain: response.waf_details.protected_domain,
-            status: response.waf_details.waf_api_status,
-            inspection: response.waf_details.inspection_mode,
-            proxy: response.waf_details.proxy_domain,
-            apiKey: response.waf_details.api_key
-          });
+
+          // ✅ MULTIPLE WAF APIs
+          if (Array.isArray(response.waf_details)) {
+            setWafInfo(
+              response.waf_details.map(item => ({
+                wafName: item.waf_name,
+                domain: item.protected_domain,
+                status: item.waf_api_status,
+                inspection: item.inspection_mode,
+                proxy: item.proxy_domain,
+                apiKey: item.api_key
+              }))
+            );
+          } else if (response.waf_details) {
+            // fallback if backend sends single object
+            setWafInfo([{
+              wafName: response.waf_details.waf_name,
+              domain: response.waf_details.protected_domain,
+              status: response.waf_details.waf_api_status,
+              inspection: response.waf_details.inspection_mode,
+              proxy: response.waf_details.proxy_domain,
+              apiKey: response.waf_details.api_key
+            }]);
+          }
+
         }
       } catch (err) {
         console.log(err);
+      }
+      try {
+        const response = await getWAFSecurityTipOfDay();
+        setDailySecurityTips({
+          title: response.title,
+          description: response.description,
+          category: response.category,
+          severity: response.severity
+        });
+      }catch(err) {
+        console.log("Error fetching data => ",err);
       }
     };
 
@@ -134,37 +164,42 @@ function WAFPanel() {
             <h2>WAF Information</h2>
 
             <div className="waf-info-grid">
-
-              <div className="waf-card">
-                <h4>WAF Name</h4>
-                <p>{wafInfo.wafName}</p>
-              </div>
-
-              <div className="waf-card">
-                <h4>Protected Domain</h4>
-                <p>{wafInfo.domain}</p>
-              </div>
-
-              <div className="waf-card">
-                <h4>Status</h4>
-                <p className="status-active">{wafInfo.status}</p>
-              </div>
-
-              <div className="waf-card">
-                <h4>Inspection Mode</h4>
-                <p>{wafInfo.inspection}</p>
-              </div>
-
-              <div className="waf-card">
-                <h4>Proxy Domain</h4>
-                <p>{wafInfo.proxy}</p>
-              </div>
-
-              <div className="waf-card">
-                <h4>API Key</h4>
-                <p>{wafInfo.apiKey}</p>
-              </div>
-
+              <table className="waf-table">
+                <thead>
+                  <tr>
+                    <th>WAF Name</th>
+                    <th>Protected Domain</th>
+                    <th>Status</th>
+                    <th>Inspection Mode</th>
+                    <th>Proxy Domain</th>
+                    <th>API Key</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {wafInfo.length === 0 ? (
+                    <tr>
+                      <td colSpan="6" style={{ textAlign: "center" }}>
+                        No APIs found
+                      </td>
+                    </tr>
+                  ) : (
+                    wafInfo.map((api, index) => (
+                      <tr key={index}>
+                        <td>{api.wafName}</td>
+                        <td>{api.domain}</td>
+                        <td>
+                          <span className={`status ${api.status === "Active" ? "active" : "inactive"}`}>
+                            {api.status}
+                          </span>
+                        </td>
+                        <td>{api.inspection}</td>
+                        <td>{api.proxy}</td>
+                        <td className="api-key">{api.apiKey}</td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
             </div>
 
             {/* QUICK STATS */}
@@ -216,12 +251,24 @@ function WAFPanel() {
             <h2>Ethixion Tip</h2>
 
             <div className="system-tip">
-              <p>
-                Enable stricter rate limiting on login endpoints. Most attacks
-                occur through repeated login attempts.
-              </p>
-            </div>
+  <div className="tip-header">
+    <span className="tip-badge">Daily Tip</span>
+    <span className="tip-severity high">{dailySecurityTips.severity}</span>
+  </div>
 
+  <h3 className="tip-title">
+    {dailySecurityTips.title}
+  </h3>
+
+  <p className="tip-description">
+    {dailySecurityTips.description}
+  </p>
+
+  <div className="tip-footer">
+    <span className="tip-category">{dailySecurityTips.category}</span>
+    <span className="tip-date">Today</span>
+  </div>
+</div>
           </div>
 
         </div>

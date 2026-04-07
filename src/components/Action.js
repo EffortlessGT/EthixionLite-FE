@@ -27,12 +27,32 @@ function Action() {
     const strongPwdPatt = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/;
 
     if (!emailPatt.test(data.username)) {
-      toast.error("Please enter a valid email address.");
+      toast.error("Please enter a valid email address.", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        closeButton: false,
+        pauseOnHover: true,
+        style: {
+          color: '#0a192f',
+        }
+      });
       return;
     }
 
     if (!strongPwdPatt.test(data.password)) {
-      toast.error("Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.");
+      toast.error("Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        closeButton: false,
+        pauseOnHover: true,
+        style: {
+          color: '#0a192f',
+        }
+      });
       return;
     }
 
@@ -61,17 +81,44 @@ function Action() {
     }
 
     if (!emailPatt.test(data.email)) {
-      toast.error("Please enter a valid email address.");
+      toast.error("Please enter a valid email address.", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeButton: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+      });
       return;
     }
 
     if (!strongPwdPatt.test(data.mypwd)) {
-      toast.error("Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.");
+      toast.error("Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeButton: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        style: {
+          color: '#0a192f',
+        }
+      });
       return;
     }
 
     if (data.mypwd !== data.mypwdII) {
-      toast.error('Both passwords do not match.');
+      toast.error('Both passwords do not match.', {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeButton: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        style: {
+          color: '#0a192f',
+        }
+      });
       return;
     }
 
@@ -90,7 +137,16 @@ function Action() {
       const email = decoded.email;
       const response = await loginFormII({ email, googleLogin: true });
     } catch (err) {
-      toast.error("This email is not registered. Please sign up first.");
+      toast.error("This email is not registered. Please sign up first.", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeButton: false,
+        closeOnClick: false,
+        pauseOnHover: true,       style: {
+          color: '#0a192f',
+        }
+      });
       console.log("Google Sign-In error:", err);
     }
   };
@@ -129,7 +185,16 @@ function Action() {
             <div className="horizontal-rule"></div>
             <GoogleLogin
               onSuccess={handleGoogleLogin}
-              onError={() => toast.error("Google Sign-In Failed")}
+              onError={() => toast.error("Google Sign-In Failed", {
+                position: "top-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: false,
+                pauseOnHover: true,
+                style: {
+                  color: '#0a192f',
+                }
+              })}
             />
           </form>
         </div>

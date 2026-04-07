@@ -17,7 +17,17 @@ export const loginForm = async (data) => {
     //alert('Valid Credentials.');
     window.location = '/dashboard';
   } else {
-    toast.error('Invalid Username or Password!');
+    toast.error('Invalid Username or Password!', {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeButton: false,
+      closeOnClick: false,
+      pauseOnHover: true,
+      style: {
+          color: '#0a192f',
+        }
+    });
   }
 
   if (!resp.ok) {
@@ -41,7 +51,17 @@ export const loginFormII = async (data) => {
   if (resp.ok && rs.status) {
     window.location = '/dashboard';
   } else {
-    toast.error('No user found, Kindly register yourself first!');
+    toast.error('No user found, Kindly register yourself first!', {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeButton: false,
+      closeOnClick: false,
+      pauseOnHover: true,
+      style: {
+          color: '#0a192f',
+        }
+    });
   }
 
   if (!resp.ok) {
@@ -108,7 +128,17 @@ export const apiForm = async (data) => {
   }
 
   if (resp.ok && res.status === "NoActiveUserError") {
-    toast.error('No Active user session found. Kindly login again!');
+    toast.error('No Active user session found. Kindly login again!', {
+      direction: "top-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: false,
+      closeButton: false,
+      pauseOnHover: true,
+      style: {
+          color: '#0a192f',
+        }
+    });
     window.location = '/action';
   }
 
@@ -116,7 +146,17 @@ export const apiForm = async (data) => {
     toast.success("API Creation Successful. Kindly head to dashboard to manage API.");
     console.log("API Created with API Name & Key ->", res.apiname, res.apikey);
   } else {
-    toast.error("Failure Occured due to " + (res.message ? `: ${res.message}` : "."));
+    toast.error("Failure Occured due to " + (res.message ? `: ${res.message}` : ".", {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeButton: false,
+      closeOnClick: false,
+      pauseOnHover: true,
+      style: {
+          color: '#0a192f',
+        }
+    }));
   }
 
   if (!resp.ok) {
@@ -144,7 +184,17 @@ export const wafapiForm = async (data) => {
   }
 
   if (resp.ok && res.status === "NoActiveUserError") {
-    toast.error('No Active user session found. Kindly login again!');
+    toast.error('No Active user session found. Kindly login again!', {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeButton: false,
+      closeOnClick: false,
+      pauseOnHover: true,
+      style: {
+          color: '#0a192f',
+        }
+    });
     window.location = '/action';
   }
 
@@ -152,7 +202,17 @@ export const wafapiForm = async (data) => {
     toast.success("Ethixion WAF API Creation Successful. Kindly head to dashboard to manage API.");
     console.log("API Created with API Name & Key ->", res.apiname, res.apikey);
   } else {
-    toast.error("Failure Occured due to " + (res.message ? `: ${res.message}` : "."));
+    toast.error("Failure Occured due to " + (res.message ? `: ${res.message}` : ".", {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeButton: false,
+      closeOnClick: false,
+      pauseOnHover: true,
+      style: {
+          color: '#0a192f',
+        }
+    }));
   }
 
   if (!resp.ok) {
@@ -184,7 +244,17 @@ export const validateActiveUser = async (data) => {
     }
   } catch (err) {
     console.error("Error checking session:", err);
-    toast.error("Something went wrong while validating session.");
+    toast.error("Something went wrong while validating session.", {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeButton: false,
+      closeOnClick: false,
+      pauseOnHover: true,
+      style: {
+          color: '#0a192f',
+        }
+    });
     return false;
   }
 };
@@ -211,7 +281,17 @@ export const validateActiveWAFUser = async (data) => {
     }
   } catch (err) {
     console.error("Error checking session:", err);
-    toast.error("Something went wrong while validating session.");
+    toast.error("Something went wrong while validating session.", {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeButton: false,
+      closeOnClick: false,
+      pauseOnHover: true,
+      style: {
+          color: '#0a192f',
+        }
+    });
     return false;
   }
 };
@@ -228,7 +308,16 @@ export const ethixionapi = async (data) => {
     });
 
     const rs = await resp.json();
-    toast(rs.msg);
+    toast(rs.msg, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: false,
+      pauseOnHover: true,
+      style: {
+          color: '#0a192f',
+        }
+    });
   } catch (e) {
     console.error("Error ->", e);
   }
@@ -282,7 +371,16 @@ export const setEthixionRules = async (data) => {
       credentials: 'include',
     });
     const rs = await resp.json();
-    toast(rs.msg);
+    toast(rs.msg, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: false,
+      pauseOnHover: true,
+      style: {
+          color: '#0a192f',
+        }
+    });
     if (rs.status === "NoActiveUserError") {
       //alert(rs.msg);
       window.location = "/action";
@@ -576,3 +674,21 @@ export const getWAFDashboardData = async () => {
     throw new Error(resp.error || "Failed to fetch todays request count data.");
   }
 }
+
+export const getWAFSecurityTipOfDay = async () => {
+  const resp = await fetch(`${addr}/waf_security_tip_for_day`, { 
+    method: "GET",
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
+  });
+
+  const rs = await resp.json();
+
+  if (resp.ok && rs.status === "success" && rs.tipsData) {
+    return rs.tipsData;
+  } else {
+    throw new Error(rs.msg || "Failed to fetch security tip of the day.");
+  }
+};
