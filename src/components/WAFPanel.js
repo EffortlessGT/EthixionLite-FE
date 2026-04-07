@@ -16,7 +16,6 @@ import {
   Tooltip,
   ResponsiveContainer
 } from 'recharts';
-import { desc, s, title } from 'framer-motion/client';
 
 function WAFPanel() {
 
