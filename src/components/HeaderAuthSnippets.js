@@ -8,8 +8,8 @@ const HeaderAuthSnippets = () => {
   const [redirectUrl, setRedirectUrl] = useState("https://your-app.com/fallback");
   const [language, setLanguage] = useState("bash");
   const [snippet, setSnippet] = useState("");
-  const [bodies, setBodies] = useState("amount=100&currency=USD");
-  const [targetUrl, setTargetUrl] = useState("https://api.yourapp.com/charge");
+  const bodies = "amount=100&currency=USD";
+  const targetUrl = "https://api.yourapp.com/charge";
 
   const escapeShell = (s) => s.replace(/(["\\$`])/g, "\\$1");
   const escapeJS = (s) => s.replace(/\\/g, "\\\\").replace(/`/g, "\\`");

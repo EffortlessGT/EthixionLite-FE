@@ -1,21 +1,23 @@
 import React, { useEffect, useState } from 'react';
 
-function EthixionJS() {
-  const logs = [
-    "[✔] Application request captured",
-    "[✔] Header signature validated",
-    "[✔] Token authentication passed",
-    "[✔] Payload integrity confirmed",
-    "[✔] Rate-limiting check clear",
-    "[✔] Anomaly scan: CLEAN",
-    "[✔] Policy checks passed"
-  ];
+// ✅ move outside (stable reference)
+const logs = [
+  "[✔] Application request captured",
+  "[✔] Header signature validated",
+  "[✔] Token authentication passed",
+  "[✔] Payload integrity confirmed",
+  "[✔] Rate-limiting check clear",
+  "[✔] Anomaly scan: CLEAN",
+  "[✔] Policy checks passed"
+];
 
+function EthixionJS() {
   const [displayedLogs, setDisplayedLogs] = useState([]);
   const [verified, setVerified] = useState(false);
 
   useEffect(() => {
     let i = 0;
+
     const interval = setInterval(() => {
       if (i < logs.length) {
         setDisplayedLogs((prev) => [...prev, logs[i]]);
@@ -29,19 +31,11 @@ function EthixionJS() {
       setVerified(true);
     }, 10000);
 
-    // Optional redirect (commented out)
-    /*
-    const redirectTimeout = setTimeout(() => {
-      window.location.href = "/dashboard";
-    }, 13000);
-    */
-
     return () => {
       clearInterval(interval);
       clearTimeout(verifyTimeout);
-      // clearTimeout(redirectTimeout);
     };
-  }, []);
+  }, []); // ✅ no dependency needed
 
   return (
     <div>
@@ -64,6 +58,7 @@ function EthixionJS() {
           </div>
         ))}
       </div>
+
       {verified && (
         <div style={{
           marginTop: '20px',
@@ -74,6 +69,7 @@ function EthixionJS() {
           Request Verified. Redirecting...
         </div>
       )}
+
       <style>{`
         @keyframes fadeIn {
           to { opacity: 1; }
