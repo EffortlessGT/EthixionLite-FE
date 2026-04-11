@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import "../HeaderAuthSnippets.css";
 
 const HeaderAuthSnippets = () => {
   const [endpoint, setEndpoint] = useState("http://127.0.0.1:2400/ethix_gatekeeper");
   const [apiName, setApiName] = useState("EthicalPay");
   const [apiKey, setApiKey] = useState("ethixdssnsdvk0124840");
-  const [targetUrl, setTargeUrl] = useState("https://your-app.com/target");
   const [redirectUrl, setRedirectUrl] = useState("https://your-app.com/fallback");
-  const [bodies, SetBodies] = useState("Ganesh Telore is a developer.");
   const [language, setLanguage] = useState("bash");
   const [snippet, setSnippet] = useState("");
+  const [bodies, setBodies] = useState("amount=100&currency=USD");
+  const [targetUrl, setTargetUrl] = useState("https://api.yourapp.com/charge");
 
   const escapeShell = (s) => s.replace(/(["\\$`])/g, "\\$1");
   const escapeJS = (s) => s.replace(/\\/g, "\\\\").replace(/`/g, "\\`");
@@ -18,7 +18,7 @@ const HeaderAuthSnippets = () => {
   const escapeCSharp = (s) => s.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
   const escapePHP = (s) => s.replace(/"/g, '\\"');
 
-  const buildSnippets = () => {
+  const buildSnippets = useCallback(() => {
     const url = endpoint.trim();
     const name = apiName.trim();
     const key = apiKey.trim();
@@ -162,11 +162,11 @@ end
 
 puts "#{res.code} #{res.body}"`
     };
-  };
+}, [endpoint, apiName, apiKey, redirectUrl]);
 
   useEffect(() => {
-    setSnippet(buildSnippets()[language]);
-  }, [endpoint, apiName, apiKey, redirectUrl, language]);
+  setSnippet(buildSnippets()[language]);
+}, [buildSnippets, language]);
 
   const copyCode = () => {
     navigator.clipboard.writeText(snippet).then(() => {
