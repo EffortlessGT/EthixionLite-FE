@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import user_img from '../assets/img/user_img.png';
+//import user_img from '../assets/img/user_img.png';
 import { Link } from 'react-router-dom';
 import { getWAFDashboardData, getCurrentWAFUser, getWAFSecurityTipOfDay } from '../api';
 import FadeUpOnScroll from './FadeUpOnScroll';
