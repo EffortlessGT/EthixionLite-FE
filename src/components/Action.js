@@ -58,7 +58,7 @@ function Action() {
 
     try {
       const result = await loginForm(data);
-      if (result.status == "success") {
+      if (result.status === "success") {
         window.location.href = '/dashboard';
       }
     } catch (err) {
@@ -136,6 +136,22 @@ function Action() {
       const decoded = jwtDecode(credentialResponse.credential);
       const email = decoded.email;
       const response = await loginFormII({ email, googleLogin: true });
+      console.log("Google Login Response:", response);
+
+      if (response.status === "success") {
+        window.location.href = '/dashboard';
+      } else {
+        toast.error(response.message || "Google Sign-In Failed", {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          style: {
+            color: '#0a192f',
+          }
+        });
+      }
     } catch (err) {
       toast.error("This email is not registered. Please sign up first.", {
         position: "top-center",
