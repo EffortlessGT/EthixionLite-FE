@@ -138,7 +138,7 @@ function WAFPanel() {
           {/* Sidebar */}
           <div className={`dash-sidebar ${menuOpen ? 'show' : ''}`}>
             <div className='sidebar-userprofile'>
-              <img src={user_img} alt='user'/>
+              <img src='../assets/img/user_img.png' alt='user'/>
               <p>{userData ? userData.fullname : "Please Wait..."}</p>
             </div>
 
