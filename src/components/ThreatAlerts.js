@@ -17,7 +17,7 @@ function ThreatAlerts() {
         const result = await getCurrentUser();
         setUserData(result);
       } catch (error) {
-        console.error("Error fetching user data:", error);
+        console.error('Error fetching user data:', error);
       }
     };
 
@@ -32,16 +32,15 @@ function ThreatAlerts() {
           setLogs(res.logs);
           console.log(res);
         } else {
-          setError("No Threats Detected Today for your API.");
+          setError('No Threats Detected Today for your API.');
         }
       } catch (exc) {
-        console.error("Error -> ", exc);
-        setError("No Threats Detected Today for your API.");
+        console.error('Error -> ', exc);
+        setError('No Threats Detected Today for your API.');
       }
     };
     fetchThreats();
-  }, [])
-
+  }, []);
 
   let logsdata;
   if (error) {
@@ -51,7 +50,9 @@ function ThreatAlerts() {
       <>
         {logs.map((app, i) => (
           <div class="threat-alert-box" key={i}>
-            <h4>Threats Detected for API: <strong>{app.apiname}</strong></h4>
+            <h4>
+              Threats Detected for API: <strong>{app.apiname}</strong>
+            </h4>
             {app.threats.map((log, j) => (
               <div class="alert-log">
                 <div className="alert-entry" key={j}>
@@ -61,41 +62,59 @@ function ThreatAlerts() {
             ))}
           </div>
         ))}
-
       </>
     );
   }
   return (
     <FadeUpOnScroll>
-      <main className='dashboard'>
+      <main className="dashboard">
         <div className="hamburger-icon" onClick={() => setMenuOpen(!menuOpen)}>
           {menuOpen ? <FiX size={30} /> : <FiMenu size={30} />}
         </div>
 
-        <div className={`dashboard-container ${menuOpen ? 'sidebar-open' : ''}`}>
+        <div
+          className={`dashboard-container ${menuOpen ? 'sidebar-open' : ''}`}
+        >
           <div className={`dash-sidebar ${menuOpen ? 'show' : ''}`}>
-            <div className='sidebar-userprofile'>
-              <img src={user_img} alt='User' />
-              <p>{userData ? userData.fullname : "Loading..."}</p>
+            <div className="sidebar-userprofile">
+              <img src={user_img} alt="User" />
+              <p>{userData ? userData.fullname : 'Loading...'}</p>
             </div>
-            <div className='sidebar-navigations' onClick={() => setMenuOpen(false)}>
-              <Link to="/firewall_rules"><h3>Firewall Rules</h3></Link>
-              <Link to="/threat_alerts"><h3>Threat Alerts</h3></Link>
-              <Link to="/traffic_insights"><h3>Traffic Monitor</h3></Link>
-              <Link to="/reportlogs"><h3>Report & Logs</h3></Link>
-              <Link to="/api"><h3>API</h3></Link>
-              <Link to="/api_settings"><h3>Settings</h3></Link>
-              <Link to="/"><h3>Home</h3></Link>
+            <div
+              className="sidebar-navigations"
+              onClick={() => setMenuOpen(false)}
+            >
+              <Link to="/firewall_rules">
+                <h3>Firewall Rules</h3>
+              </Link>
+              <Link to="/threat_alerts">
+                <h3>Threat Alerts</h3>
+              </Link>
+              <Link to="/traffic_insights">
+                <h3>Traffic Monitor</h3>
+              </Link>
+              <Link to="/reportlogs">
+                <h3>Report & Logs</h3>
+              </Link>
+              <Link to="/api">
+                <h3>API</h3>
+              </Link>
+              <Link to="/api_settings">
+                <h3>Settings</h3>
+              </Link>
+              <Link to="/">
+                <h3>Home</h3>
+              </Link>
             </div>
           </div>
 
           <div className="dash-dataContainer">
             <h2 id="logs-heading">Threat Logs</h2>
-            <p>You can view today's threat logs for your generated API requests along with detected threat details here.</p>
-            <div class="threat-alert-box">
-              {logsdata}
-            </div>
-
+            <p>
+              You can view today's threat logs for your generated API requests
+              along with detected threat details here.
+            </p>
+            <div class="threat-alert-box">{logsdata}</div>
           </div>
         </div>
       </main>

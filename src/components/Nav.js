@@ -13,19 +13,47 @@ function Nav() {
       <div className="navbar">
         {/* Logo (kept as toggle for hamburger effect if you want) */}
         <div className="logo" onClick={toggleMenu}>
-          <img src={fevicon} alt="Ethixion" /> Ethi<span>xion</span>&nbsp;Lite
+          <img src={fevicon} alt="Ethixion" /> Ethi<span>xion</span>&nbsp;
         </div>
 
         {/* Sidebar menu */}
         <div className={`menus ${menuOpen ? 'show' : ''}`} id="nav-menu">
           <ul>
-            <li><Link to="/" onClick={closeMenu}>Home</Link></li>
-            <li><Link to="/action" onClick={closeMenu}>Login</Link></li>
-            <li><Link to="/dashboard" onClick={closeMenu}>Dashboard</Link></li>
-            <li><Link to="/waf_dashboard" onClick={closeMenu}>WAF Dashboard</Link></li>
-            <li><Link to="/SDK" onClick={closeMenu}>SDK</Link></li>
-            <li><Link to="/documentation" onClick={closeMenu}>Documentation</Link></li>
-            <li><Link to="/about" onClick={closeMenu}>About us</Link></li>
+            <li>
+              <Link to="/" onClick={closeMenu}>
+                Home
+              </Link>
+            </li>
+            <li>
+              <Link to="/action" onClick={closeMenu}>
+                Login
+              </Link>
+            </li>
+            <li>
+              <Link to="/dashboard" onClick={closeMenu}>
+                Dashboard
+              </Link>
+            </li>
+            <li>
+              <Link to="/waf_dashboard" onClick={closeMenu}>
+                WAF Dashboard
+              </Link>
+            </li>
+            <li>
+              <Link to="/SDK" onClick={closeMenu}>
+                SDK
+              </Link>
+            </li>
+            <li>
+              <Link to="/documentation" onClick={closeMenu}>
+                Documentation
+              </Link>
+            </li>
+            <li>
+              <Link to="/about" onClick={closeMenu}>
+                About us
+              </Link>
+            </li>
           </ul>
         </div>
       </div>

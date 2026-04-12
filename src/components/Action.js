@@ -24,11 +24,12 @@ function Action() {
     const data = { username, password };
 
     const emailPatt = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    const strongPwdPatt = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/;
+    const strongPwdPatt =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/;
 
     if (!emailPatt.test(data.username)) {
-      toast.error("Please enter a valid email address.", {
-        position: "top-center",
+      toast.error('Please enter a valid email address.', {
+        position: 'top-center',
         autoClose: 5000,
         hideProgressBar: false,
         closeOnClick: false,
@@ -36,33 +37,38 @@ function Action() {
         pauseOnHover: true,
         style: {
           color: '#0a192f',
-        }
+        },
       });
       return;
     }
 
     if (!strongPwdPatt.test(data.password)) {
-      toast.error("Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.", {
-        position: "top-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        closeButton: false,
-        pauseOnHover: true,
-        style: {
-          color: '#0a192f',
+      toast.error(
+        'Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.',
+        {
+          position: 'top-center',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          closeButton: false,
+          pauseOnHover: true,
+          style: {
+            color: '#0a192f',
+          },
         }
-      });
+      );
       return;
     }
 
     try {
       const result = await loginForm(data);
-      if (result.status === "success") {
+      if (result.status === 'success') {
         window.location.href = '/dashboard';
       }
     } catch (err) {
-      <EthixionAlert msg={"Unable to reach to server. Please try again later."} />
+      <EthixionAlert
+        msg={'Unable to reach to server. Please try again later.'}
+      />;
     }
   };
 
@@ -73,43 +79,60 @@ function Action() {
 
     const fullnamePatt = /^[A-Za-z]+(?: [A-Za-z]+)*$/;
     const emailPatt = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    const strongPwdPatt = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/;
+    const strongPwdPatt =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/;
 
     if (!fullnamePatt.test(data.fullname)) {
-      toast.error('Only characters allowed in full name.');
-      return;
-    }
-
-    if (!emailPatt.test(data.email)) {
-      toast.error("Please enter a valid email address.", {
-        position: "top-center",
+      toast.error('Only characters allowed in full name.', {
+        position: 'top-center',
         autoClose: 5000,
         hideProgressBar: false,
         closeButton: false,
         closeOnClick: false,
         pauseOnHover: true,
+        style: {
+          color: '#0a192f',
+        },
+      });
+      return;
+    }
+
+    if (!emailPatt.test(data.email)) {
+      toast.error('Please enter a valid email address.', {
+        position: 'top-center',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeButton: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        style: {
+          color: '#0a192f',
+        },
       });
       return;
     }
 
     if (!strongPwdPatt.test(data.mypwd)) {
-      toast.error("Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.", {
-        position: "top-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeButton: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        style: {
-          color: '#0a192f',
+      toast.error(
+        'Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.',
+        {
+          position: 'top-center',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeButton: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          style: {
+            color: '#0a192f',
+          },
         }
-      });
+      );
       return;
     }
 
     if (data.mypwd !== data.mypwdII) {
       toast.error('Both passwords do not match.', {
-        position: "top-center",
+        position: 'top-center',
         autoClose: 5000,
         hideProgressBar: false,
         closeButton: false,
@@ -117,17 +140,17 @@ function Action() {
         pauseOnHover: true,
         style: {
           color: '#0a192f',
-        }
+        },
       });
       return;
     }
 
     try {
       const rs = await registrationForm(data);
-      setAlertMsg(rs.msg || "Unexpected response from server.");
+      setAlertMsg(rs.msg || 'Unexpected response from server.');
     } catch (err) {
-      console.error("Registration error:", err);
-      setAlertMsg("Unable to reach server. Please try again later.");
+      console.error('Registration error:', err);
+      setAlertMsg('Unable to reach server. Please try again later.');
     }
   };
 
@@ -136,37 +159,37 @@ function Action() {
       const decoded = jwtDecode(credentialResponse.credential);
       const email = decoded.email;
       const response = await loginFormII({ email, googleLogin: true });
-      console.log("Google Login Response:", response);
+      console.log('Google Login Response:', response);
 
-      if (response.status === "success") {
+      if (response.status === 'success') {
         window.location.href = '/dashboard';
       } else {
-        toast.error(response.message || "Google Sign-In Failed", {
-          position: "top-center",
+        toast.error(response.message || 'Google Sign-In Failed', {
+          position: 'top-center',
           autoClose: 5000,
           hideProgressBar: false,
           closeOnClick: false,
           pauseOnHover: true,
           style: {
             color: '#0a192f',
-          }
+          },
         });
       }
     } catch (err) {
-      toast.error("This email is not registered. Please sign up first.", {
-        position: "top-center",
+      toast.error('This email is not registered. Please sign up first.', {
+        position: 'top-center',
         autoClose: 5000,
         hideProgressBar: false,
         closeButton: false,
         closeOnClick: false,
-        pauseOnHover: true,       style: {
+        pauseOnHover: true,
+        style: {
           color: '#0a192f',
-        }
+        },
       });
-      console.log("Google Sign-In error:", err);
+      console.log('Google Sign-In error:', err);
     }
   };
-
 
   return (
     <FadeUpOnScroll delay={0.3}>
@@ -201,16 +224,18 @@ function Action() {
             <div className="horizontal-rule"></div>
             <GoogleLogin
               onSuccess={handleGoogleLogin}
-              onError={() => toast.error("Google Sign-In Failed", {
-                position: "top-center",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: false,
-                pauseOnHover: true,
-                style: {
-                  color: '#0a192f',
-                }
-              })}
+              onError={() =>
+                toast.error('Google Sign-In Failed', {
+                  position: 'top-center',
+                  autoClose: 5000,
+                  hideProgressBar: false,
+                  closeOnClick: false,
+                  pauseOnHover: true,
+                  style: {
+                    color: '#0a192f',
+                  },
+                })
+              }
             />
           </form>
         </div>
@@ -248,7 +273,8 @@ function Action() {
               onChange={(e) => setPasswordII(e.target.value)}
             />
             <div className="tccontainer">
-              <input type="checkbox" required /> I Accept Ethixion Terms & Conditions.
+              <input type="checkbox" required /> I Accept Ethixion Terms &
+              Conditions.
             </div>
             <button type="submit">Register</button>
             <p onClick={handleFlip}>Already have an account? Sign In</p>

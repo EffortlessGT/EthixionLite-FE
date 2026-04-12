@@ -47,21 +47,21 @@ Ethixion Lite ensures that no internal API or service endpoint is directly expos
 
 ## Architecture Overview
 
-| Layer | Role |
-|------|------|
-| API Authentication | Ensures only registered clients send requests |
-| Threat Detection | Blocks harmful payloads before they reach backend |
-| Forwarding Layer | Routes valid traffic to protected servers |
+| Layer              | Role                                              |
+| ------------------ | ------------------------------------------------- |
+| API Authentication | Ensures only registered clients send requests     |
+| Threat Detection   | Blocks harmful payloads before they reach backend |
+| Forwarding Layer   | Routes valid traffic to protected servers         |
 
 ---
 
 ## Tech Stack
 
-| Component | Technology |
-|----------|------------|
-| Language | Rust |
-| Framework | Rocket |
-| Database | PostgreSQL |
+| Component         | Technology                       |
+| ----------------- | -------------------------------- |
+| Language          | Rust                             |
+| Framework         | Rocket                           |
+| Database          | PostgreSQL                       |
 | Deployment Target | Linux / Docker / VM environments |
 
 Rust ensures memory safety, speed, and high concurrency—making Ethixion Lite secure and efficient.
@@ -79,13 +79,13 @@ Rust ensures memory safety, speed, and high concurrency—making Ethixion Lite s
 
 ## Roadmap
 
-| Feature | Status |
-|--------|--------|
-| Dashboard for app/key management | In Progress |
-| Rate Limiting | Planned |
-| Event Logging and Monitoring | Planned |
-| Threat Signature Database | Planned |
-| Upgrade Path to Reverse Proxy WAF (Ethixion Pro) | Upcoming |
+| Feature                                          | Status      |
+| ------------------------------------------------ | ----------- |
+| Dashboard for app/key management                 | In Progress |
+| Rate Limiting                                    | Planned     |
+| Event Logging and Monitoring                     | Planned     |
+| Threat Signature Database                        | Planned     |
+| Upgrade Path to Reverse Proxy WAF (Ethixion Pro) | Upcoming    |
 
 ---
 

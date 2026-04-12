@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 
 // ✅ move outside (stable reference)
 const logs = [
-  "[✔] Application request captured",
-  "[✔] Header signature validated",
-  "[✔] Token authentication passed",
-  "[✔] Payload integrity confirmed",
-  "[✔] Rate-limiting check clear",
-  "[✔] Anomaly scan: CLEAN",
-  "[✔] Policy checks passed"
+  '[✔] Application request captured',
+  '[✔] Header signature validated',
+  '[✔] Token authentication passed',
+  '[✔] Payload integrity confirmed',
+  '[✔] Rate-limiting check clear',
+  '[✔] Anomaly scan: CLEAN',
+  '[✔] Policy checks passed',
 ];
 
 function EthixionJS() {
@@ -39,33 +39,41 @@ function EthixionJS() {
 
   return (
     <div>
-      <div id="logBox" style={{ 
-        fontSize: '0.9em', 
-        maxHeight: '160px', 
-        overflowY: 'auto', 
-        border: '1px solid #ccc', 
-        borderRadius: '10px', 
-        padding: '15px', 
-        backgroundColor: '#fff' 
-      }}>
+      <div
+        id="logBox"
+        style={{
+          fontSize: '0.9em',
+          maxHeight: '160px',
+          overflowY: 'auto',
+          border: '1px solid #ccc',
+          borderRadius: '10px',
+          padding: '15px',
+          backgroundColor: '#fff',
+        }}
+      >
         {displayedLogs.map((log, index) => (
-          <div key={index} style={{ 
-            opacity: 1, 
-            padding: '4px 0', 
-            animation: 'fadeIn 0.6s ease forwards' 
-          }}>
+          <div
+            key={index}
+            style={{
+              opacity: 1,
+              padding: '4px 0',
+              animation: 'fadeIn 0.6s ease forwards',
+            }}
+          >
             {log}
           </div>
         ))}
       </div>
 
       {verified && (
-        <div style={{
-          marginTop: '20px',
-          fontSize: '1.3em',
-          color: '#2e7d32',
-          animation: 'bounce 1s ease infinite alternate'
-        }}>
+        <div
+          style={{
+            marginTop: '20px',
+            fontSize: '1.3em',
+            color: '#2e7d32',
+            animation: 'bounce 1s ease infinite alternate',
+          }}
+        >
           Request Verified. Redirecting...
         </div>
       )}

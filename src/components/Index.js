@@ -10,19 +10,37 @@ function Index() {
         <div className="hero">
           <div className="main-container">
             <div className="desc-container">
-              <h1>Ethix<span>ion</span> Lite - Silent Walls, Loud Prtection!</h1>
+              <h1>
+                Ethix<span>ion</span> - Silent Walls, Loud Prtection!
+              </h1>
               <p>
-                Ethixion is a next-generation firewall solution designed to safeguard networks with
-                precision, transparency, and ethical control. It empowers administrators to monitor,
-                filter, and defend digital infrastructures against evolving threats—without compromising
-                on integrity or user trust. Built with cutting-edge technology, Ethixion adapts in real
-                time to emerging cyber threats, ensuring maximum uptime and resilience. Its intuitive
-                interface allows seamless management, even in complex environments, giving teams full
-                visibility and command. Unlike traditional firewalls, Ethixion prioritizes user privacy
-                while enforcing strong security policies.
-                This is the first prototype of WAF not fully developed yet, but soon will be live.
+                Ethixion is a unified security solution that combines a Web
+                Application Firewall (WAF), reverse proxy, and API Access
+                Security Layer to protect modern web applications and backend
+                services from unauthorized access and malicious traffic. Acting
+                as a centralized gateway, Ethixion ensures that every incoming
+                request is securely routed, authenticated, and inspected before
+                reaching the origin server. By integrating reverse proxy
+                capabilities, it manages traffic flow efficiently while
+                isolating backend systems from direct exposure, significantly
+                reducing the attack surface. The API Access Security Layer
+                enforces strict authentication and validation mechanisms,
+                ensuring that only authorized clients can interact with
+                protected services. In parallel, the WAF component applies
+                intelligent filtering and pattern-based detection to mitigate
+                common web threats and abnormal request behavior. Designed with
+                performance and scalability in mind, Ethixion operates in
+                real-time, providing reliable protection without impacting
+                application responsiveness. Its modular architecture allows
+                seamless integration into existing infrastructures while
+                enabling future expansion into advanced security capabilities.
+                This version represents a fully functional and extensible
+                foundation, combining traffic control, access management, and
+                application-layer protection into a single cohesive system.
               </p>
-              <Link to="/action"><button>Start for free</button></Link>
+              <Link to="/action">
+                <button>Start for free</button>
+              </Link>
             </div>
             <div className="ethixion-firewall-animation">
               <div className="glow-ring"></div>
@@ -40,7 +58,10 @@ function Index() {
             <div className="features">
               <div className="featured-box">
                 <h3>High Performance</h3>
-                <p>Built with Rust, ensuring low-latency and efficient network packet filtering.</p>
+                <p>
+                  Built with Rust, ensuring low-latency and efficient network
+                  packet filtering.
+                </p>
               </div>
               <div className="featured-box">
                 <h3>Customizable Rules</h3>
@@ -64,25 +85,32 @@ function Index() {
               </div>
             </div>
           </div>
-        </FadeUpOnScroll><div className="timeline-container">
+        </FadeUpOnScroll>
+        <div className="timeline-container">
           <h2>How It Works</h2>
           <div className="timeline">
             <div className="timeline-item">
-              <div className="timeline-icon"><i className="fas fa-shield-alt"></i></div>
+              <div className="timeline-icon">
+                <i className="fas fa-shield-alt"></i>
+              </div>
               <div className="timeline-content">
                 <h3>Intercept</h3>
                 <p>All traffic passes through Ethixion WAF.</p>
               </div>
             </div>
             <div className="timeline-item">
-              <div className="timeline-icon"><i className="fas fa-search"></i></div>
+              <div className="timeline-icon">
+                <i className="fas fa-search"></i>
+              </div>
               <div className="timeline-content">
                 <h3>Analyze</h3>
                 <p>Packets are analyzed in real-time with AI + Rules.</p>
               </div>
             </div>
             <div className="timeline-item">
-              <div className="timeline-icon"><i className="fas fa-bolt"></i></div>
+              <div className="timeline-icon">
+                <i className="fas fa-bolt"></i>
+              </div>
               <div className="timeline-content">
                 <h3>Act</h3>
                 <p>Threats are blocked, logs generated, and admins alerted.</p>
@@ -92,21 +120,40 @@ function Index() {
         </div>
         <FadeUpOnScroll>
           <div className="why-ethixion-ul">
-            <h2>Why <span>Ethixion</span> Lite?</h2>
+            <h2>
+              Why <span>Ethixion</span> Lite?
+            </h2>
             <ul>
-              <li><i className="fas fa-bolt"></i> Blazing-fast performance powered by Rust, ensuring minimal latency and maximum security.</li>
-              <li><i className="fas fa-brain"></i> Intelligent threat filtering that adapts to evolving attack patterns.</li>
-              <li><i className="fas fa-satellite-dish"></i> Real-time alerts that notify you instantly of suspicious activity.</li>
-              <li><i className="fas fa-globe-asia"></i> Geo-fencing support to restrict access from specific regions or countries.</li>
-              <li><i className="fas fa-chart-line"></i> Live analytics dashboard to monitor threat trends and system health.</li>
-              <li><i className="fas fa-sliders-h"></i> Fully customizable rule engine tailored to your app's security needs.</li>
+              <li>
+                <i className="fas fa-bolt"></i> Blazing-fast performance powered
+                by Rust, ensuring minimal latency and maximum security.
+              </li>
+              <li>
+                <i className="fas fa-brain"></i> Intelligent threat filtering
+                that adapts to evolving attack patterns.
+              </li>
+              <li>
+                <i className="fas fa-satellite-dish"></i> Real-time alerts that
+                notify you instantly of suspicious activity.
+              </li>
+              <li>
+                <i className="fas fa-globe-asia"></i> Geo-fencing support to
+                restrict access from specific regions or countries.
+              </li>
+              <li>
+                <i className="fas fa-chart-line"></i> Live analytics dashboard
+                to monitor threat trends and system health.
+              </li>
+              <li>
+                <i className="fas fa-sliders-h"></i> Fully customizable rule
+                engine tailored to your app's security needs.
+              </li>
             </ul>
           </div>
         </FadeUpOnScroll>
       </main>
       <Footer />
     </FadeUpOnScroll>
-
   );
 }
 

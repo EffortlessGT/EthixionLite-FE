@@ -2,7 +2,11 @@ import './App.css';
 import Nav from './components/Nav';
 import { useEffect, useRef, useState } from 'react';
 import Index from './components/Index';
-import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Navigate,
+} from 'react-router-dom';
 import Action from './components/Action';
 import Panel from './components/Panel';
 import APIPage from './components/APIPage';
@@ -18,7 +22,8 @@ import WAFPanel from './components/WAFPanel';
 import WAFAPIPage from './components/WAFAPIPage';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import 'react-loading-skeleton/dist/skeleton.css';
+import { LoadingProvider } from './LoadingContext';
 
 function RouteSecurityHandler({ children }) {
   const [isValidated, setIsValidated] = useState(null);
@@ -30,12 +35,12 @@ function RouteSecurityHandler({ children }) {
         const isValid = await validateActiveUser();
         setIsValidated(isValid);
         if (!isValid && !alertedRef.current) {
-          toast.error("No active user found! Kindly login...");
+          toast.error('No active user found! Kindly login...');
           alertedRef.current = true;
         }
       } catch (err) {
-        console.error("Validation error:", err);
-        toast.error("Unable to validate session. Please log in.");
+        console.error('Validation error:', err);
+        toast.error('Unable to validate session. Please log in.');
         setIsValidated(false);
       }
     };
@@ -64,12 +69,12 @@ function WAFRoutesSecurityHandler({ children }) {
         const isValid = await validateActiveWAFUser();
         setIsValidated(isValid);
         if (!isValid && !alertedRef.current) {
-          toast.error("No active user found! Kindly login...");
+          toast.error('No active user found! Kindly login...');
           alertedRef.current = true;
         }
       } catch (err) {
-        console.error("Validation error:", err);
-        toast.error("Unable to validate session. Please log in.");
+        console.error('Validation error:', err);
+        toast.error('Unable to validate session. Please log in.');
         setIsValidated(false);
       }
     };
@@ -90,17 +95,16 @@ function WAFRoutesSecurityHandler({ children }) {
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: (
       <>
-
         <Nav />
         <Index />
       </>
     ),
   },
   {
-    path: "/action",
+    path: '/action',
     element: (
       <>
         <Nav />
@@ -109,7 +113,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/dashboard",
+    path: '/dashboard',
     element: (
       <RouteSecurityHandler>
         <Panel />
@@ -117,7 +121,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/waf_dashboard",
+    path: '/waf_dashboard',
     element: (
       <WAFRoutesSecurityHandler>
         <WAFPanel />
@@ -125,7 +129,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/api",
+    path: '/api',
     element: (
       <RouteSecurityHandler>
         <Nav />
@@ -134,93 +138,86 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/waf_api",
+    path: '/waf_api',
     element: (
       <WAFRoutesSecurityHandler>
-        <Nav/>
-        <WAFAPIPage/>
+        <Nav />
+        <WAFAPIPage />
       </WAFRoutesSecurityHandler>
-    )
+    ),
   },
   {
-    path: "/firewall_rules",
+    path: '/firewall_rules',
     element: (
       <RouteSecurityHandler>
         <EthixionRules />
       </RouteSecurityHandler>
-    )
+    ),
   },
   {
-    path: "/threat_alerts",
+    path: '/threat_alerts',
     element: (
       <RouteSecurityHandler>
         <ThreatAlerts />
       </RouteSecurityHandler>
-    )
+    ),
   },
   {
-    path: "/reportlogs",
+    path: '/reportlogs',
     element: (
       <RouteSecurityHandler>
         <ReportLogs />
       </RouteSecurityHandler>
-    )
+    ),
   },
   {
-    path: "/documentation",
-    element: (
-      <RevealDocumentation />
-    )
+    path: '/documentation',
+    element: <RevealDocumentation />,
   },
   {
-    path: "/SDK",
-    element: (
-      <DownloadEthixionSDK />
-    )
+    path: '/SDK',
+    element: <DownloadEthixionSDK />,
   },
   {
-    path: "/traffic_insights",
-    element: (
-      <TrafficMonitorPage />
-    )
+    path: '/traffic_insights',
+    element: <TrafficMonitorPage />,
   },
   {
-    path: "/trends_status",
-    element: (
-      <TrafficMonitorPage />
-    )
+    path: '/trends_status',
+    element: <TrafficMonitorPage />,
   },
   {
-    path: "/api_settings",
-    element: (
-      <APISettings />
-    )
+    path: '/api_settings',
+    element: <APISettings />,
   },
   {
-    path: "/about",
+    path: '/about',
     element: (
       <>
         <Nav />
         <AboutEthixion />
       </>
-    )
-  }, {
-    path: "/verify_user",
+    ),
+  },
+  {
+    path: '/verify_user',
     element: (
       <>
         <Nav />
         <VerifyAccount />
       </>
-    )
-  }
+    ),
+  },
 ]);
 
 function App() {
   return (
-    <div className="App">
-      <RouterProvider router={router} />
-      <ToastContainer />
-    </div>
+    <LoadingProvider>
+      <div className="App">
+        <RouterProvider router={router} />
+        <ToastContainer />
+      </div>
+    </LoadingProvider>
   );
 }
 
@@ -228,7 +225,7 @@ function RevealDocumentation() {
   useEffect(() => {
     window.open('/documentation/Ethixion_WAF_Documentation.pdf', '_self');
   }, []);
-  return <Navigate to="/" replace />
+  return <Navigate to="/" replace />;
 }
 
 function DownloadEthixionSDK() {

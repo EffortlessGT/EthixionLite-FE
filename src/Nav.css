@@ -1,100 +1,100 @@
 /* Navbar */
 .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 20px;
-    background: #333;
-    color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  background: #333;
+  color: #fff;
 }
 
 /* Logo */
 .nav-logo {
-    font-size: 20px;
-    font-weight: bold;
+  font-size: 20px;
+  font-weight: bold;
 }
 
 /* Desktop links */
 .nav-links {
-    display: flex;
-    gap: 20px;
-    list-style: none;
+  display: flex;
+  gap: 20px;
+  list-style: none;
 }
 
 .nav-links li {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .nav-links li:hover {
-    color: #f39c12;
+  color: #f39c12;
 }
 
 /* Hamburger */
 .hamburger {
-    display: none;
-    flex-direction: column;
-    gap: 5px;
-    cursor: pointer;
-    z-index: 1100;
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  z-index: 1100;
 }
 
 .hamburger span {
-    width: 25px;
-    height: 3px;
-    background: #fff;
-    border-radius: 2px;
+  width: 25px;
+  height: 3px;
+  background: #fff;
+  border-radius: 2px;
 }
 
 /* Sidebar */
 .side-menu {
-    position: fixed;
-    top: 0;
-    right: -250px;
-    /* hidden off-screen */
-    width: 250px;
-    height: 100%;
-    background: #444;
-    padding-top: 60px;
-    transition: right 0.3s ease-in-out;
-    z-index: 1000;
+  position: fixed;
+  top: 0;
+  right: -250px;
+  /* hidden off-screen */
+  width: 250px;
+  height: 100%;
+  background: #444;
+  padding-top: 60px;
+  transition: right 0.3s ease-in-out;
+  z-index: 1000;
 }
 
 .side-menu ul {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    padding-left: 20px;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-left: 20px;
 }
 
 .side-menu li {
-    color: #fff;
-    cursor: pointer;
+  color: #fff;
+  cursor: pointer;
 }
 
 .side-menu li:hover {
-    color: #f39c12;
+  color: #f39c12;
 }
 
 /* Sidebar open */
 .side-menu.open {
-    right: 0;
+  right: 0;
 }
 
 /* Mobile only */
 @media (max-width: 768px) {
-    .nav-links {
-        display: none;
-    }
+  .nav-links {
+    display: none;
+  }
 
-    .hamburger {
-        display: flex;
-    }
+  .hamburger {
+    display: flex;
+  }
 }
 
 /* Desktop: completely disable sidebar */
 @media (min-width: 769px) {
-    .side-menu {
-        display: none;
-    }
+  .side-menu {
+    display: none;
+  }
 }
