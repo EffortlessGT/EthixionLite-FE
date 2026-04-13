@@ -26,17 +26,7 @@ function Index() {
                 reducing the attack surface. The API Access Security Layer
                 enforces strict authentication and validation mechanisms,
                 ensuring that only authorized clients can interact with
-                protected services. In parallel, the WAF component applies
-                intelligent filtering and pattern-based detection to mitigate
-                common web threats and abnormal request behavior. Designed with
-                performance and scalability in mind, Ethixion operates in
-                real-time, providing reliable protection without impacting
-                application responsiveness. Its modular architecture allows
-                seamless integration into existing infrastructures while
-                enabling future expansion into advanced security capabilities.
-                This version represents a fully functional and extensible
-                foundation, combining traffic control, access management, and
-                application-layer protection into a single cohesive system.
+                protected services. 
               </p>
               <Link to="/action">
                 <button>Start for free</button>

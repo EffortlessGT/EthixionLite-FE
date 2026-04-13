@@ -1143,7 +1143,7 @@ input:-webkit-autofill {
 
 .api-IdeaContainer {
   width: 90%;
-  margin: 10px 5%;
+  margin: 10% 5%;
   display: flex;
   flex-wrap: wrap;
   gap: 40px;
@@ -2777,7 +2777,7 @@ textarea::placeholder {
 
   .main-container {
     width: 90%;
-    margin: 10px auto;
+    margin: 70px auto;
     flex-direction: column-reverse;
   }
 
