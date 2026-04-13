@@ -80,9 +80,7 @@ function Action() {
   return (
     <FadeUpOnScroll delay={0.3}>
       <div className="action-container">
-        {alertMsg && (
-          toast.info(alertMsg)
-        )}
+        {alertMsg && toast.info(alertMsg)}
 
         {/* Sign In */}
         <div className={`signin ${isFlipped ? 'hide' : 'show'}`}>
@@ -107,10 +105,14 @@ function Action() {
 
             <p onClick={handleFlip}>Don't have an account? Sign Up</p>
 
-            <GoogleLogin
-              onSuccess={handleGoogleLogin}
-              onError={() => toast.error('Google Sign-In Failed')}
-            />
+            <div className="google-login-wrapper">
+              <GoogleLogin
+                onSuccess={handleGoogleLogin}
+                onError={() =>
+                  toast.error('Google Sign-In Failed, try again later.')
+                }
+              />
+            </div>
           </form>
         </div>
 

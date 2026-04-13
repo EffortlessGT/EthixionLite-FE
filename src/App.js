@@ -20,6 +20,7 @@ import APISettings from './components/APISettings';
 import VerifyAccount from './components/VerifyAccount';
 import WAFPanel from './components/WAFPanel';
 import WAFAPIPage from './components/WAFAPIPage';
+import NetworkListener from './NetworkListener';
 
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-loading-skeleton/dist/skeleton.css';
@@ -213,6 +214,7 @@ const router = createBrowserRouter([
 function App() {
   return (
     <div className="App">
+      <NetworkListener />
       <RouterProvider router={router} />
       <Toaster position="top-center" />
     </div>
