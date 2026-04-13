@@ -3,7 +3,7 @@ import api_img from '../assets/img/api_img.png';
 import Footer from './Footer';
 import { apiForm } from '../api';
 import FadeUpOnScroll from './FadeUpOnScroll';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 
 function APIPage() {
   const [apiname, setApiname] = useState('');

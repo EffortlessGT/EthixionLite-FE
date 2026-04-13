@@ -15,7 +15,7 @@ import { FiMenu, FiX } from 'react-icons/fi';
 import PopupNotificationWrapper from './PopUpNotificationWrapper';
 import EthixionAlert from './EthixionAlert';
 import HeaderAuthSnippets from './HeaderAuthSnippets';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 
 function APISettings() {
   const [userData, setUserData] = useState(null);
@@ -76,9 +76,7 @@ function APISettings() {
         window.location.reload();
       }
     } catch (Err) {
-      <EthixionAlert
-        msg={'Something went wrong with server please try again later'}
-      />;
+      toast.error('Something went wrong with server please try again later');
     }
   };
 
@@ -90,9 +88,7 @@ function APISettings() {
         window.location.reload();
       }
     } catch (Err) {
-      <EthixionAlert
-        msg={'Something went wrong with server please try again later'}
-      />;
+      toast.error('Something went wrong with server please try again later');
     }
   };
 
@@ -104,9 +100,7 @@ function APISettings() {
         window.location.reload();
       }
     } catch (Err) {
-      <EthixionAlert
-        msg={'Something went wrong with server please try again later'}
-      />;
+      toast.error('Something went wrong with server please try again later');
     }
   };
 
@@ -120,9 +114,7 @@ function APISettings() {
       }
     } catch (Err) {
       setRegStatus(false);
-      <EthixionAlert
-        msg={'Something went wrong with server please try again later'}
-      />;
+      toast.error('Something went wrong with server please try again later');
     }
   };
 
