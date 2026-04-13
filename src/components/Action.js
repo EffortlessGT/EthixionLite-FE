@@ -3,7 +3,6 @@ import { loginForm, registrationForm, loginFormII } from '../api';
 import FadeUpOnScroll from './FadeUpOnScroll';
 import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
-import EthixionAlert from './EthixionAlert';
 import { toast } from 'sonner';
 
 function Action() {
@@ -15,7 +14,7 @@ function Action() {
   const [email, setEmail] = useState('');
   const [mypwd, setMyPassword] = useState('');
   const [mypwdII, setPasswordII] = useState('');
-  const [alertMsg, setAlertMsg] = useState(null);
+  const alertMsg = null;
 
   const handleFlip = () => setIsFlipped(!isFlipped);
 
@@ -82,7 +81,7 @@ function Action() {
     <FadeUpOnScroll delay={0.3}>
       <div className="action-container">
         {alertMsg && (
-          <EthixionAlert msg={alertMsg} onClose={() => setAlertMsg(null)} />
+          toast.info(alertMsg)
         )}
 
         {/* Sign In */}

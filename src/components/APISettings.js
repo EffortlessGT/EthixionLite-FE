@@ -13,7 +13,6 @@ import {
 import FadeUpOnScroll from './FadeUpOnScroll';
 import { FiMenu, FiX } from 'react-icons/fi';
 import PopupNotificationWrapper from './PopUpNotificationWrapper';
-import EthixionAlert from './EthixionAlert';
 import HeaderAuthSnippets from './HeaderAuthSnippets';
 import { toast } from 'sonner';
 
