@@ -1,4 +1,4 @@
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 
 const addr = 'http://127.0.0.1:8000';
 export const loginForm = async (data) => {
@@ -17,21 +17,11 @@ export const loginForm = async (data) => {
     //alert('Valid Credentials.');
     window.location = '/dashboard';
   } else {
-    toast.error('Invalid Username or Password!', {
-      position: 'top-center',
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeButton: false,
-      closeOnClick: false,
-      pauseOnHover: true,
-      style: {
-        color: '#0a192f',
-      },
-    });
+    toast.error('Invalid Username or Password!');
   }
 
   if (!resp.ok) {
-    throw new Error('Network response was not ok');
+    toast.error('Network response was not ok');
   }
 
   return rs;
@@ -51,17 +41,7 @@ export const loginFormII = async (data) => {
   if (resp.ok && rs.status) {
     window.location = '/dashboard';
   } else {
-    toast.error('No user found, Kindly register yourself first!', {
-      position: 'top-center',
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeButton: false,
-      closeOnClick: false,
-      pauseOnHover: true,
-      style: {
-        color: '#0a192f',
-      },
-    });
+    toast.error('No user found, Kindly register yourself first!');
   }
 
   if (!resp.ok) {
@@ -85,7 +65,7 @@ export const registrationForm = async (data) => {
     return res;
   }
   if (!resp.ok) {
-    throw new Error('Network response was not ok');
+    toast.error('Network response was not ok');
   }
 
   return await resp.text();
@@ -106,7 +86,7 @@ export const VerifyUserAccount = async (token) => {
   if (resp.ok && rs.status === 'success') {
     return rs;
   } else {
-    throw new Error(rs.msg || 'Verification failed');
+    toast.error(rs.msg || 'Verification failed');
   }
 };
 
@@ -129,17 +109,7 @@ export const apiForm = async (data) => {
   }
 
   if (resp.ok && res.status === 'NoActiveUserError') {
-    toast.error('No Active user session found. Kindly login again!', {
-      position: 'top-center',
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: false,
-      closeButton: false,
-      pauseOnHover: true,
-      style: {
-        color: '#0a192f',
-      },
-    });
+    toast.error('No Active user session found. Kindly login again!');
     window.location = '/action';
   }
 
@@ -150,19 +120,7 @@ export const apiForm = async (data) => {
     console.log('API Created with API Name & Key ->', res.apiname, res.apikey);
   } else {
     toast.error(
-      'Failure Occured due to ' +
-        (res.message ? `: ${res.message}` : '.',
-        {
-          position: 'top-center',
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeButton: false,
-          closeOnClick: false,
-          pauseOnHover: true,
-          style: {
-            color: '#0a192f',
-          },
-        })
+      'Failure Occured due to ' + (res.message ? `: ${res.message}` : '.')
     );
   }
 
@@ -191,17 +149,7 @@ export const wafapiForm = async (data) => {
   }
 
   if (resp.ok && res.status === 'NoActiveUserError') {
-    toast.error('No Active user session found. Kindly login again!', {
-      position: 'top-center',
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeButton: false,
-      closeOnClick: false,
-      pauseOnHover: true,
-      style: {
-        color: '#0a192f',
-      },
-    });
+    toast.error('No Active user session found. Kindly login again!');
     window.location = '/action';
   }
 
@@ -212,24 +160,12 @@ export const wafapiForm = async (data) => {
     console.log('API Created with API Name & Key ->', res.apiname, res.apikey);
   } else {
     toast.error(
-      'Failure Occured due to ' +
-        (res.message ? `: ${res.message}` : '.',
-        {
-          position: 'top-center',
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeButton: false,
-          closeOnClick: false,
-          pauseOnHover: true,
-          style: {
-            color: '#0a192f',
-          },
-        })
+      'Failure Occured due to ' + (res.message ? `: ${res.message}` : '.')
     );
   }
 
   if (!resp.ok) {
-    throw new Error('Network response was not ok');
+    toast.error('Network response was not ok');
   }
 
   return res;
@@ -257,17 +193,7 @@ export const validateActiveUser = async (data) => {
     }
   } catch (err) {
     console.error('Error checking session:', err);
-    toast.error('Something went wrong while validating session.', {
-      position: 'top-center',
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeButton: false,
-      closeOnClick: false,
-      pauseOnHover: true,
-      style: {
-        color: '#0a192f',
-      },
-    });
+    toast.error('Something went wrong while validating session.');
     return false;
   }
 };
@@ -294,17 +220,7 @@ export const validateActiveWAFUser = async (data) => {
     }
   } catch (err) {
     console.error('Error checking session:', err);
-    toast.error('Something went wrong while validating session.', {
-      position: 'top-center',
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeButton: false,
-      closeOnClick: false,
-      pauseOnHover: true,
-      style: {
-        color: '#0a192f',
-      },
-    });
+    toast.error('Something went wrong while validating session.');
     return false;
   }
 };
@@ -321,16 +237,7 @@ export const ethixionapi = async (data) => {
     });
 
     const rs = await resp.json();
-    toast(rs.msg, {
-      position: 'top-right',
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: false,
-      pauseOnHover: true,
-      style: {
-        color: '#0a192f',
-      },
-    });
+    toast.error(rs.msg || 'Unexpected response from Ethixion Server');
   } catch (e) {
     console.error('Error ->', e);
   }
@@ -350,7 +257,7 @@ export const getCurrentUser = async () => {
   if (resp.ok) {
     return res;
   } else {
-    throw new Error(res.error || 'Failed to fetch user data');
+    toast.error(res.error || 'Failed to fetch user data');
   }
 };
 
@@ -368,7 +275,7 @@ export const getCurrentWAFUser = async () => {
   if (resp.ok) {
     return res;
   } else {
-    throw new Error(res.error || 'Failed to fetch user data');
+    toast.error(res.error || 'Failed to fetch user data');
   }
 };
 
@@ -383,16 +290,7 @@ export const setEthixionRules = async (data) => {
       credentials: 'include',
     });
     const rs = await resp.json();
-    toast(rs.msg, {
-      position: 'top-right',
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: false,
-      pauseOnHover: true,
-      style: {
-        color: '#0a192f',
-      },
-    });
+    toast.error(rs.msg || 'Unexpected response from Ethixion Server');
     if (rs.status === 'NoActiveUserError') {
       //alert(rs.msg);
       window.location = '/action';
@@ -416,7 +314,7 @@ export const getThreatLogs = async () => {
     console.log(data);
     return data;
   } else {
-    throw new Error(resp.error || 'Failed to fetch logs data');
+    toast.error(resp.error || 'Failed to fetch logs data');
   }
 };
 
@@ -437,7 +335,7 @@ export const getDashboardData = async () => {
     return rs.msg;
   } else {
     //console.error(rs.error);
-    throw new Error(resp.error || 'Failed to fetch todays request count data.');
+    toast.error(resp.error || 'Failed to fetch todays request count data.');
   }
 };
 
@@ -460,7 +358,7 @@ export const getReportLogs = async () => {
       data2: rs.data2,
     };
   } else {
-    throw new Error('Error => ', resp.error);
+    toast.error('Error => ', resp.error);
   }
 };
 
@@ -478,7 +376,7 @@ export const getDashboardSecurityDetails = async () => {
   if (resp.ok && rs.status === 'success') {
     return rs;
   } else {
-    throw new Error('Error => ', resp.error);
+    toast.error('Error => ', resp.error);
   }
 };
 
@@ -496,7 +394,7 @@ export const getDashboardTrendsDetails = async () => {
   if (resp.ok && rs.status === 'success') {
     return rs;
   } else {
-    throw new Error('Error => ', resp.error);
+    toast.error('Error => ', resp.error);
   }
 };
 
@@ -514,7 +412,7 @@ export const getDashboardTrendsStatusDetails = async () => {
   if (resp.ok && rs.status === 'success') {
     return rs;
   } else {
-    throw new Error('Error => ', resp.error);
+    toast.error('Error => ', resp.error);
   }
 };
 
@@ -532,7 +430,7 @@ export const getDashboardAdvanceMonitorsDetails = async () => {
   if (resp.ok && rs.status === 'success') {
     return rs;
   } else {
-    throw new Error('Error => ', resp.error);
+    toast.error('Error => ', resp.error);
   }
 };
 
@@ -550,7 +448,7 @@ export const getAPIData = async () => {
   if (resp.ok && rs.status === 'success') {
     return rs;
   } else {
-    throw new Error('Error => ', resp.error);
+    toast.error('Error => ', resp.error);
   }
 };
 
@@ -568,7 +466,7 @@ export const APIDisableResp = async (data) => {
   if (resp.ok && rs.status) {
     return rs;
   } else {
-    throw new Error('Error => ', resp.error);
+    toast.error('Error => ', resp.error);
   }
 };
 
@@ -586,7 +484,7 @@ export const APIEnableResp = async (data) => {
   if (resp.ok && rs.status) {
     return rs;
   } else {
-    throw new Error('Error => ', resp.error);
+    toast.error('Error => ', resp.error);
   }
 };
 
@@ -604,7 +502,7 @@ export const APIDeleteResp = async (data) => {
   if (resp.ok && rs.status) {
     return rs;
   } else {
-    throw new Error('Error => ', resp.error);
+    toast.error('Error => ', resp.error);
   }
 };
 
@@ -622,7 +520,7 @@ export const APIRegenerateResp = async (data) => {
   if (resp.ok && rs.status === 'success') {
     return rs;
   } else {
-    throw new Error('Error => ', resp.error);
+    toast.error('Error => ', resp.error);
   }
 };
 
@@ -640,7 +538,7 @@ export const APIRegeneratedKeyResp = async (data) => {
   if (resp.ok && rs.status === 'success') {
     return rs;
   } else {
-    throw new Error('Error => ', resp.error);
+    toast.error('Error => ', resp.error);
   }
 };
 
@@ -658,7 +556,7 @@ export const APIAlertsDataResp = async (data) => {
   if (resp.ok && rs.status === 'success') {
     return rs;
   } else {
-    throw new Error('Error => ', resp.error);
+    toast.error('Error => ', resp.error);
   }
 };
 
@@ -679,7 +577,7 @@ export const getWAFDashboardData = async () => {
     return rs.msg;
   } else {
     //console.error(rs.error);
-    throw new Error(resp.error || 'Failed to fetch todays request count data.');
+    toast.error(resp.error || 'Failed to fetch todays request count data.');
   }
 };
 
@@ -697,6 +595,6 @@ export const getWAFSecurityTipOfDay = async () => {
   if (resp.ok && rs.status === 'success' && rs.tipsData) {
     return rs.tipsData;
   } else {
-    throw new Error(rs.msg || 'Failed to fetch security tip of the day.');
+    toast.error(rs.msg || 'Failed to fetch security tip of the day.');
   }
 };

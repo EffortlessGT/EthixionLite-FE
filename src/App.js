@@ -20,10 +20,10 @@ import APISettings from './components/APISettings';
 import VerifyAccount from './components/VerifyAccount';
 import WAFPanel from './components/WAFPanel';
 import WAFAPIPage from './components/WAFAPIPage';
-import { ToastContainer, toast } from 'react-toastify';
+
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-loading-skeleton/dist/skeleton.css';
-import { LoadingProvider } from './LoadingContext';
+import { Toaster, toast } from 'sonner';
 
 function RouteSecurityHandler({ children }) {
   const [isValidated, setIsValidated] = useState(null);
@@ -212,12 +212,10 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <LoadingProvider>
-      <div className="App">
-        <RouterProvider router={router} />
-        <ToastContainer />
-      </div>
-    </LoadingProvider>
+    <div className="App">
+      <RouterProvider router={router} />
+      <Toaster position="top-center" />
+    </div>
   );
 }
 
