@@ -65,40 +65,26 @@ nav .navbar {
   margin-right: 10px;
 }
 
-/* MENU BASE (hidden state) */
 .menus {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100vh;
-  width: 260px;
-  background: #0a192f;
-  padding-top: 80px;
-  z-index: 999;
-
-  transform: translate3d(-100%, 0, 0);
-  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: transform;
-}
-
-.menus.show {
-  transform: translate3d(0, 0, 0);
+  display: flex;
+  align-items: right;
+  margin-left: auto;
+  padding-right: 20px;
 }
 
 .menus ul {
-  list-style: none;
-  padding: 0;
+  display: flex;
+  gap: 30px;
 }
 
 .menus ul li {
-  margin: 20px;
+  list-style: none;
 }
 
 .menus ul li a {
-  color: #0f172a;
+  color: #0a192f;
   text-decoration: none;
   font-size: 18px;
-  transition: 0.3s;
 }
 
 .menus ul li a:hover {
@@ -1757,7 +1743,7 @@ input[type='number']::-webkit-outer-spin-button {
 footer {
   width: 100%;
   background-color: #0a192f;
-  height: 110px;
+  height: 120px;
 }
 
 .site-footer {
@@ -2746,36 +2732,47 @@ textarea::placeholder {
 }
 
 @media (max-width: 768px) {
+  .menus {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 260px;
+    background: #0a192f;
+    padding-top: 80px;
+    z-index: 999;
+
+    transform: translateX(-100%);
+    transition: transform 0.4s ease-in-out;
+    flex-direction: column;
+  }
+
+  .menus.show {
+    transform: translateX(0);
+  }
+
+  .menus ul {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .menus ul li a {
+    color: #fff;
+    font-size: 18px;
+  }
+
+  .overlay {
+    display: block;
+  }
+}
+
+@media (max-width: 768px) {
   .navbar .logo {
     padding-left: 20px;
   }
 
   .navbar {
     position: relative;
-  }
-
-  .navbar .menus {
-    display: none;
-    position: absolute;
-    top: 75px;
-    left: 0;
-    background: #fff;
-    border: 1px solid #f0e4e4;
-    border-radius: 10px;
-    width: 90%;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  }
-
-  .menus ul li {
-    width: 50%;
-    color: #0a192f;
-    border-radius: 8px;
-  }
-
-  .menus ul li:hover {
-    font-weight: bold;
-    color: #fff;
-    background-color: transparent;
   }
 
   .navbar .menus.show {
