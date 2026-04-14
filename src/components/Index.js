@@ -26,7 +26,7 @@ function Index() {
                 reducing the attack surface. The API Access Security Layer
                 enforces strict authentication and validation mechanisms,
                 ensuring that only authorized clients can interact with
-                protected services. 
+                protected services.
               </p>
               <Link to="/action">
                 <button>Start for free</button>

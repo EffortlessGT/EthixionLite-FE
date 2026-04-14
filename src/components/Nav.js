@@ -5,19 +5,19 @@ import { Link } from 'react-router-dom';
 function Nav() {
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const toggleMenu = () => setMenuOpen(!menuOpen);
+  const toggleMenu = () => setMenuOpen((prev) => !prev);
   const closeMenu = () => setMenuOpen(false);
 
   return (
     <nav>
       <div className="navbar">
-        {/* Logo (kept as toggle for hamburger effect if you want) */}
+        {/* Logo */}
         <div className="logo" onClick={toggleMenu}>
-          <img src={fevicon} alt="Ethixion" /> Ethi<span>xion</span>&nbsp;
+          <img src={fevicon} alt="Ethixion" /> Ethi<span>xion</span>
         </div>
 
         {/* Sidebar menu */}
-        <div className={`menus ${menuOpen ? 'show' : ''}`} id="nav-menu">
+        <div className={`menus ${menuOpen ? 'show' : ''}`}>
           <ul>
             <li>
               <Link to="/" onClick={closeMenu}>
@@ -31,7 +31,7 @@ function Nav() {
             </li>
             <li>
               <Link to="/dashboard" onClick={closeMenu}>
-                Dashboard
+                API Dashboard
               </Link>
             </li>
             <li>
@@ -57,6 +57,12 @@ function Nav() {
           </ul>
         </div>
       </div>
+
+      {/* ✅ KEEP overlay always mounted */}
+      <div
+        className={`overlay ${menuOpen ? 'show' : ''}`}
+        onClick={closeMenu}
+      />
     </nav>
   );
 }
