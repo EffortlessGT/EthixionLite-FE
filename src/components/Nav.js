@@ -30,12 +30,24 @@ function Nav() {
               </Link>
             </li>
             <li>
-              <Link to="/dashboard" onClick={closeMenu}>
+              <Link
+                to="/dashboard"
+                onClick={() => {
+                  closeMenu();
+                  window.location.href = '/asg_dashboard';
+                }}
+              >
                 API Dashboard
               </Link>
             </li>
             <li>
-              <Link to="/waf_dashboard" onClick={closeMenu}>
+              <Link
+                to="/waf_dashboard"
+                onClick={() => {
+                  closeMenu();
+                  window.location.href = '/waf_dashboard';
+                }}
+              >
                 WAF Dashboard
               </Link>
             </li>
@@ -58,7 +70,7 @@ function Nav() {
         </div>
       </div>
 
-      {/* ✅ KEEP overlay always mounted */}
+      {/* KEEP overlay always mounted */}
       <div
         className={`overlay ${menuOpen ? 'show' : ''}`}
         onClick={closeMenu}

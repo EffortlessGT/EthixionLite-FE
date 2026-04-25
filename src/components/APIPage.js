@@ -90,7 +90,7 @@ function APIPage() {
   };
 
   const panelRedirect = () => {
-    window.location = '/panel';
+    window.location = '';
   };
   return (
     <FadeUpOnScroll delay={0.3}>

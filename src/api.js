@@ -1,174 +1,199 @@
 import { toast } from 'sonner';
 
-const addr = 'http://127.0.0.1:8000';
+const addr = process.env.REACT_APP_ROCKET_BACKEND_URL_DESKTOP;
+console.log('Backend URL:', addr);
 export const loginForm = async (data) => {
-  const resp = await fetch(`${addr}/login`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    credentials: 'include',
-    body: JSON.stringify(data),
-  });
-
-  const rs = await resp.json();
-
-  if (resp.ok && rs.status) {
-    //alert('Valid Credentials.');
-    window.location = '/dashboard';
-  } else {
-    toast.error('Invalid Username or Password!');
-  }
-
-  if (!resp.ok) {
-    toast.error('Network response was not ok');
-  }
-
-  return rs;
-};
-export const loginFormII = async (data) => {
-  const resp = await fetch(`${addr}/google_login`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    credentials: 'include',
-    body: JSON.stringify(data),
-  });
-
-  const rs = await resp.json();
-
-  if (resp.ok && rs.status) {
-    window.location = '/dashboard';
-  } else {
-    toast.error('No user found, Kindly register yourself first!');
-  }
-
-  if (!resp.ok) {
-    throw new Error('Network response was not ok');
-  }
-
-  return rs;
-};
-
-export const registrationForm = async (data) => {
-  const resp = await fetch(`${addr}/registration`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data),
-  });
-  const res = await resp.json();
-  if (resp.ok) {
-    //alert('Registration Successfull. Kindly Login to Ethixion for accessing services.');
-    return res;
-  }
-  if (!resp.ok) {
-    toast.error('Network response was not ok');
-  }
-
-  return await resp.text();
-};
-
-export const VerifyUserAccount = async (token) => {
-  const resp = await fetch(
-    `${addr}/verify_account?token=${encodeURIComponent(token)}`,
-    {
-      method: 'GET',
+  try {
+    const resp = await fetch(`${addr}/login`, {
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-    }
-  );
+      credentials: 'include',
+      body: JSON.stringify(data),
+    });
 
-  const rs = await resp.json();
-  if (resp.ok && rs.status === 'success') {
+    const rs = await resp.json();
+
+    if (resp.ok && rs.status) {
+      //alert('Valid Credentials.');
+      window.location = '/dashboard';
+    } else {
+      toast.error(rs.message || 'Invalid credentials. Please try again.');
+    }
+
+    if (!resp.ok) {
+      toast.error('Ethixion Connection Failed. Please try again later.');
+    }
+
     return rs;
-  } else {
-    toast.error(rs.msg || 'Verification failed');
+  } catch (err) {
+    console.error('Error during login:', err);
+    toast.error('Unable to reach server. Please try again later.');
+  }
+};
+export const loginFormII = async (data) => {
+  try {
+    const resp = await fetch(`${addr}/google_login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify(data),
+    });
+
+    const rs = await resp.json();
+
+    if (resp.ok && rs.status) {
+      window.location = '/dashboard';
+    } else {
+      toast.error('No user found, Kindly register yourself first!');
+    }
+    if (!resp.ok) {
+      toast.error('Ethixion Connection Failed. Please try again later.');
+    }
+
+    return rs;
+  } catch (err) {
+    console.error('Error during Google Login:', err);
+    toast.error('Unable to reach server. Please try again later.');
+  }
+};
+
+export const registrationForm = async (data) => {
+  try {
+    const resp = await fetch(`${addr}/registration`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+    const res = await resp.json();
+    if (resp.ok) {
+      //alert('Registration Successfull. Kindly Login to Ethixion for accessing services.');
+      return res;
+    }
+    if (!resp.ok) {
+      toast.error('Ethixion Connection Failed. Please try again later.');
+    }
+
+    return await resp.text();
+  } catch (err) {
+    console.error('Error during registration:', err);
+    toast.error('Unable to reach server. Please try again later.');
+  }
+};
+
+export const VerifyUserAccount = async (token) => {
+  try {
+    const resp = await fetch(
+      `${addr}/verify_account?token=${encodeURIComponent(token)}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    const rs = await resp.json();
+    if (resp.ok && rs.status === 'success') {
+      return rs;
+    } else {
+      toast.error(rs.msg || 'Verification failed');
+    }
+  } catch (err) {
+    console.error('Error during account verification:', err);
+    toast.error('Unable to reach server. Please try again later.');
   }
 };
 
 export const apiForm = async (data) => {
-  const resp = await fetch(`${addr}/api`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    credentials: 'include',
-    body: JSON.stringify(data),
-  });
-
-  let res = {};
   try {
-    const text = await resp.text();
-    res = text ? JSON.parse(text) : {};
+    const resp = await fetch(`${addr}/api`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify(data),
+    });
+
+    let res = {};
+    try {
+      const text = await resp.text();
+      res = text ? JSON.parse(text) : {};
+    } catch (err) {
+      console.error('Failed to parse JSON:', err);
+    }
+
+    if (resp.ok && res.status === 'NoActiveUserError') {
+      toast.error('No Active user session found. Kindly login again!');
+      window.location = '/action';
+    }
+
+    if (resp.ok && res.status === 'done') {
+      toast.success(
+        'API Creation Successful. Kindly head to dashboard to manage API.'
+      );
+      console.log(
+        'API Created with API Name & Key ->',
+        res.apiname,
+        res.apikey
+      );
+    } else {
+      toast.error(
+        'Failure Occured due to ' + (res.message ? `: ${res.message}` : '.')
+      );
+    }
+
+    if (!resp.ok) {
+      toast.error('Ethixion Connection Failed. Please try again later.');
+    }
+
+    return res;
   } catch (err) {
-    console.error('Failed to parse JSON:', err);
+    console.error('Error during API creation:', err);
+    toast.error('Unable to reach server. Please try again later.');
   }
-
-  if (resp.ok && res.status === 'NoActiveUserError') {
-    toast.error('No Active user session found. Kindly login again!');
-    window.location = '/action';
-  }
-
-  if (resp.ok && res.status === 'done') {
-    toast.success(
-      'API Creation Successful. Kindly head to dashboard to manage API.'
-    );
-    console.log('API Created with API Name & Key ->', res.apiname, res.apikey);
-  } else {
-    toast.error(
-      'Failure Occured due to ' + (res.message ? `: ${res.message}` : '.')
-    );
-  }
-
-  if (!resp.ok) {
-    throw new Error('Network response was not ok');
-  }
-
-  return res;
 };
 export const wafapiForm = async (data) => {
-  const resp = await fetch(`${addr}/waf_api_handler`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    credentials: 'include',
-    body: JSON.stringify(data),
-  });
-
-  let res = {};
   try {
-    const text = await resp.text();
-    res = text ? JSON.parse(text) : {};
+    const resp = await fetch(`${addr}/waf_api_handler`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify(data),
+    });
+    if (resp.ok && resp.status === 'NoActiveUserError') {
+      toast.error('No Active user session found. Kindly login again!');
+      window.location = '/action';
+    }
+
+    if (resp.ok && resp.status === 'success') {
+      toast.success(
+        'Ethixion WAF API Creation Successful. Kindly head to dashboard to manage API.'
+      );
+     
+    } else {
+      toast.error(
+        'Failure Occured due to ' + (resp.message ? `: ${resp.message}` : '.')
+      );
+    }
+
+    if (!resp.ok) {
+      toast.error('Ethixion Connection Failed. Please try again later.');
+    }
+
+    return resp;
   } catch (err) {
-    console.error('Failed to parse JSON:', err);
+    console.error('Error during WAF API creation:', err);
+    toast.error('Unable to reach server. Please try again later.');
   }
-
-  if (resp.ok && res.status === 'NoActiveUserError') {
-    toast.error('No Active user session found. Kindly login again!');
-    window.location = '/action';
-  }
-
-  if (resp.ok && res.status === 'success') {
-    toast.success(
-      'Ethixion WAF API Creation Successful. Kindly head to dashboard to manage API.'
-    );
-    console.log('API Created with API Name & Key ->', res.apiname, res.apikey);
-  } else {
-    toast.error(
-      'Failure Occured due to ' + (res.message ? `: ${res.message}` : '.')
-    );
-  }
-
-  if (!resp.ok) {
-    toast.error('Network response was not ok');
-  }
-
-  return res;
 };
 
 export const validateActiveUser = async (data) => {
@@ -193,7 +218,7 @@ export const validateActiveUser = async (data) => {
     }
   } catch (err) {
     console.error('Error checking session:', err);
-    toast.error('Something went wrong while validating session.');
+    toast.error('Ethixion Connection Failed. Please try again later.');
     return false;
   }
 };
@@ -244,38 +269,48 @@ export const ethixionapi = async (data) => {
 };
 
 export const getCurrentUser = async () => {
-  const resp = await fetch(`${addr}/getcurrentuserinfo`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ key: 'current_user' }),
-    credentials: 'include',
-  });
+  try {
+    const resp = await fetch(`${addr}/getcurrentuserinfo`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ key: 'current_user' }),
+      credentials: 'include',
+    });
 
-  const res = await resp.json();
-  if (resp.ok) {
-    return res;
-  } else {
-    toast.error(res.error || 'Failed to fetch user data');
+    const res = await resp.json();
+    if (resp.ok) {
+      return res;
+    } else {
+      toast.error(res.error || 'Failed to fetch user data');
+    }
+  } catch (err) {
+    console.error('Error fetching current user:', err);
+    toast.error('Unable to reach server. Please try again later.');
   }
 };
 
 export const getCurrentWAFUser = async () => {
-  const resp = await fetch(`${addr}/getcurrentwafuserinfo`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ key: 'current_user' }),
-    credentials: 'include',
-  });
+  try {
+    const resp = await fetch(`${addr}/getcurrentwafuserinfo`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ key: 'current_user' }),
+      credentials: 'include',
+    });
 
-  const res = await resp.json();
-  if (resp.ok) {
-    return res;
-  } else {
-    toast.error(res.error || 'Failed to fetch user data');
+    const res = await resp.json();
+    if (resp.ok) {
+      return res;
+    } else {
+      toast.error(res.error || 'Failed to fetch user data');
+    }
+  } catch (err) {
+    console.error('Error fetching current WAF user:', err);
+    toast.error('Unable to reach server. Please try again later.');
   }
 };
 
@@ -301,300 +336,436 @@ export const setEthixionRules = async (data) => {
 };
 
 export const getThreatLogs = async () => {
-  const resp = await fetch(`${addr}/get_todays_threat_logs`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({}),
-    credentials: 'include',
-  });
-  const data = await resp.json();
-  if (resp.ok && data.status) {
-    console.log(data);
-    return data;
-  } else {
-    toast.error(resp.error || 'Failed to fetch logs data');
+  try {
+    const resp = await fetch(`${addr}/get_todays_threat_logs`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({}),
+      credentials: 'include',
+    });
+    const data = await resp.json();
+    if (resp.ok && data.status) {
+      console.log(data);
+      return data;
+    } else {
+      toast.error(resp.error || 'Failed to fetch logs data');
+    }
+  } catch (err) {
+    console.error('Error fetching threat logs:', err);
+    toast.error('Unable to reach server. Please try again later.');
+  }
+};
+
+export const checkASGExistsForCurrentUser = async () => {
+  try {
+    const resp = await fetch(`${addr}/check_asg_exists`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+    });
+
+    const rs = await resp.json();
+    if (resp.ok && rs.status === 'success' && rs.exists) {
+      return rs.exists;
+    } else if (rs.status === 'failed' && !rs.exists) {
+      return rs.msg;
+    } else {
+      toast.error(
+        rs.msg ||
+          'No ASG setup found for current user. Please set up ASG to view dashboard insights.'
+      );
+      return false;
+    }
+  } catch (err) {
+    console.error('Error checking ASG existence:', err);
+    toast.error('Unable to reach server. Please try again later.');
   }
 };
 
 export const getDashboardData = async () => {
-  const resp = await fetch(`${addr}/dashboard_data`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({}),
-    credentials: 'include',
-  });
-  const rs = await resp.json();
-  //console.log("Backend response:", rs, "HTTP status:", resp.status);
-  if (resp.ok && rs.status === 'success' && rs.ReqData) {
-    return rs.ReqData;
-  } else if (rs.status === 'failed') {
-    return rs.msg;
-  } else {
-    //console.error(rs.error);
-    toast.error(resp.error || 'Failed to fetch todays request count data.');
+  try {
+    const resp = await fetch(`${addr}/dashboard_data`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({}),
+      credentials: 'include',
+    });
+    const rs = await resp.json();
+    //console.log("Backend response:", rs, "HTTP status:", resp.status);
+    if (resp.ok && rs.status === 'success' && rs.ReqData) {
+      return rs.ReqData;
+    } else if (rs.status === 'failed') {
+      return rs.msg;
+    } else {
+      //console.error(rs.error);
+      toast.error(resp.error || 'Failed to fetch todays request count data.');
+    }
+  } catch (err) {
+    console.error('Error fetching dashboard data:', err);
+    toast.error('Unable to reach server. Please try again later.');
   }
 };
 
 export const getReportLogs = async () => {
-  const resp = await fetch(`${addr}/reportlogs`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    credentials: 'include',
-    body: JSON.stringify({}),
-  });
+  try {
+    const resp = await fetch(`${addr}/reportlogs`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify({}),
+    });
 
-  const rs = await resp.json();
-  if (resp.ok && rs.status === 'success') {
-    console.log(rs.data1);
-    console.log(rs.data2);
-    return {
-      data1: rs.data1,
-      data2: rs.data2,
-    };
-  } else {
-    toast.error('Error => ', resp.error);
+    const rs = await resp.json();
+    if (resp.ok && rs.status === 'success') {
+      console.log(rs.data1);
+      console.log(rs.data2);
+      return {
+        data1: rs.data1,
+        data2: rs.data2,
+      };
+    } else {
+      toast.error('Error => ', resp.error);
+    }
+  } catch (err) {
+    console.error('Error fetching report logs:', err);
+    toast.error('Unable to reach server. Please try again later.');
   }
 };
 
 export const getDashboardSecurityDetails = async () => {
-  const resp = await fetch(`${addr}/security_details`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    credentials: 'include',
-    body: JSON.stringify({}),
-  });
+  try {
+    const resp = await fetch(`${addr}/security_details`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify({}),
+    });
 
-  const rs = await resp.json();
-  if (resp.ok && rs.status === 'success') {
-    return rs;
-  } else {
-    toast.error('Error => ', resp.error);
+    const rs = await resp.json();
+    if (resp.ok && rs.status === 'success') {
+      return rs;
+    } else {
+      toast.error('Error => ', resp.error);
+    }
+  } catch (err) {
+    console.error('Error fetching security details:', err);
+    toast.error('Unable to reach server. Please try again later.');
   }
 };
 
 export const getDashboardTrendsDetails = async () => {
-  const resp = await fetch(`${addr}/trends_details`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    credentials: 'include',
-    body: JSON.stringify({}),
-  });
+  try {
+    const resp = await fetch(`${addr}/trends_details`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify({}),
+    });
 
-  const rs = await resp.json();
-  if (resp.ok && rs.status === 'success') {
-    return rs;
-  } else {
-    toast.error('Error => ', resp.error);
+    const rs = await resp.json();
+    if (resp.ok && rs.status === 'success') {
+      return rs;
+    } else {
+      toast.error('Error => ', resp.error);
+    }
+  } catch (err) {
+    console.error('Error fetching trends details:', err);
+    toast.error('Unable to reach server. Please try again later.');
   }
 };
 
 export const getDashboardTrendsStatusDetails = async () => {
-  const resp = await fetch(`${addr}/trends_status`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    credentials: 'include',
-    body: JSON.stringify({}),
-  });
+  try {
+    const resp = await fetch(`${addr}/trends_status`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify({}),
+    });
 
-  const rs = await resp.json();
-  if (resp.ok && rs.status === 'success') {
-    return rs;
-  } else {
-    toast.error('Error => ', resp.error);
+    const rs = await resp.json();
+    if (resp.ok && rs.status === 'success') {
+      return rs;
+    } else {
+      toast.error('Error => ', resp.error);
+    }
+  } catch (err) {
+    console.error('Error fetching trends status details:', err);
+    toast.error('Unable to reach server. Please try again later.');
   }
 };
 
 export const getDashboardAdvanceMonitorsDetails = async () => {
-  const resp = await fetch(`${addr}/advance_monitors`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    credentials: 'include',
-    body: JSON.stringify({}),
-  });
+  try {
+    const resp = await fetch(`${addr}/advance_monitors`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify({}),
+    });
 
-  const rs = await resp.json();
-  if (resp.ok && rs.status === 'success') {
-    return rs;
-  } else {
-    toast.error('Error => ', resp.error);
+    const rs = await resp.json();
+    if (resp.ok && rs.status === 'success') {
+      return rs;
+    } else {
+      toast.error('Error => ', resp.error);
+    }
+  } catch (err) {
+    console.error('Error fetching advance monitors details:', err);
+    toast.error('Unable to reach server. Please try again later.');
   }
 };
 
 export const getAPIData = async () => {
-  const resp = await fetch(`${addr}/api_overview`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    credentials: 'include',
-    body: JSON.stringify({}),
-  });
+  try {
+    const resp = await fetch(`${addr}/api_overview`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify({}),
+    });
 
-  const rs = await resp.json();
-  if (resp.ok && rs.status === 'success') {
-    return rs;
-  } else {
-    toast.error('Error => ', resp.error);
+    const rs = await resp.json();
+    if (resp.ok && rs.status === 'success') {
+      return rs;
+    } else {
+      toast.error('Error => ', resp.error);
+    }
+  } catch (err) {
+    console.error('Error fetching API data:', err);
+    toast.error('Unable to reach server. Please try again later.');
   }
 };
 
 export const APIDisableResp = async (data) => {
-  const resp = await fetch(`${addr}/disable_API`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    credentials: 'include',
-    body: JSON.stringify({ apiname: data }),
-  });
+  try {
+    const resp = await fetch(`${addr}/disable_API`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify({ apiname: data }),
+    });
 
-  const rs = await resp.json();
-  if (resp.ok && rs.status) {
-    return rs;
-  } else {
-    toast.error('Error => ', resp.error);
+    const rs = await resp.json();
+    if (resp.ok && rs.status) {
+      return rs;
+    } else {
+      toast.error('Error => ', resp.error);
+    }
+  } catch (err) {
+    console.error('Error disabling API:', err);
+    toast.error('Unable to reach server. Please try again later.');
   }
 };
 
 export const APIEnableResp = async (data) => {
-  const resp = await fetch(`${addr}/enable_API`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    credentials: 'include',
-    body: JSON.stringify({ apiname: data }),
-  });
+  try {
+    const resp = await fetch(`${addr}/enable_API`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify({ apiname: data }),
+    });
 
-  const rs = await resp.json();
-  if (resp.ok && rs.status) {
-    return rs;
-  } else {
-    toast.error('Error => ', resp.error);
+    const rs = await resp.json();
+    if (resp.ok && rs.status) {
+      return rs;
+    } else {
+      toast.error('Error => ', resp.error);
+    }
+  } catch (err) {
+    console.error('Error enabling API:', err);
+    toast.error('Unable to reach server. Please try again later.');
   }
 };
 
 export const APIDeleteResp = async (data) => {
-  const resp = await fetch(`${addr}/delete_API`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    credentials: 'include',
-    body: JSON.stringify({ apiname: data }),
-  });
+  try {
+    const resp = await fetch(`${addr}/delete_API`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify({ apiname: data }),
+    });
 
-  const rs = await resp.json();
-  if (resp.ok && rs.status) {
-    return rs;
-  } else {
-    toast.error('Error => ', resp.error);
+    const rs = await resp.json();
+    if (resp.ok && rs.status) {
+      return rs;
+    } else {
+      toast.error('Error => ', resp.error);
+    }
+  } catch (err) {
+    console.error('Error deleting API:', err);
+    toast.error('Unable to reach server. Please try again later.');
   }
 };
 
 export const APIRegenerateResp = async (data) => {
-  const resp = await fetch(`${addr}/regenerate_api_key`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    credentials: 'include',
-    body: JSON.stringify({ apiname: data }),
-  });
+  try {
+    const resp = await fetch(`${addr}/regenerate_api_key`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify({ apiname: data }),
+    });
 
-  const rs = await resp.json();
-  if (resp.ok && rs.status === 'success') {
-    return rs;
-  } else {
-    toast.error('Error => ', resp.error);
+    const rs = await resp.json();
+    if (resp.ok && rs.status === 'success') {
+      return rs;
+    } else {
+      toast.error('Error => ', resp.error);
+    }
+  } catch (err) {
+    console.error('Error regenerating API key:', err);
+    toast.error('Unable to reach server. Please try again later.');
   }
 };
 
 export const APIRegeneratedKeyResp = async (data) => {
-  const resp = await fetch(`${addr}/fetch_regenerated_api_key`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    credentials: 'include',
-    body: JSON.stringify({ apiname: data }),
-  });
+  try {
+    const resp = await fetch(`${addr}/fetch_regenerated_api_key`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify({ apiname: data }),
+    });
 
-  const rs = await resp.json();
-  if (resp.ok && rs.status === 'success') {
-    return rs;
-  } else {
-    toast.error('Error => ', resp.error);
+    const rs = await resp.json();
+    if (resp.ok && rs.status === 'success') {
+      return rs;
+    } else {
+      toast.error('Error => ', resp.error);
+    }
+  } catch (err) {
+    console.error('Error fetching regenerated API key:', err);
+    toast.error('Unable to reach server. Please try again later.');
   }
 };
 
 export const APIAlertsDataResp = async (data) => {
-  const resp = await fetch(`${addr}/retrieve_api_alerts`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    credentials: 'include',
-    body: JSON.stringify({ apiname: data }),
-  });
+  try {
+    const resp = await fetch(`${addr}/retrieve_api_alerts`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify({ apiname: data }),
+    });
 
-  const rs = await resp.json();
-  if (resp.ok && rs.status === 'success') {
-    return rs;
-  } else {
-    toast.error('Error => ', resp.error);
+    const rs = await resp.json();
+    if (resp.ok && rs.status === 'success') {
+      return rs;
+    } else {
+      toast.error('Error => ', resp.error);
+    }
+  } catch (err) {
+    console.error('Error fetching API alerts data:', err);
+    toast.error('Unable to reach server. Please try again later.');
+  }
+};
+
+export const checkWAFExistsForCurrentUser = async () => {
+  try {
+    const resp = await fetch(`${addr}/check_wafsec_exists`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+    });
+
+    const rs = await resp.json();
+    if (resp.ok && rs.status === 'success' && rs.exists) {
+      return rs.exists;
+    } else if (rs.status === 'failed' && !rs.exists) {
+      return rs.msg;
+    } else {
+      toast.error(
+        rs.msg ||
+          'No WAF setup found for current user. Please set up WAF to view dashboard insights.'
+      );
+      return false;
+    }
+  } catch (err) {
+    console.error('Error checking WAF existence:', err);
+    toast.error('Unable to reach server. Please try again later.');
   }
 };
 
 export const getWAFDashboardData = async () => {
-  const resp = await fetch(`${addr}/waf_dashboard_insights`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({}),
-    credentials: 'include',
-  });
-  const rs = await resp.json();
-  //console.log("Backend response:", rs, "HTTP status:", resp.status);
-  if (resp.ok && rs.status === 'success' && rs.data && rs.waf_details) {
-    return rs;
-  } else if (rs.status === 'failed') {
-    return rs.msg;
-  } else {
-    //console.error(rs.error);
-    toast.error(resp.error || 'Failed to fetch todays request count data.');
+  try {
+    const resp = await fetch(`${addr}/waf_dashboard_insights`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({}),
+      credentials: 'include',
+    });
+    const rs = await resp.json();
+    //console.log("Backend response:", rs, "HTTP status:", resp.status);
+    if (resp.ok && rs.status === 'success' && rs.data && rs.waf_details) {
+      return rs;
+    } else if (rs.status === 'failed') {
+      return rs.msg;
+    } else {
+      //console.error(rs.error);
+      toast.error(resp.error || 'Failed to fetch todays request count data.');
+    }
+  } catch (err) {
+    console.error('Error fetching WAF dashboard data:', err);
+    toast.error('Unable to reach server. Please try again later.');
   }
 };
 
 export const getWAFSecurityTipOfDay = async () => {
-  const resp = await fetch(`${addr}/waf_security_tip_for_day`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    credentials: 'include',
-  });
+  try {
+    const resp = await fetch(`${addr}/waf_security_tip_for_day`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+    });
 
-  const rs = await resp.json();
+    const rs = await resp.json();
 
-  if (resp.ok && rs.status === 'success' && rs.tipsData) {
-    return rs.tipsData;
-  } else {
-    toast.error(rs.msg || 'Failed to fetch security tip of the day.');
+    if (resp.ok && rs.status === 'success' && rs.tipsData) {
+      return rs.tipsData;
+    } else {
+      toast.error(rs.msg || 'Failed to fetch security tip of the day.');
+    }
+  } catch (err) {
+    console.error('Error fetching security tip of the day:', err);
+    toast.error('Unable to reach server. Please try again later.');
   }
 };

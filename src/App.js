@@ -6,6 +6,7 @@ import {
   createBrowserRouter,
   RouterProvider,
   Navigate,
+  useLocation,
 } from 'react-router-dom';
 import Action from './components/Action';
 import Panel from './components/Panel';
@@ -29,12 +30,14 @@ import { Toaster, toast } from 'sonner';
 function RouteSecurityHandler({ children }) {
   const [isValidated, setIsValidated] = useState(null);
   const alertedRef = useRef(false);
+  const location = useLocation();
 
   useEffect(() => {
     const validate = async () => {
       try {
         const isValid = await validateActiveUser();
         setIsValidated(isValid);
+
         if (!isValid && !alertedRef.current) {
           toast.error('No active user found! Kindly login...');
           alertedRef.current = true;
@@ -54,7 +57,7 @@ function RouteSecurityHandler({ children }) {
   }
 
   if (!isValidated) {
-    return <Navigate to="/action" replace />;
+    return <Navigate to="/action" state={{ from: location }} replace />;
   }
 
   return children;
@@ -63,12 +66,14 @@ function RouteSecurityHandler({ children }) {
 function WAFRoutesSecurityHandler({ children }) {
   const [isValidated, setIsValidated] = useState(null);
   const alertedRef = useRef(false);
+  const location = useLocation();
 
   useEffect(() => {
     const validate = async () => {
       try {
         const isValid = await validateActiveWAFUser();
         setIsValidated(isValid);
+
         if (!isValid && !alertedRef.current) {
           toast.error('No active user found! Kindly login...');
           alertedRef.current = true;
@@ -88,7 +93,7 @@ function WAFRoutesSecurityHandler({ children }) {
   }
 
   if (!isValidated) {
-    return <Navigate to="/action" replace />;
+    return <Navigate to="/action" state={{ from: location }} replace />;
   }
 
   return children;
@@ -114,7 +119,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: '/dashboard',
+    path: '/asg_dashboard',
     element: (
       <RouteSecurityHandler>
         <Panel />
@@ -133,8 +138,10 @@ const router = createBrowserRouter([
     path: '/api',
     element: (
       <RouteSecurityHandler>
-        <Nav />
-        <APIPage />
+        <>
+          <Nav />
+          <APIPage />
+        </>
       </RouteSecurityHandler>
     ),
   },
@@ -142,8 +149,10 @@ const router = createBrowserRouter([
     path: '/waf_api',
     element: (
       <WAFRoutesSecurityHandler>
-        <Nav />
-        <WAFAPIPage />
+        <>
+          <Nav />
+          <WAFAPIPage />
+        </>
       </WAFRoutesSecurityHandler>
     ),
   },

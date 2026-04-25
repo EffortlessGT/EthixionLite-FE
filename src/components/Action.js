@@ -9,6 +9,7 @@ function Action() {
   const [isFlipped, setIsFlipped] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [requestedService, setRequestedService] = useState('ASG_SERVICE');
 
   const [fullname, setFullname] = useState('');
   const [email, setEmail] = useState('');
@@ -21,7 +22,7 @@ function Action() {
   // LOGIN
   const handleLogin = async (e) => {
     e.preventDefault();
-    const data = { username, password };
+    const data = { username, password, requestedService };
 
     const emailPatt = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -33,7 +34,7 @@ function Action() {
     try {
       const result = await loginForm(data);
       if (result.status === 'success') {
-        window.location.href = '/dashboard';
+        window.location.href = result.redirectTo;
       }
     } catch (err) {
       toast.error('Unable to reach server.');
@@ -73,7 +74,7 @@ function Action() {
         toast.error(response.message || 'Google Sign-In Failed');
       }
     } catch (err) {
-      toast.error('Please sign up first.');
+      toast.error('No Account exists, Please sign up first.');
     }
   };
 
@@ -148,7 +149,6 @@ function Action() {
               value={mypwdII}
               onChange={(e) => setPasswordII(e.target.value)}
             />
-
             <button type="submit">Register</button>
 
             <p onClick={handleFlip}>Already have an account? Sign In</p>
