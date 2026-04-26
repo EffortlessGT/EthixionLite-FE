@@ -178,7 +178,6 @@ export const wafapiForm = async (data) => {
       toast.success(
         'Ethixion WAF API Creation Successful. Kindly head to dashboard to manage API.'
       );
-     
     } else {
       toast.error(
         'Failure Occured due to ' + (resp.message ? `: ${resp.message}` : '.')

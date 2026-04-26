@@ -584,12 +584,12 @@ input::placeholder {
     margin: 10px auto;
     padding: 0 5px;
   }
-  
+
   .google-login-wrapper > div {
     max-width: 100% !important;
     border-radius: 10px;
   }
-  
+
   .google-login-wrapper iframe {
     border-radius: 10px !important;
   }
@@ -600,7 +600,7 @@ input::placeholder {
     max-width: 100% !important;
     border-radius: 8px;
   }
-  
+
   .google-login-wrapper iframe {
     border-radius: 8px !important;
   }
@@ -1172,7 +1172,6 @@ input:-webkit-autofill {
   color: #64ffda;
   -webkit-tap-highlight-color: transparent;
 }
-
 
 .dash-sidebar {
   transition: transform 0.5s ease;
@@ -2910,7 +2909,7 @@ textarea::placeholder {
 
 @media (max-width: 768px) {
   .hero .main-container {
-      height: auto;
+    height: auto;
   }
   .menus {
     position: fixed;

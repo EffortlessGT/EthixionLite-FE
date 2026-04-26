@@ -9,7 +9,7 @@ function Action() {
   const [isFlipped, setIsFlipped] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [requestedService, setRequestedService] = useState('ASG_SERVICE');
+  const [requestedService] = useState('ASG_SERVICE');
 
   const [fullname, setFullname] = useState('');
   const [email, setEmail] = useState('');

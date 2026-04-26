@@ -18,7 +18,6 @@ function WAFAPIPage() {
   const [geoBlock, setGeoBlock] = useState('');
   const [httpallowedmethods, setHttpAllowedMethods] = useState([]);
 
-
   const handleThreatChange = (e) => {
     const value = e.target.value;
     if (e.target.checked) setThreatRules([...threatRules, value]);
@@ -61,7 +60,6 @@ function WAFAPIPage() {
       );
     }
   };
-
 
   return (
     <FadeUpOnScroll delay={0.3}>
