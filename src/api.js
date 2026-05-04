@@ -14,10 +14,18 @@ export const loginForm = async (data) => {
     });
 
     const rs = await resp.json();
+    console.log('Login response:', rs); 
 
     if (resp.ok && rs.status) {
-      //alert('Valid Credentials.');
-      window.location = '/dashboard';
+      console.log('Redirect URL:', rs.redirectTO); 
+      if (rs.redirectTO) {
+        window.location.href = rs.redirectTO;
+        return rs; 
+      } else {
+        console.warn('No redirectTO URL provided by backend');
+        toast.error('Login successful but redirect URL missing.');
+        return rs;
+      }
     } else {
       toast.error(rs.message || 'Invalid credentials. Please try again.');
     }
@@ -46,7 +54,11 @@ export const loginFormII = async (data) => {
     const rs = await resp.json();
 
     if (resp.ok && rs.status) {
-      window.location = '/dashboard';
+      if (rs.redirectTO) {
+      window.location.href = rs.redirectTO || '/action';
+      }else {
+        toast.error('Login successful but redirect URL missing.');
+      }
     } else {
       toast.error('No user found, Kindly register yourself first!');
     }
@@ -171,7 +183,7 @@ export const wafapiForm = async (data) => {
     });
     if (resp.ok && resp.status === 'NoActiveUserError') {
       toast.error('No Active user session found. Kindly login again!');
-      window.location = '/action';
+      window.location.href = '/action';
     }
 
     if (resp.ok && resp.status === 'success') {
@@ -327,7 +339,7 @@ export const setEthixionRules = async (data) => {
     toast.error(rs.msg || 'Unexpected response from Ethixion Server');
     if (rs.status === 'NoActiveUserError') {
       //alert(rs.msg);
-      window.location = '/action';
+      window.location.href = '/action';
     }
   } catch (err) {
     console.error('Error -> ', err);

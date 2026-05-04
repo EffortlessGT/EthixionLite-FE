@@ -26,6 +26,7 @@ import NetworkListener from './NetworkListener';
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-loading-skeleton/dist/skeleton.css';
 import { Toaster, toast } from 'sonner';
+import { SetService } from './components/ServiceAccifier';
 
 function RouteSecurityHandler({ children }) {
   const [isValidated, setIsValidated] = useState(null);
@@ -121,17 +122,21 @@ const router = createBrowserRouter([
   {
     path: '/asg_dashboard',
     element: (
+      <SetService service="ASG_SERVICE" >
       <RouteSecurityHandler>
         <Panel />
       </RouteSecurityHandler>
+      </SetService>
     ),
   },
   {
     path: '/waf_dashboard',
     element: (
+      <SetService service="WAF_SERVICE" > 
       <WAFRoutesSecurityHandler>
         <WAFPanel />
       </WAFRoutesSecurityHandler>
+      </SetService>
     ),
   },
   {

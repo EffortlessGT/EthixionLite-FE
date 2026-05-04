@@ -4,12 +4,13 @@ import FadeUpOnScroll from './FadeUpOnScroll';
 import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
 import { toast } from 'sonner';
+import { GetService } from './ServiceAccifier';
 
 function Action() {
   const [isFlipped, setIsFlipped] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [requestedService] = useState('ASG_SERVICE');
+  const [requestedService] = useState(GetService() || 'DEFAULT_SERVICE');
 
   const [fullname, setFullname] = useState('');
   const [email, setEmail] = useState('');
@@ -66,7 +67,7 @@ function Action() {
       const decoded = jwtDecode(credentialResponse.credential);
       const email = decoded.email;
 
-      const response = await loginFormII({ email, googleLogin: true });
+      const response = await loginFormII({ email, googleLogin: true, requestedService });
 
       if (response.status === 'success') {
         window.location.href = '/dashboard';
@@ -77,6 +78,13 @@ function Action() {
       toast.error('No Account exists, Please sign up first.');
     }
   };
+
+  for (let i = 0; i < localStorage.length; i++) {
+  const key = localStorage.key(i);
+  const value = localStorage.getItem(key);
+
+  console.log(key, value);
+}
 
   return (
     <FadeUpOnScroll delay={0.3}>
