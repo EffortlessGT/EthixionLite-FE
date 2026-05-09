@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import user_img from '../assets/img/user_img.png';
 import { Link } from 'react-router-dom';
+import './SkeletonLoader.css';
 import {
   checkWAFExistsForCurrentUser,
   getCurrentWAFUser,
@@ -27,6 +28,7 @@ function WAFPanel() {
   const [userData, setUserData] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [wafAPIExists, setwafAPIExists] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [stats, setStats] = useState({
     total: 0,
     allowed: 0,
@@ -96,6 +98,8 @@ function WAFPanel() {
         }
       } catch (err) {
         console.log(err);
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchAllDashboardData();
@@ -194,7 +198,54 @@ function WAFPanel() {
           <div className="dash-dataContainer">
             <span>Ethixion | Web Application Firewall Dashboard</span>
 
-            {!wafAPIExists ? (
+            {isLoading ? (
+              <div className="skeleton-loader">
+                {/* Header Skeleton */}
+                <div className="skeleton-text skeleton-heading"></div>
+
+                {/* WAF Info Skeleton */}
+                <div className="skeleton-section-title"></div>
+                <div className="skeleton-table">
+                  <div className="skeleton-table-header">
+                    <div className="skeleton-table-cell"></div>
+                    <div className="skeleton-table-cell"></div>
+                    <div className="skeleton-table-cell"></div>
+                    <div className="skeleton-table-cell"></div>
+                    <div className="skeleton-table-cell"></div>
+                    <div className="skeleton-table-cell"></div>
+                  </div>
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="skeleton-table-row">
+                      <div className="skeleton-table-cell"></div>
+                      <div className="skeleton-table-cell"></div>
+                      <div className="skeleton-table-cell"></div>
+                      <div className="skeleton-table-cell"></div>
+                      <div className="skeleton-table-cell"></div>
+                      <div className="skeleton-table-cell"></div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Quick Stats Skeleton */}
+                <div className="skeleton-section-title"></div>
+                <div className="skeleton-stats">
+                  {[1, 2, 3, 4].map((i) => (
+                    <div key={i} className="skeleton-stat-item"></div>
+                  ))}
+                </div>
+
+                {/* Charts Skeleton */}
+                <div className="skeleton-section-title"></div>
+                <div className="skeleton-charts">
+                  <div className="skeleton-chart-box"></div>
+                  <div className="skeleton-chart-box"></div>
+                </div>
+
+                {/* Tip Skeleton */}
+                <div className="skeleton-section-title"></div>
+                <div className="skeleton-tip-box"></div>
+              </div>
+            ) : !wafAPIExists ? (
               <div className="api-warning">
                 <p>
                   It looks like you haven't set up your WAF API Security Gateway

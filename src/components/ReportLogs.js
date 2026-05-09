@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import FadeUpOnScroll from './FadeUpOnScroll';
 import { FiMenu, FiX } from 'react-icons/fi';
 import { getCurrentUser, getReportLogs } from '../api';
+import './SkeletonLoader.css';
 
 function ReportLogs() {
   const [userData, setUserData] = useState(null);
@@ -14,6 +15,7 @@ function ReportLogs() {
   const [threat_filters, setThreatFilters] = useState([]);
   const [menuOpen, setMenuOpen] = useState(false);
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -48,6 +50,8 @@ function ReportLogs() {
           'No api request made today. if you dont created any api yet kindly do it first and your request made stats will be visible here.'
         );
         //console.error("Error fetching user data:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -157,8 +161,36 @@ function ReportLogs() {
           </div>
 
           <div className="dash-dataContainer">
-            {render}
-            {tableData}
+            {isLoading ? (
+              <div className="skeleton-loader">
+                <div className="skeleton-section-title"></div>
+                <div className="skeleton-stats">
+                  {[1, 2, 3, 4].map((i) => (
+                    <div key={i} className="skeleton-stat-item"></div>
+                  ))}
+                </div>
+                <div className="skeleton-section-title"></div>
+                <div className="skeleton-table">
+                  <div className="skeleton-table-header">
+                    {[1, 2, 3, 4, 5, 6].map((i) => (
+                      <div key={i} className="skeleton-table-cell"></div>
+                    ))}
+                  </div>
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="skeleton-table-row">
+                      {[1, 2, 3, 4, 5, 6].map((j) => (
+                        <div key={j} className="skeleton-table-cell"></div>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <>
+                {render}
+                {tableData}
+              </>
+            )}
           </div>
         </div>
       </main>

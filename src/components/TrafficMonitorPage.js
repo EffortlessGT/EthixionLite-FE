@@ -11,6 +11,7 @@ import {
 } from '../api';
 import FadeUpOnScroll from './FadeUpOnScroll';
 import { FiMenu, FiX } from 'react-icons/fi';
+import './SkeletonLoader.css';
 import {
   BarChart,
   Bar,
@@ -28,6 +29,7 @@ function TrafficMonitorPage() {
   const [userData, setUserData] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [currentView, setCurrentView] = useState('volume');
+  const [isLoading, setIsLoading] = useState(true);
 
   const [totalRQ, setTotalRQ] = useState('0 Today');
   const [allowedRQ, setAllowedRQ] = useState('0 Today');
@@ -259,6 +261,10 @@ function TrafficMonitorPage() {
     fetchTrendsData();
     fetchTrendsStatusData();
     fetchAdvanceMonitorsData();
+    
+    // Set loading to false after a short delay to ensure all data is fetched
+    const timer = setTimeout(() => setIsLoading(false), 500);
+    return () => clearTimeout(timer);
   }, []);
 
   const volumeContainer = error ? (
@@ -663,11 +669,23 @@ function TrafficMonitorPage() {
             </div>
 
             <div className="monitor-section fade-in">
-              {currentView === 'volume' && volumeContainer}
-              {currentView === 'security' && securityContainer}
-              {currentView === 'trends' && trendsContainer}
-              {currentView === 'advance_monitors' && advanceMonitorContainers}
-              {currentView === 'status' && trendsStatusContainer}
+              {isLoading ? (
+                <div className="skeleton-loader">
+                  <div className="skeleton-charts">
+                    {[1, 2, 3, 4, 5].map((i) => (
+                      <div key={i} className="skeleton-chart-box"></div>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <>
+                  {currentView === 'volume' && volumeContainer}
+                  {currentView === 'security' && securityContainer}
+                  {currentView === 'trends' && trendsContainer}
+                  {currentView === 'advance_monitors' && advanceMonitorContainers}
+                  {currentView === 'status' && trendsStatusContainer}
+                </>
+              )}
             </div>
           </div>
         </div>

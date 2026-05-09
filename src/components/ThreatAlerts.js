@@ -4,12 +4,14 @@ import { Link } from 'react-router-dom';
 import FadeUpOnScroll from './FadeUpOnScroll';
 import { FiMenu, FiX } from 'react-icons/fi';
 import { getThreatLogs, getCurrentUser } from '../api';
+import './SkeletonLoader.css';
 
 function ThreatAlerts() {
   const [userData, setUserData] = useState(null);
   const [logs, setLogs] = useState([]);
   const [error, setError] = useState('');
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -37,6 +39,8 @@ function ThreatAlerts() {
       } catch (exc) {
         console.error('Error -> ', exc);
         setError('No Threats Detected Today for your API.');
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchThreats();
@@ -114,7 +118,17 @@ function ThreatAlerts() {
               You can view today's threat logs for your generated API requests
               along with detected threat details here.
             </p>
-            <div class="threat-alert-box">{logsdata}</div>
+            {isLoading ? (
+              <div className="skeleton-loader">
+                <div className="skeleton-list">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="skeleton-card"></div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div className="threat-alert-box">{logsdata}</div>
+            )}
           </div>
         </div>
       </main>

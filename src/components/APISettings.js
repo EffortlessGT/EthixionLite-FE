@@ -15,6 +15,7 @@ import { FiMenu, FiX } from 'react-icons/fi';
 import PopupNotificationWrapper from './PopUpNotificationWrapper';
 import HeaderAuthSnippets from './HeaderAuthSnippets';
 import { toast } from 'sonner';
+import './SkeletonLoader.css';
 
 function APISettings() {
   const [userData, setUserData] = useState(null);
@@ -26,6 +27,7 @@ function APISettings() {
   const [regStatus, setRegStatus] = useState(false);
   const [myapiname, setMyAPIName] = useState('');
   const [apiAlertData, setAPIAlertData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -65,6 +67,10 @@ function APISettings() {
     fetchUser();
     fetchApiData();
     fetchApiAlertsData();
+    
+    // Set loading to false after data fetches are initiated
+    const timer = setTimeout(() => setIsLoading(false), 800);
+    return () => clearTimeout(timer);
   }, []);
 
   const disableAPI = async (apiname) => {
@@ -194,6 +200,31 @@ function APISettings() {
                 )}
               </div>
             </PopupNotificationWrapper>
+          ) : isLoading ? (
+            <div className="dash-dataContainer" id="dash-dataContainer">
+              <div className="skeleton-loader">
+                <div className="skeleton-section-title" style={{ width: '40%' }}></div>
+                <div style={{ display: 'flex', gap: '12px', marginBottom: '24px' }}>
+                  {[1, 2, 3, 4].map((i) => (
+                    <div key={i} className="skeleton-button"></div>
+                  ))}
+                </div>
+                <div className="skeleton-table">
+                  <div className="skeleton-table-header">
+                    {[1, 2, 3, 4, 5, 6, 7].map((i) => (
+                      <div key={i} className="skeleton-table-cell"></div>
+                    ))}
+                  </div>
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="skeleton-table-row">
+                      {[1, 2, 3, 4, 5, 6, 7].map((j) => (
+                        <div key={j} className="skeleton-table-cell"></div>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
           ) : (
             <div className="dash-dataContainer" id="dash-dataContainer">
               <h1>🔧 API Settings</h1>

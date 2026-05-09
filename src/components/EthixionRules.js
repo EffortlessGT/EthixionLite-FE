@@ -5,12 +5,14 @@ import FadeUpOnScroll from './FadeUpOnScroll';
 import { FiMenu, FiX } from 'react-icons/fi';
 import { getCurrentUser, setEthixionRules } from '../api';
 import { toast } from 'react-toastify';
+import './SkeletonLoader.css';
 
 function EthixionRules() {
   const [userData, setUserData] = useState(null);
   const [apiname, setApiName] = useState('');
   const [threat_filters, setThreatFilters] = useState([]);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -19,6 +21,8 @@ function EthixionRules() {
         setUserData(result);
       } catch (error) {
         console.error('Error fetching user data:', error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -95,7 +99,18 @@ function EthixionRules() {
           </div>
 
           <div className="dash-dataContainer">
-            <div className="firewall-rules-container">
+            {isLoading ? (
+              <div className="skeleton-loader">
+                <div className="skeleton-section-title"></div>
+                <div className="skeleton-form-group">
+                  <div className="skeleton-input"></div>
+                  <div className="skeleton-input"></div>
+                  <div className="skeleton-input"></div>
+                  <div className="skeleton-button"></div>
+                </div>
+              </div>
+            ) : (
+              <div className="firewall-rules-container">
               <h2>Ethixion Rules</h2>
               <form onSubmit={handleRules} method="POST">
                 <label for="apiname">API Name:</label>
@@ -175,6 +190,7 @@ function EthixionRules() {
                 <button type="submit">Submit</button>
               </form>
             </div>
+            )}
           </div>
         </div>
       </main>

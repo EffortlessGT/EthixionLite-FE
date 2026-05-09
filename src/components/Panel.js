@@ -9,6 +9,7 @@ import {
 import FadeUpOnScroll from './FadeUpOnScroll';
 import { FiMenu, FiX } from 'react-icons/fi';
 import { Tooltip as ReactTooltip } from 'react-tooltip';
+import './SkeletonLoader.css';
 
 function Panel() {
   const [userData, setUserData] = useState(null);
@@ -59,8 +60,23 @@ function Panel() {
     fetchAllData();
   }, []);
 
-  if (loading || isAPIExists === null) {
-    return <p style={{ padding: '20px' }}>Loading dashboard...</p>;
+  if (isAPIExists === null) {
+    return (
+      <FadeUpOnScroll>
+        <main className="dashboard">
+          <div className="skeleton-loader" style={{ padding: '20px' }}>
+            <div className="skeleton-heading"></div>
+            <div className="skeleton-section-title"></div>
+            <div className="skeleton-stats">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="skeleton-stat-item"></div>
+              ))}
+            </div>
+            <div className="skeleton-tip-box"></div>
+          </div>
+        </main>
+      </FadeUpOnScroll>
+    );
   }
 
   return (
@@ -133,7 +149,20 @@ function Panel() {
           <div className="dash-dataContainer">
             <span>Ethixion | API Security Gatway Dashboard</span>
 
-            {!isAPIExists ? (
+            {loading ? (
+              <div className="skeleton-loader">
+                <div className="skeleton-heading"></div>
+                <div className="skeleton-text"></div>
+                <div className="skeleton-section-title"></div>
+                <div className="skeleton-stats">
+                  {[1, 2, 3, 4].map((i) => (
+                    <div key={i} className="skeleton-stat-item"></div>
+                  ))}
+                </div>
+                <div className="skeleton-section-title"></div>
+                <div className="skeleton-tip-box"></div>
+              </div>
+            ) : !isAPIExists ? (
               <div className="api-warning">
                 <p>
                   It looks like you haven't set up your API Security Gateway
