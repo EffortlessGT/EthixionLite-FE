@@ -68,7 +68,7 @@ function APISettings() {
     fetchUser();
     fetchApiData();
     fetchApiAlertsData();
-    
+
     // Set loading to false after data fetches are initiated
     const timer = setTimeout(() => setIsLoading(false), 800);
     return () => clearTimeout(timer);
@@ -204,16 +204,35 @@ function APISettings() {
           ) : isLoading ? (
             <div className="dash-dataContainer" id="dash-dataContainer">
               <div style={{ padding: '20px' }}>
-                <Skeleton height={24} width="40%" style={{ marginBottom: '24px' }} />
-                <div style={{ display: 'flex', gap: '12px', marginBottom: '24px' }}>
+                <Skeleton
+                  height={24}
+                  width="40%"
+                  style={{ marginBottom: '24px' }}
+                />
+                <div
+                  style={{ display: 'flex', gap: '12px', marginBottom: '24px' }}
+                >
                   {[1, 2, 3, 4].map((i) => (
-                    <Skeleton key={i} height={44} width={120} borderRadius={4} />
+                    <Skeleton
+                      key={i}
+                      height={44}
+                      width={120}
+                      borderRadius={4}
+                    />
                   ))}
                 </div>
                 <div style={{ margin: '16px 0' }}>
                   <Skeleton height={20} style={{ marginBottom: '12px' }} />
                   {[1, 2, 3].map((i) => (
-                    <div key={i} style={{ display: 'flex', gap: '12px', padding: '16px', borderBottom: '1px solid #e0e0e0' }}>
+                    <div
+                      key={i}
+                      style={{
+                        display: 'flex',
+                        gap: '12px',
+                        padding: '16px',
+                        borderBottom: '1px solid #e0e0e0',
+                      }}
+                    >
                       <Skeleton height={20} width="12%" />
                       <Skeleton height={20} width="15%" />
                       <Skeleton height={20} width="12%" />

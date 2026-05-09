@@ -262,7 +262,7 @@ function TrafficMonitorPage() {
     fetchTrendsData();
     fetchTrendsStatusData();
     fetchAdvanceMonitorsData();
-    
+
     // Set loading to false after a short delay to ensure all data is fetched
     const timer = setTimeout(() => setIsLoading(false), 500);
     return () => clearTimeout(timer);
@@ -672,9 +672,22 @@ function TrafficMonitorPage() {
             <div className="monitor-section fade-in">
               {isLoading ? (
                 <div style={{ padding: '20px' }}>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px', margin: '24px 0' }}>
+                  <div
+                    style={{
+                      display: 'grid',
+                      gridTemplateColumns:
+                        'repeat(auto-fit, minmax(300px, 1fr))',
+                      gap: '24px',
+                      margin: '24px 0',
+                    }}
+                  >
                     {[1, 2, 3, 4, 5].map((i) => (
-                      <Skeleton key={i} height={300} borderRadius={8} style={{ padding: '16px' }} />
+                      <Skeleton
+                        key={i}
+                        height={300}
+                        borderRadius={8}
+                        style={{ padding: '16px' }}
+                      />
                     ))}
                   </div>
                 </div>
@@ -683,7 +696,8 @@ function TrafficMonitorPage() {
                   {currentView === 'volume' && volumeContainer}
                   {currentView === 'security' && securityContainer}
                   {currentView === 'trends' && trendsContainer}
-                  {currentView === 'advance_monitors' && advanceMonitorContainers}
+                  {currentView === 'advance_monitors' &&
+                    advanceMonitorContainers}
                   {currentView === 'status' && trendsStatusContainer}
                 </>
               )}

@@ -21,12 +21,18 @@ import APISettings from './components/APISettings';
 import VerifyAccount from './components/VerifyAccount';
 import WAFPanel from './components/WAFPanel';
 import WAFAPIPage from './components/WAFAPIPage';
+import HTTPMethodControlPage from './components/HTTPMethodControlPage';
+import DomainManagement from './components/WAFDashboard/DomainManagement';
+import APIKeysManagement from './components/WAFDashboard/APIKeysManagement';
+import LoggingMonitoring from './components/WAFDashboard/LoggingMonitoring';
+import Alerts from './components/WAFDashboard/Alerts';
 import NetworkListener from './NetworkListener';
 
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-loading-skeleton/dist/skeleton.css';
 import { Toaster, toast } from 'sonner';
 import { SetService } from './components/ServiceAccifier';
+import RateLimiting from './components/WAFDashboard/RateLimiting';
 
 function RouteSecurityHandler({ children }) {
   const [isValidated, setIsValidated] = useState(null);
@@ -122,20 +128,20 @@ const router = createBrowserRouter([
   {
     path: '/asg_dashboard',
     element: (
-      <SetService service="ASG_SERVICE" >
-      <RouteSecurityHandler>
-        <Panel />
-      </RouteSecurityHandler>
+      <SetService service="ASG_SERVICE">
+        <RouteSecurityHandler>
+          <Panel />
+        </RouteSecurityHandler>
       </SetService>
     ),
   },
   {
     path: '/waf_dashboard',
     element: (
-      <SetService service="WAF_SERVICE" > 
-      <WAFRoutesSecurityHandler>
-        <WAFPanel />
-      </WAFRoutesSecurityHandler>
+      <SetService service="WAF_SERVICE">
+        <WAFRoutesSecurityHandler>
+          <WAFPanel />
+        </WAFRoutesSecurityHandler>
       </SetService>
     ),
   },
@@ -157,6 +163,66 @@ const router = createBrowserRouter([
         <>
           <Nav />
           <WAFAPIPage />
+        </>
+      </WAFRoutesSecurityHandler>
+    ),
+  },
+  {
+    path: '/domainmanagement',
+    element: (
+      <WAFRoutesSecurityHandler>
+        <>
+          <DomainManagement />
+        </>
+      </WAFRoutesSecurityHandler>
+    ),
+  },
+  {
+    path: '/ratelimit',
+    element: (
+      <WAFRoutesSecurityHandler>
+        <>
+          <RateLimiting />
+        </>
+      </WAFRoutesSecurityHandler>
+    ),
+  },
+  {
+    path: '/apikeys',
+    element: (
+      <WAFRoutesSecurityHandler>
+        <>
+          <APIKeysManagement />
+        </>
+      </WAFRoutesSecurityHandler>
+    ),
+  },
+  {
+    path: '/httpcontrol',
+    element: (
+      <WAFRoutesSecurityHandler>
+        <>
+          <HTTPMethodControlPage />
+        </>
+      </WAFRoutesSecurityHandler>
+    ),
+  },
+  {
+    path: '/logs',
+    element: (
+      <WAFRoutesSecurityHandler>
+        <>
+          <LoggingMonitoring />
+        </>
+      </WAFRoutesSecurityHandler>
+    ),
+  },
+  {
+    path: '/alerts',
+    element: (
+      <WAFRoutesSecurityHandler>
+        <>
+          <Alerts />
         </>
       </WAFRoutesSecurityHandler>
     ),

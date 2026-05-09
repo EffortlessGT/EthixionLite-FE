@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import user_img from '../assets/img/user_img.png';
 import { Link } from 'react-router-dom';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
@@ -10,8 +9,6 @@ import {
   getWAFDashboardData,
 } from '../api';
 import FadeUpOnScroll from './FadeUpOnScroll';
-import { FiMenu, FiX } from 'react-icons/fi';
-import { Tooltip as ReactTooltip } from 'react-tooltip';
 
 import {
   PieChart,
@@ -24,6 +21,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from 'recharts';
+import WAFDashboardNavbar from './WAFDashboardNavbar';
 
 function WAFPanel() {
   const [userData, setUserData] = useState(null);
@@ -123,77 +121,15 @@ function WAFPanel() {
   return (
     <FadeUpOnScroll>
       <main className="dashboard">
-        {/* Hamburger */}
-        <div className="hamburger-icon" onClick={() => setMenuOpen(!menuOpen)}>
-          {menuOpen ? <FiX size={30} /> : <FiMenu size={30} />}
-        </div>
-
         <div
           className={`dashboard-container ${menuOpen ? 'sidebar-open' : ''}`}
         >
-          {/* Sidebar */}
-          <div className={`dash-sidebar ${menuOpen ? 'show' : ''}`}>
-            <div className="sidebar-userprofile">
-              <img src={user_img} alt="user" />
-              <div
-                className="truncate"
-                data-tooltip-id="nameTip"
-                data-tooltip-content={
-                  userData?.fullname === 'Setup Required!'
-                    ? 'Set up your WAF to get started!'
-                    : userData?.fullname || 'Loading...'
-                }
-              >
-                {userData?.fullname || 'Loading...'}
-              </div>
-
-              <ReactTooltip
-                id="nameTip"
-                place="bottom"
-                className="custom-tooltip"
-              />
-            </div>
-
-            <div
-              className="sidebar-navigations"
-              onClick={() => setMenuOpen(false)}
-            >
-              {wafAPIExists === true && (
-                <>
-                  <Link to="/domain">
-                    <h3>Domain Management</h3>
-                  </Link>
-                  <Link to="/rules">
-                    <h3>Security Rules</h3>
-                  </Link>
-                  <Link to="/ratelimit">
-                    <h3>Rate Limiting</h3>
-                  </Link>
-                  <Link to="/http">
-                    <h3>HTTP Method Control</h3>
-                  </Link>
-                  <Link to="/apikeys">
-                    <h3>API Keys</h3>
-                  </Link>
-                  <Link to="/logs">
-                    <h3>Logging & Monitoring</h3>
-                  </Link>
-                  <Link to="/alerts">
-                    <h3>Alerts</h3>
-                  </Link>
-                  <Link to="/dashboard">
-                    <h3>ASG Dashboard</h3>
-                  </Link>
-                </>
-              )}
-              <Link to="/waf_api">
-                <h3>API</h3>
-              </Link>
-              <Link to="/">
-                <h3>Home</h3>
-              </Link>
-            </div>
-          </div>
+          <WAFDashboardNavbar
+            menuOpen={menuOpen}
+            setMenuOpen={setMenuOpen}
+            userData={userData}
+            wafAPIExists={wafAPIExists}
+          />
 
           {/* Main Content */}
           <div className="dash-dataContainer">
@@ -202,14 +138,30 @@ function WAFPanel() {
             {isLoading ? (
               <div style={{ padding: '20px' }}>
                 {/* Header Skeleton */}
-                <Skeleton height={24} width="50%" style={{ marginBottom: '20px' }} />
+                <Skeleton
+                  height={24}
+                  width="50%"
+                  style={{ marginBottom: '20px' }}
+                />
 
                 {/* WAF Info Skeleton */}
-                <Skeleton height={20} width="30%" style={{ margin: '24px 0 16px 0' }} />
+                <Skeleton
+                  height={20}
+                  width="30%"
+                  style={{ margin: '24px 0 16px 0' }}
+                />
                 <div style={{ margin: '16px 0' }}>
                   <Skeleton height={20} style={{ marginBottom: '12px' }} />
                   {[1, 2, 3].map((i) => (
-                    <div key={i} style={{ display: 'flex', gap: '12px', padding: '16px', borderBottom: '1px solid #e0e0e0' }}>
+                    <div
+                      key={i}
+                      style={{
+                        display: 'flex',
+                        gap: '12px',
+                        padding: '16px',
+                        borderBottom: '1px solid #e0e0e0',
+                      }}
+                    >
                       <Skeleton height={20} width="15%" />
                       <Skeleton height={20} width="20%" />
                       <Skeleton height={20} width="10%" />
@@ -221,23 +173,58 @@ function WAFPanel() {
                 </div>
 
                 {/* Quick Stats Skeleton */}
-                <Skeleton height={20} width="30%" style={{ margin: '24px 0 16px 0' }} />
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', margin: '16px 0' }}>
+                <Skeleton
+                  height={20}
+                  width="30%"
+                  style={{ margin: '24px 0 16px 0' }}
+                />
+                <div
+                  style={{
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    gap: '16px',
+                    margin: '16px 0',
+                  }}
+                >
                   {[1, 2, 3, 4].map((i) => (
-                    <Skeleton key={i} height={80} width={200} borderRadius={8} />
+                    <Skeleton
+                      key={i}
+                      height={80}
+                      width={200}
+                      borderRadius={8}
+                    />
                   ))}
                 </div>
 
                 {/* Charts Skeleton */}
-                <Skeleton height={20} width="30%" style={{ margin: '24px 0 16px 0' }} />
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px', margin: '24px 0' }}>
+                <Skeleton
+                  height={20}
+                  width="30%"
+                  style={{ margin: '24px 0 16px 0' }}
+                />
+                <div
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+                    gap: '24px',
+                    margin: '24px 0',
+                  }}
+                >
                   <Skeleton height={300} borderRadius={8} />
                   <Skeleton height={300} borderRadius={8} />
                 </div>
 
                 {/* Tip Skeleton */}
-                <Skeleton height={20} width="30%" style={{ margin: '24px 0 16px 0' }} />
-                <Skeleton height={200} borderRadius={8} style={{ padding: '24px', margin: '16px 0' }} />
+                <Skeleton
+                  height={20}
+                  width="30%"
+                  style={{ margin: '24px 0 16px 0' }}
+                />
+                <Skeleton
+                  height={200}
+                  borderRadius={8}
+                  style={{ padding: '24px', margin: '16px 0' }}
+                />
               </div>
             ) : !wafAPIExists ? (
               <div className="api-warning">

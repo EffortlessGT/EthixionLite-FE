@@ -14,13 +14,13 @@ export const loginForm = async (data) => {
     });
 
     const rs = await resp.json();
-    console.log('Login response:', rs); 
+    console.log('Login response:', rs);
 
     if (resp.ok && rs.status) {
-      console.log('Redirect URL:', rs.redirectTO); 
+      console.log('Redirect URL:', rs.redirectTO);
       if (rs.redirectTO) {
         window.location.href = rs.redirectTO;
-        return rs; 
+        return rs;
       } else {
         console.warn('No redirectTO URL provided by backend');
         toast.error('Login successful but redirect URL missing.');
@@ -55,8 +55,8 @@ export const loginFormII = async (data) => {
 
     if (resp.ok && rs.status) {
       if (rs.redirectTO) {
-      window.location.href = rs.redirectTO || '/action';
-      }else {
+        window.location.href = rs.redirectTO || '/action';
+      } else {
         toast.error('Login successful but redirect URL missing.');
       }
     } else {

@@ -102,8 +102,19 @@ function EthixionRules() {
           <div className="dash-dataContainer">
             {isLoading ? (
               <div style={{ padding: '20px' }}>
-                <Skeleton height={20} width="30%" style={{ margin: '24px 0 16px 0' }} />
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', margin: '16px 0' }}>
+                <Skeleton
+                  height={20}
+                  width="30%"
+                  style={{ margin: '24px 0 16px 0' }}
+                />
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '8px',
+                    margin: '16px 0',
+                  }}
+                >
                   <Skeleton height={40} borderRadius={4} />
                   <Skeleton height={40} borderRadius={4} />
                   <Skeleton height={40} borderRadius={4} />
@@ -112,85 +123,87 @@ function EthixionRules() {
               </div>
             ) : (
               <div className="firewall-rules-container">
-              <h2>Ethixion Rules</h2>
-              <form onSubmit={handleRules} method="POST">
-                <label for="apiname">API Name:</label>
-                <br />
-                <input
-                  type="text"
-                  id="apiname"
-                  name="apiname"
-                  value={apiname}
-                  onChange={(e) => setApiName(e.target.value)}
-                  required
-                />
-                <br />
-
-                <fieldset>
-                  <legend>Custom Firewall Rules (Enable/Disable)</legend>
-
+                <h2>Ethixion Rules</h2>
+                <form onSubmit={handleRules} method="POST">
+                  <label for="apiname">API Name:</label>
+                  <br />
                   <input
-                    type="checkbox"
-                    id="rule_allowlist_ip"
-                    name="allowlist_ip"
-                    value="Allowlist IP"
-                    checked={threat_filters.includes('Allowlist IP')}
-                    onChange={handleThreatFilters}
+                    type="text"
+                    id="apiname"
+                    name="apiname"
+                    value={apiname}
+                    onChange={(e) => setApiName(e.target.value)}
+                    required
                   />
-                  <label for="rule_allowlist_ip">Allowlist IP</label>
                   <br />
 
-                  <input
-                    type="checkbox"
-                    id="rule_rate_limit"
-                    name="rate_limit"
-                    value="Rate Limiting"
-                    checked={threat_filters.includes('Rate Limiting')}
-                    onChange={handleThreatFilters}
-                  />
-                  <label for="rule_rate_limit">Enable Rate Limiting</label>
-                  <br />
+                  <fieldset>
+                    <legend>Custom Firewall Rules (Enable/Disable)</legend>
 
-                  <input
-                    type="checkbox"
-                    id="rule_geofencing"
-                    name="geofencing"
-                    value="Geofencing"
-                    checked={threat_filters.includes('Geofencing')}
-                    onChange={handleThreatFilters}
-                  />
-                  <label for="rule_geofencing">Enable Geofencing</label>
-                  <br />
+                    <input
+                      type="checkbox"
+                      id="rule_allowlist_ip"
+                      name="allowlist_ip"
+                      value="Allowlist IP"
+                      checked={threat_filters.includes('Allowlist IP')}
+                      onChange={handleThreatFilters}
+                    />
+                    <label for="rule_allowlist_ip">Allowlist IP</label>
+                    <br />
 
-                  <input
-                    type="checkbox"
-                    id="rule_alert_email"
-                    name="alert_email_enabled"
-                    value="Alert Emails"
-                    checked={threat_filters.includes('Alert Emails')}
-                    onChange={handleThreatFilters}
-                  />
-                  <label for="rule_alert_email">Enable Alert Emails</label>
-                  <br />
+                    <input
+                      type="checkbox"
+                      id="rule_rate_limit"
+                      name="rate_limit"
+                      value="Rate Limiting"
+                      checked={threat_filters.includes('Rate Limiting')}
+                      onChange={handleThreatFilters}
+                    />
+                    <label for="rule_rate_limit">Enable Rate Limiting</label>
+                    <br />
 
-                  <input
-                    type="checkbox"
-                    id="rule_pattern_matching"
-                    name="pattern_matching"
-                    value="Threat Pattern Matching"
-                    checked={threat_filters.includes('Threat Pattern Matching')}
-                    onChange={handleThreatFilters}
-                  />
-                  <label for="rule_pattern_matching">
-                    Enable Threat Pattern Matching
-                  </label>
-                  <br />
-                </fieldset>
+                    <input
+                      type="checkbox"
+                      id="rule_geofencing"
+                      name="geofencing"
+                      value="Geofencing"
+                      checked={threat_filters.includes('Geofencing')}
+                      onChange={handleThreatFilters}
+                    />
+                    <label for="rule_geofencing">Enable Geofencing</label>
+                    <br />
 
-                <br />
-                <button type="submit">Submit</button>
-              </form>
-            </div>
+                    <input
+                      type="checkbox"
+                      id="rule_alert_email"
+                      name="alert_email_enabled"
+                      value="Alert Emails"
+                      checked={threat_filters.includes('Alert Emails')}
+                      onChange={handleThreatFilters}
+                    />
+                    <label for="rule_alert_email">Enable Alert Emails</label>
+                    <br />
+
+                    <input
+                      type="checkbox"
+                      id="rule_pattern_matching"
+                      name="pattern_matching"
+                      value="Threat Pattern Matching"
+                      checked={threat_filters.includes(
+                        'Threat Pattern Matching'
+                      )}
+                      onChange={handleThreatFilters}
+                    />
+                    <label for="rule_pattern_matching">
+                      Enable Threat Pattern Matching
+                    </label>
+                    <br />
+                  </fieldset>
+
+                  <br />
+                  <button type="submit">Submit</button>
+                </form>
+              </div>
             )}
           </div>
         </div>

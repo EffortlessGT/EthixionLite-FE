@@ -121,9 +121,20 @@ function ThreatAlerts() {
             </p>
             {isLoading ? (
               <div style={{ padding: '20px' }}>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '12px',
+                  }}
+                >
                   {[1, 2, 3].map((i) => (
-                    <Skeleton key={i} height={150} borderRadius={8} style={{ padding: '16px' }} />
+                    <Skeleton
+                      key={i}
+                      height={150}
+                      borderRadius={8}
+                      style={{ padding: '16px' }}
+                    />
                   ))}
                 </div>
               </div>

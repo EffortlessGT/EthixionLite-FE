@@ -66,14 +66,33 @@ function Panel() {
       <FadeUpOnScroll>
         <main className="dashboard">
           <div style={{ padding: '20px' }}>
-            <Skeleton height={24} width="50%" style={{ marginBottom: '20px' }} />
-            <Skeleton height={20} width="30%" style={{ margin: '24px 0 16px 0' }} />
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', margin: '16px 0' }}>
+            <Skeleton
+              height={24}
+              width="50%"
+              style={{ marginBottom: '20px' }}
+            />
+            <Skeleton
+              height={20}
+              width="30%"
+              style={{ margin: '24px 0 16px 0' }}
+            />
+            <div
+              style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: '16px',
+                margin: '16px 0',
+              }}
+            >
               {[1, 2, 3, 4].map((i) => (
                 <Skeleton key={i} height={80} width={200} borderRadius={8} />
               ))}
             </div>
-            <Skeleton height={200} borderRadius={8} style={{ padding: '24px', margin: '16px 0' }} />
+            <Skeleton
+              height={200}
+              borderRadius={8}
+              style={{ padding: '24px', margin: '16px 0' }}
+            />
           </div>
         </main>
       </FadeUpOnScroll>
@@ -152,16 +171,44 @@ function Panel() {
 
             {loading ? (
               <div style={{ padding: '20px' }}>
-                <Skeleton height={24} width="50%" style={{ marginBottom: '20px' }} />
+                <Skeleton
+                  height={24}
+                  width="50%"
+                  style={{ marginBottom: '20px' }}
+                />
                 <Skeleton height={16} style={{ marginBottom: '8px' }} />
-                <Skeleton height={20} width="30%" style={{ margin: '24px 0 16px 0' }} />
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', margin: '16px 0' }}>
+                <Skeleton
+                  height={20}
+                  width="30%"
+                  style={{ margin: '24px 0 16px 0' }}
+                />
+                <div
+                  style={{
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    gap: '16px',
+                    margin: '16px 0',
+                  }}
+                >
                   {[1, 2, 3, 4].map((i) => (
-                    <Skeleton key={i} height={80} width={200} borderRadius={8} />
+                    <Skeleton
+                      key={i}
+                      height={80}
+                      width={200}
+                      borderRadius={8}
+                    />
                   ))}
                 </div>
-                <Skeleton height={20} width="30%" style={{ margin: '24px 0 16px 0' }} />
-                <Skeleton height={200} borderRadius={8} style={{ padding: '24px', margin: '16px 0' }} />
+                <Skeleton
+                  height={20}
+                  width="30%"
+                  style={{ margin: '24px 0 16px 0' }}
+                />
+                <Skeleton
+                  height={200}
+                  borderRadius={8}
+                  style={{ padding: '24px', margin: '16px 0' }}
+                />
               </div>
             ) : !isAPIExists ? (
               <div className="api-warning">

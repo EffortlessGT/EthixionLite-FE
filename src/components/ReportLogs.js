@@ -164,17 +164,45 @@ function ReportLogs() {
           <div className="dash-dataContainer">
             {isLoading ? (
               <div style={{ padding: '20px' }}>
-                <Skeleton height={20} width="30%" style={{ margin: '24px 0 16px 0' }} />
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', margin: '16px 0' }}>
+                <Skeleton
+                  height={20}
+                  width="30%"
+                  style={{ margin: '24px 0 16px 0' }}
+                />
+                <div
+                  style={{
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    gap: '16px',
+                    margin: '16px 0',
+                  }}
+                >
                   {[1, 2, 3, 4].map((i) => (
-                    <Skeleton key={i} height={80} width={200} borderRadius={8} />
+                    <Skeleton
+                      key={i}
+                      height={80}
+                      width={200}
+                      borderRadius={8}
+                    />
                   ))}
                 </div>
-                <Skeleton height={20} width="30%" style={{ margin: '24px 0 16px 0' }} />
+                <Skeleton
+                  height={20}
+                  width="30%"
+                  style={{ margin: '24px 0 16px 0' }}
+                />
                 <div style={{ margin: '16px 0' }}>
                   <Skeleton height={20} style={{ marginBottom: '12px' }} />
                   {[1, 2, 3].map((i) => (
-                    <div key={i} style={{ display: 'flex', gap: '12px', padding: '16px', borderBottom: '1px solid #e0e0e0' }}>
+                    <div
+                      key={i}
+                      style={{
+                        display: 'flex',
+                        gap: '12px',
+                        padding: '16px',
+                        borderBottom: '1px solid #e0e0e0',
+                      }}
+                    >
                       <Skeleton height={20} width="15%" />
                       <Skeleton height={20} width="15%" />
                       <Skeleton height={20} width="15%" />

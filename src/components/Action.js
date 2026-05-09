@@ -67,7 +67,11 @@ function Action() {
       const decoded = jwtDecode(credentialResponse.credential);
       const email = decoded.email;
 
-      const response = await loginFormII({ email, googleLogin: true, requestedService });
+      const response = await loginFormII({
+        email,
+        googleLogin: true,
+        requestedService,
+      });
 
       if (response.status === 'success') {
         window.location.href = '/dashboard';
@@ -80,11 +84,11 @@ function Action() {
   };
 
   for (let i = 0; i < localStorage.length; i++) {
-  const key = localStorage.key(i);
-  const value = localStorage.getItem(key);
+    const key = localStorage.key(i);
+    const value = localStorage.getItem(key);
 
-  console.log(key, value);
-}
+    console.log(key, value);
+  }
 
   return (
     <FadeUpOnScroll delay={0.3}>
