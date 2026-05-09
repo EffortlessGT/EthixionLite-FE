@@ -11,7 +11,8 @@ import {
 } from '../api';
 import FadeUpOnScroll from './FadeUpOnScroll';
 import { FiMenu, FiX } from 'react-icons/fi';
-import './SkeletonLoader.css';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 import {
   BarChart,
   Bar,
@@ -670,10 +671,10 @@ function TrafficMonitorPage() {
 
             <div className="monitor-section fade-in">
               {isLoading ? (
-                <div className="skeleton-loader">
-                  <div className="skeleton-charts">
+                <div style={{ padding: '20px' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px', margin: '24px 0' }}>
                     {[1, 2, 3, 4, 5].map((i) => (
-                      <div key={i} className="skeleton-chart-box"></div>
+                      <Skeleton key={i} height={300} borderRadius={8} style={{ padding: '16px' }} />
                     ))}
                   </div>
                 </div>

@@ -4,7 +4,8 @@ import { Link } from 'react-router-dom';
 import FadeUpOnScroll from './FadeUpOnScroll';
 import { FiMenu, FiX } from 'react-icons/fi';
 import { getCurrentUser, getReportLogs } from '../api';
-import './SkeletonLoader.css';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 function ReportLogs() {
   const [userData, setUserData] = useState(null);
@@ -162,25 +163,24 @@ function ReportLogs() {
 
           <div className="dash-dataContainer">
             {isLoading ? (
-              <div className="skeleton-loader">
-                <div className="skeleton-section-title"></div>
-                <div className="skeleton-stats">
+              <div style={{ padding: '20px' }}>
+                <Skeleton height={20} width="30%" style={{ margin: '24px 0 16px 0' }} />
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', margin: '16px 0' }}>
                   {[1, 2, 3, 4].map((i) => (
-                    <div key={i} className="skeleton-stat-item"></div>
+                    <Skeleton key={i} height={80} width={200} borderRadius={8} />
                   ))}
                 </div>
-                <div className="skeleton-section-title"></div>
-                <div className="skeleton-table">
-                  <div className="skeleton-table-header">
-                    {[1, 2, 3, 4, 5, 6].map((i) => (
-                      <div key={i} className="skeleton-table-cell"></div>
-                    ))}
-                  </div>
+                <Skeleton height={20} width="30%" style={{ margin: '24px 0 16px 0' }} />
+                <div style={{ margin: '16px 0' }}>
+                  <Skeleton height={20} style={{ marginBottom: '12px' }} />
                   {[1, 2, 3].map((i) => (
-                    <div key={i} className="skeleton-table-row">
-                      {[1, 2, 3, 4, 5, 6].map((j) => (
-                        <div key={j} className="skeleton-table-cell"></div>
-                      ))}
+                    <div key={i} style={{ display: 'flex', gap: '12px', padding: '16px', borderBottom: '1px solid #e0e0e0' }}>
+                      <Skeleton height={20} width="15%" />
+                      <Skeleton height={20} width="15%" />
+                      <Skeleton height={20} width="15%" />
+                      <Skeleton height={20} width="15%" />
+                      <Skeleton height={20} width="10%" />
+                      <Skeleton height={20} width="20%" />
                     </div>
                   ))}
                 </div>

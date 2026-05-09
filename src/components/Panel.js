@@ -9,7 +9,8 @@ import {
 import FadeUpOnScroll from './FadeUpOnScroll';
 import { FiMenu, FiX } from 'react-icons/fi';
 import { Tooltip as ReactTooltip } from 'react-tooltip';
-import './SkeletonLoader.css';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 function Panel() {
   const [userData, setUserData] = useState(null);
@@ -64,15 +65,15 @@ function Panel() {
     return (
       <FadeUpOnScroll>
         <main className="dashboard">
-          <div className="skeleton-loader" style={{ padding: '20px' }}>
-            <div className="skeleton-heading"></div>
-            <div className="skeleton-section-title"></div>
-            <div className="skeleton-stats">
+          <div style={{ padding: '20px' }}>
+            <Skeleton height={24} width="50%" style={{ marginBottom: '20px' }} />
+            <Skeleton height={20} width="30%" style={{ margin: '24px 0 16px 0' }} />
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', margin: '16px 0' }}>
               {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="skeleton-stat-item"></div>
+                <Skeleton key={i} height={80} width={200} borderRadius={8} />
               ))}
             </div>
-            <div className="skeleton-tip-box"></div>
+            <Skeleton height={200} borderRadius={8} style={{ padding: '24px', margin: '16px 0' }} />
           </div>
         </main>
       </FadeUpOnScroll>
@@ -150,17 +151,17 @@ function Panel() {
             <span>Ethixion | API Security Gatway Dashboard</span>
 
             {loading ? (
-              <div className="skeleton-loader">
-                <div className="skeleton-heading"></div>
-                <div className="skeleton-text"></div>
-                <div className="skeleton-section-title"></div>
-                <div className="skeleton-stats">
+              <div style={{ padding: '20px' }}>
+                <Skeleton height={24} width="50%" style={{ marginBottom: '20px' }} />
+                <Skeleton height={16} style={{ marginBottom: '8px' }} />
+                <Skeleton height={20} width="30%" style={{ margin: '24px 0 16px 0' }} />
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', margin: '16px 0' }}>
                   {[1, 2, 3, 4].map((i) => (
-                    <div key={i} className="skeleton-stat-item"></div>
+                    <Skeleton key={i} height={80} width={200} borderRadius={8} />
                   ))}
                 </div>
-                <div className="skeleton-section-title"></div>
-                <div className="skeleton-tip-box"></div>
+                <Skeleton height={20} width="30%" style={{ margin: '24px 0 16px 0' }} />
+                <Skeleton height={200} borderRadius={8} style={{ padding: '24px', margin: '16px 0' }} />
               </div>
             ) : !isAPIExists ? (
               <div className="api-warning">

@@ -4,7 +4,8 @@ import { Link } from 'react-router-dom';
 import FadeUpOnScroll from './FadeUpOnScroll';
 import { FiMenu, FiX } from 'react-icons/fi';
 import { getThreatLogs, getCurrentUser } from '../api';
-import './SkeletonLoader.css';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 function ThreatAlerts() {
   const [userData, setUserData] = useState(null);
@@ -119,10 +120,10 @@ function ThreatAlerts() {
               along with detected threat details here.
             </p>
             {isLoading ? (
-              <div className="skeleton-loader">
-                <div className="skeleton-list">
+              <div style={{ padding: '20px' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                   {[1, 2, 3].map((i) => (
-                    <div key={i} className="skeleton-card"></div>
+                    <Skeleton key={i} height={150} borderRadius={8} style={{ padding: '16px' }} />
                   ))}
                 </div>
               </div>

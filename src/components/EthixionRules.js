@@ -5,7 +5,8 @@ import FadeUpOnScroll from './FadeUpOnScroll';
 import { FiMenu, FiX } from 'react-icons/fi';
 import { getCurrentUser, setEthixionRules } from '../api';
 import { toast } from 'react-toastify';
-import './SkeletonLoader.css';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 function EthixionRules() {
   const [userData, setUserData] = useState(null);
@@ -100,13 +101,13 @@ function EthixionRules() {
 
           <div className="dash-dataContainer">
             {isLoading ? (
-              <div className="skeleton-loader">
-                <div className="skeleton-section-title"></div>
-                <div className="skeleton-form-group">
-                  <div className="skeleton-input"></div>
-                  <div className="skeleton-input"></div>
-                  <div className="skeleton-input"></div>
-                  <div className="skeleton-button"></div>
+              <div style={{ padding: '20px' }}>
+                <Skeleton height={20} width="30%" style={{ margin: '24px 0 16px 0' }} />
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', margin: '16px 0' }}>
+                  <Skeleton height={40} borderRadius={4} />
+                  <Skeleton height={40} borderRadius={4} />
+                  <Skeleton height={40} borderRadius={4} />
+                  <Skeleton height={44} width={120} borderRadius={4} />
                 </div>
               </div>
             ) : (

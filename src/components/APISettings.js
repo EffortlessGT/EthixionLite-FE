@@ -15,7 +15,8 @@ import { FiMenu, FiX } from 'react-icons/fi';
 import PopupNotificationWrapper from './PopUpNotificationWrapper';
 import HeaderAuthSnippets from './HeaderAuthSnippets';
 import { toast } from 'sonner';
-import './SkeletonLoader.css';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 function APISettings() {
   const [userData, setUserData] = useState(null);
@@ -202,24 +203,24 @@ function APISettings() {
             </PopupNotificationWrapper>
           ) : isLoading ? (
             <div className="dash-dataContainer" id="dash-dataContainer">
-              <div className="skeleton-loader">
-                <div className="skeleton-section-title" style={{ width: '40%' }}></div>
+              <div style={{ padding: '20px' }}>
+                <Skeleton height={24} width="40%" style={{ marginBottom: '24px' }} />
                 <div style={{ display: 'flex', gap: '12px', marginBottom: '24px' }}>
                   {[1, 2, 3, 4].map((i) => (
-                    <div key={i} className="skeleton-button"></div>
+                    <Skeleton key={i} height={44} width={120} borderRadius={4} />
                   ))}
                 </div>
-                <div className="skeleton-table">
-                  <div className="skeleton-table-header">
-                    {[1, 2, 3, 4, 5, 6, 7].map((i) => (
-                      <div key={i} className="skeleton-table-cell"></div>
-                    ))}
-                  </div>
+                <div style={{ margin: '16px 0' }}>
+                  <Skeleton height={20} style={{ marginBottom: '12px' }} />
                   {[1, 2, 3].map((i) => (
-                    <div key={i} className="skeleton-table-row">
-                      {[1, 2, 3, 4, 5, 6, 7].map((j) => (
-                        <div key={j} className="skeleton-table-cell"></div>
-                      ))}
+                    <div key={i} style={{ display: 'flex', gap: '12px', padding: '16px', borderBottom: '1px solid #e0e0e0' }}>
+                      <Skeleton height={20} width="12%" />
+                      <Skeleton height={20} width="15%" />
+                      <Skeleton height={20} width="12%" />
+                      <Skeleton height={20} width="15%" />
+                      <Skeleton height={20} width="15%" />
+                      <Skeleton height={20} width="10%" />
+                      <Skeleton height={20} width="15%" />
                     </div>
                   ))}
                 </div>

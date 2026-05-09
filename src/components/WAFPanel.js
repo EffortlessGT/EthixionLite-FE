@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import user_img from '../assets/img/user_img.png';
 import { Link } from 'react-router-dom';
-import './SkeletonLoader.css';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 import {
   checkWAFExistsForCurrentUser,
   getCurrentWAFUser,
@@ -199,51 +200,44 @@ function WAFPanel() {
             <span>Ethixion | Web Application Firewall Dashboard</span>
 
             {isLoading ? (
-              <div className="skeleton-loader">
+              <div style={{ padding: '20px' }}>
                 {/* Header Skeleton */}
-                <div className="skeleton-text skeleton-heading"></div>
+                <Skeleton height={24} width="50%" style={{ marginBottom: '20px' }} />
 
                 {/* WAF Info Skeleton */}
-                <div className="skeleton-section-title"></div>
-                <div className="skeleton-table">
-                  <div className="skeleton-table-header">
-                    <div className="skeleton-table-cell"></div>
-                    <div className="skeleton-table-cell"></div>
-                    <div className="skeleton-table-cell"></div>
-                    <div className="skeleton-table-cell"></div>
-                    <div className="skeleton-table-cell"></div>
-                    <div className="skeleton-table-cell"></div>
-                  </div>
+                <Skeleton height={20} width="30%" style={{ margin: '24px 0 16px 0' }} />
+                <div style={{ margin: '16px 0' }}>
+                  <Skeleton height={20} style={{ marginBottom: '12px' }} />
                   {[1, 2, 3].map((i) => (
-                    <div key={i} className="skeleton-table-row">
-                      <div className="skeleton-table-cell"></div>
-                      <div className="skeleton-table-cell"></div>
-                      <div className="skeleton-table-cell"></div>
-                      <div className="skeleton-table-cell"></div>
-                      <div className="skeleton-table-cell"></div>
-                      <div className="skeleton-table-cell"></div>
+                    <div key={i} style={{ display: 'flex', gap: '12px', padding: '16px', borderBottom: '1px solid #e0e0e0' }}>
+                      <Skeleton height={20} width="15%" />
+                      <Skeleton height={20} width="20%" />
+                      <Skeleton height={20} width="10%" />
+                      <Skeleton height={20} width="15%" />
+                      <Skeleton height={20} width="20%" />
+                      <Skeleton height={20} width="15%" />
                     </div>
                   ))}
                 </div>
 
                 {/* Quick Stats Skeleton */}
-                <div className="skeleton-section-title"></div>
-                <div className="skeleton-stats">
+                <Skeleton height={20} width="30%" style={{ margin: '24px 0 16px 0' }} />
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', margin: '16px 0' }}>
                   {[1, 2, 3, 4].map((i) => (
-                    <div key={i} className="skeleton-stat-item"></div>
+                    <Skeleton key={i} height={80} width={200} borderRadius={8} />
                   ))}
                 </div>
 
                 {/* Charts Skeleton */}
-                <div className="skeleton-section-title"></div>
-                <div className="skeleton-charts">
-                  <div className="skeleton-chart-box"></div>
-                  <div className="skeleton-chart-box"></div>
+                <Skeleton height={20} width="30%" style={{ margin: '24px 0 16px 0' }} />
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px', margin: '24px 0' }}>
+                  <Skeleton height={300} borderRadius={8} />
+                  <Skeleton height={300} borderRadius={8} />
                 </div>
 
                 {/* Tip Skeleton */}
-                <div className="skeleton-section-title"></div>
-                <div className="skeleton-tip-box"></div>
+                <Skeleton height={20} width="30%" style={{ margin: '24px 0 16px 0' }} />
+                <Skeleton height={200} borderRadius={8} style={{ padding: '24px', margin: '16px 0' }} />
               </div>
             ) : !wafAPIExists ? (
               <div className="api-warning">
