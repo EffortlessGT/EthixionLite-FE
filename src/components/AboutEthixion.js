@@ -142,11 +142,11 @@ const AboutEthixion = () => {
                 <ul>
                   <li>
                     <a
-                      href="https://https://instagram.com/effortlessgt/"
+                      href="https://instagram.com/effortlessgt/"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      <i class="fa-brands fa-instagram icon"></i>
+                      <i className="fa-brands fa-instagram icon"></i>
                     </a>
                   </li>
                   <li>
@@ -155,7 +155,7 @@ const AboutEthixion = () => {
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      <i class="fa-brands fa-linkedin icon"></i>
+                      <i className="fa-brands fa-linkedin icon"></i>
                     </a>
                   </li>
                   <li>
@@ -164,12 +164,12 @@ const AboutEthixion = () => {
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      <i class="fa-brands fa-github icon"></i>
+                      <i className="fa-brands fa-github icon"></i>
                     </a>
                   </li>
                   <li>
                     <a href="mailto:ganeshtelore4@gmail.com">
-                      <i class="fa-solid fa-envelope icon"></i>
+                      <i className="fa-solid fa-envelope icon"></i>
                     </a>
                   </li>
                 </ul>
