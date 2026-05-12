@@ -780,3 +780,25 @@ export const getWAFSecurityTipOfDay = async () => {
     toast.error('Unable to reach server. Please try again later.');
   }
 };
+
+export const getDomainsData = async () => {
+  try {
+    const resp = await fetch(`${addr}/waf_domain_data`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+    });
+
+    const rs = await resp.json();
+    if (resp.ok && rs.status === 'success') {
+      return rs.domainData;
+    } else {
+      toast.error(rs.msg || 'Failed to fetch domains data.');
+    }
+  } catch (err) {
+    console.error('Error fetching domains data:', err);
+    toast.error('Unable to reach server. Please try again later.');
+  }
+};
