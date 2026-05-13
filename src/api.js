@@ -793,7 +793,7 @@ export const getDomainsData = async () => {
 
     const rs = await resp.json();
     if (resp.ok && rs.status === 'success') {
-      return rs.domainData;
+      return rs;
     } else {
       toast.error(rs.msg || 'Failed to fetch domains data.');
     }

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import WAFDashboardNavbar from '../WAFDashboardNavbar';
 import FadeUpOnScroll from '../FadeUpOnScroll';
-import { getDomainsData } from '../../api';
+import { getDomainsData, getCurrentWAFUser } from '../../api';
 import '../../App.css';
 
 function DomainManagement() {
@@ -11,55 +11,58 @@ function DomainManagement() {
 
   const [newDomain, setNewDomain] = useState('');
   const [newProxy, setNewProxy] = useState('');
+  const [user, setUser] = useState(null);
 
-  // Fetch Domains
   useEffect(() => {
-    const fetchDomainsData = async () => {
-      try {
-        setLoading(true);
+  const fetchDomainsData = async () => {
+        try {
+          const [user, domains] = await Promise.all([
+            getCurrentWAFUser(),
+            getDomainsData(),
+          ]);
+          setUser(user);
+          setDomains(domains);
+      setLoading(true);
 
-        const data = await getDomainsData();
+      const data = await getDomainsData();
 
-        console.log('API DATA =>', data);
+      console.log('API DATA =>', data);
 
-        if (data && data.domainData) {
-          const domainData = data.domainData;
-          const formattedData = [
-            {
-              domain: domainData.protected_domain || '',
-              proxy: domainData.proxy_domain || '',
-              ssl: true,
-              waf: true,
-              status: domainData.waf_api_status || 'Inactive',
-            },
-          ];
-
-          setDomains(formattedData);
-        } else if (data) {
-          const formattedData = [
-            {
-              domain: data.protected_domain || '',
-              proxy: data.proxy_domain || '',
-              ssl: true,
-              waf: true,
-              status: data.waf_api_status || 'Inactive',
-            },
-          ];
-
-          setDomains(formattedData);
-        } else {
-          setDomains([]);
-        }
-      } catch (error) {
-        console.error('Failed to fetch domains:', error);
+      if (!data) {
         setDomains([]);
-      } finally {
-        setLoading(false);
+        return;
       }
-    };
 
-    fetchDomainsData();
-  }, []);
+      const domainData = data.domainData || data;
+
+      if (!domainData.protected_domain) {
+        setDomains([]);
+        return;
+      }
+
+      const formattedData = [
+        {
+          waf_name: domainData.waf_name || '',
+          domain: domainData.protected_domain || '',
+          proxy: domainData.proxy_domain || '',
+          ssl: true,
+          waf: true,
+          status: domainData.waf_api_status || 'Inactive',
+          created_at: domainData.created_at || '',
+        },
+      ];
+
+      setDomains(formattedData);
+    } catch (error) {
+      console.error('Failed to fetch domains:', error);
+      setDomains([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchDomainsData();
+}, []);
 
   // Add Domain
   const addDomain = () => {
@@ -77,20 +80,6 @@ function DomainManagement() {
 
     setNewDomain('');
     setNewProxy('');
-  };
-
-  // Toggle SSL
-  const toggleSSL = (index) => {
-    setDomains((prev) =>
-      prev.map((item, i) =>
-        i === index
-          ? {
-              ...item,
-              ssl: !item.ssl,
-            }
-          : item
-      )
-    );
   };
 
   // Toggle WAF
@@ -119,6 +108,7 @@ function DomainManagement() {
             menuOpen={menuOpen}
             setMenuOpen={setMenuOpen}
             wafAPIExists={true}
+            userData={user}
           />
 
           <div className="dash-dataContainer">
@@ -179,17 +169,23 @@ function DomainManagement() {
                 <table className="domain-table">
                   <thead>
                     <tr>
+                      <th>WAF Name</th>
                       <th>Protected Domain</th>
                       <th>Proxy Domain</th>
-                      <th>SSL</th>
                       <th>WAF</th>
                       <th>Status</th>
+                      <th>Created At</th>
                     </tr>
                   </thead>
 
                   <tbody>
                     {domains.map((item, index) => (
                       <tr key={index}>
+                        <td>
+                          <span className="waf-badge">
+                            {item.waf_name}
+                          </span>
+                        </td>
                         <td>
                           <span className="domain-badge">
                             {item.domain}
@@ -198,17 +194,7 @@ function DomainManagement() {
 
                         <td>{item.proxy}</td>
 
-                        <td>
-                          <label className="switch">
-                            <input
-                              type="checkbox"
-                              checked={item.ssl}
-                              onChange={() => toggleSSL(index)}
-                            />
-
-                            <span className="slider"></span>
-                          </label>
-                        </td>
+                        
 
                         <td>
                           <label className="switch">
@@ -233,6 +219,15 @@ function DomainManagement() {
                             {item.status}
                           </span>
                         </td>
+                        <td>
+  <span className="createdat-badge">
+    {item.created_at
+      ? item.created_at
+          .replace('T', ' ')
+          .split('.')[0]
+      : 'N/A'}
+  </span>
+</td>
                       </tr>
                     ))}
                   </tbody>
