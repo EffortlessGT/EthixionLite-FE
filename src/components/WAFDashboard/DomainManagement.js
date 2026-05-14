@@ -14,55 +14,55 @@ function DomainManagement() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-  const fetchDomainsData = async () => {
-        try {
-          const [user, domains] = await Promise.all([
-            getCurrentWAFUser(),
-            getDomainsData(),
-          ]);
-          setUser(user);
-          setDomains(domains);
-      setLoading(true);
+    const fetchDomainsData = async () => {
+      try {
+        const [user, domains] = await Promise.all([
+          getCurrentWAFUser(),
+          getDomainsData(),
+        ]);
+        setUser(user);
+        setDomains(domains);
+        setLoading(true);
 
-      const data = await getDomainsData();
+        const data = await getDomainsData();
 
-      console.log('API DATA =>', data);
+        console.log('API DATA =>', data);
 
-      if (!data) {
+        if (!data) {
+          setDomains([]);
+          return;
+        }
+
+        const domainData = data.domainData || data;
+
+        if (!domainData.protected_domain) {
+          setDomains([]);
+          return;
+        }
+
+        const formattedData = [
+          {
+            waf_name: domainData.waf_name || '',
+            domain: domainData.protected_domain || '',
+            proxy: domainData.proxy_domain || '',
+            ssl: true,
+            waf: true,
+            status: domainData.waf_api_status || 'Inactive',
+            created_at: domainData.created_at || '',
+          },
+        ];
+
+        setDomains(formattedData);
+      } catch (error) {
+        console.error('Failed to fetch domains:', error);
         setDomains([]);
-        return;
+      } finally {
+        setLoading(false);
       }
+    };
 
-      const domainData = data.domainData || data;
-
-      if (!domainData.protected_domain) {
-        setDomains([]);
-        return;
-      }
-
-      const formattedData = [
-        {
-          waf_name: domainData.waf_name || '',
-          domain: domainData.protected_domain || '',
-          proxy: domainData.proxy_domain || '',
-          ssl: true,
-          waf: true,
-          status: domainData.waf_api_status || 'Inactive',
-          created_at: domainData.created_at || '',
-        },
-      ];
-
-      setDomains(formattedData);
-    } catch (error) {
-      console.error('Failed to fetch domains:', error);
-      setDomains([]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  fetchDomainsData();
-}, []);
+    fetchDomainsData();
+  }, []);
 
   // Add Domain
   const addDomain = () => {
@@ -100,9 +100,7 @@ function DomainManagement() {
     <FadeUpOnScroll>
       <main className="dashboard">
         <div
-          className={`dashboard-container ${
-            menuOpen ? 'sidebar-open' : ''
-          }`}
+          className={`dashboard-container ${menuOpen ? 'sidebar-open' : ''}`}
         >
           <WAFDashboardNavbar
             menuOpen={menuOpen}
@@ -112,17 +110,15 @@ function DomainManagement() {
           />
 
           <div className="dash-dataContainer">
-            <span className="pageTitle">
-              Ethixion WAF | Domain Management
-            </span>
+            <span className="pageTitle">Ethixion WAF | Domain Management</span>
 
             <hr />
 
             {/* Header */}
             <div className="domain-header">
               <p>
-                Manage protected domains, reverse proxy mappings,
-                SSL protection, and WAF status.
+                Manage protected domains, reverse proxy mappings, SSL
+                protection, and WAF status.
               </p>
             </div>
 
@@ -145,9 +141,7 @@ function DomainManagement() {
                   onChange={(e) => setNewProxy(e.target.value)}
                 />
 
-                <button onClick={addDomain}>
-                  Add Domain
-                </button>
+                <button onClick={addDomain}>Add Domain</button>
               </div>
             </div>
 
@@ -182,19 +176,13 @@ function DomainManagement() {
                     {domains.map((item, index) => (
                       <tr key={index}>
                         <td>
-                          <span className="waf-badge">
-                            {item.waf_name}
-                          </span>
+                          <span className="waf-badge">{item.waf_name}</span>
                         </td>
                         <td>
-                          <span className="domain-badge">
-                            {item.domain}
-                          </span>
+                          <span className="domain-badge">{item.domain}</span>
                         </td>
 
                         <td>{item.proxy}</td>
-
-                        
 
                         <td>
                           <label className="switch">
@@ -211,23 +199,19 @@ function DomainManagement() {
                         <td>
                           <span
                             className={`status-badge ${
-                              item.status === 'Active'
-                                ? 'active'
-                                : 'inactive'
+                              item.status === 'Active' ? 'active' : 'inactive'
                             }`}
                           >
                             {item.status}
                           </span>
                         </td>
                         <td>
-  <span className="createdat-badge">
-    {item.created_at
-      ? item.created_at
-          .replace('T', ' ')
-          .split('.')[0]
-      : 'N/A'}
-  </span>
-</td>
+                          <span className="createdat-badge">
+                            {item.created_at
+                              ? item.created_at.replace('T', ' ').split('.')[0]
+                              : 'N/A'}
+                          </span>
+                        </td>
                       </tr>
                     ))}
                   </tbody>

@@ -302,7 +302,6 @@ function App() {
   );
 }
 
-
 function DownloadEthixionSDK() {
   useEffect(() => {
     const link = document.createElement('a');
