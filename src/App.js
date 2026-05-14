@@ -27,6 +27,7 @@ import APIKeysManagement from './components/WAFDashboard/APIKeysManagement';
 import LoggingMonitoring from './components/WAFDashboard/LoggingMonitoring';
 import Alerts from './components/WAFDashboard/Alerts';
 import NetworkListener from './NetworkListener';
+import Documentation from './components/Documentation';
 
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-loading-skeleton/dist/skeleton.css';
@@ -253,7 +254,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/documentation',
-    element: <RevealDocumentation />,
+    element: <Documentation />,
   },
   {
     path: '/SDK',
@@ -301,12 +302,6 @@ function App() {
   );
 }
 
-function RevealDocumentation() {
-  useEffect(() => {
-    window.open('/documentation/Ethixion_WAF_Documentation.pdf', '_self');
-  }, []);
-  return <Navigate to="/" replace />;
-}
 
 function DownloadEthixionSDK() {
   useEffect(() => {

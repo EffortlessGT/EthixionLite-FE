@@ -2878,7 +2878,7 @@ textarea::placeholder {
   background: white;
   border-radius: 14px;
   border: 1px solid #e2e8f0;
-  overflow: hidden;
+  overflow: scroll;
   box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
 }
 
