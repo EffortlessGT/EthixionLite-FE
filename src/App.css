@@ -39,7 +39,10 @@
 
 /* --- Animated/Interactive styles for disabled add-domain card --- */
 .add-domain-card.disabled-card {
-  transition: transform 240ms ease, box-shadow 240ms ease, opacity 240ms ease;
+  transition:
+    transform 240ms ease,
+    box-shadow 240ms ease,
+    opacity 240ms ease;
   will-change: transform, box-shadow, opacity;
   border-radius: 8px;
 }
@@ -65,16 +68,25 @@
 }
 
 @keyframes badgePop {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.06) translateY(-2px); }
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.06) translateY(-2px);
+  }
 }
 
 .add-domain-card.disabled-card .coming-soon-note {
-  background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.06));
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.02),
+    rgba(255, 255, 255, 0.06)
+  );
   padding: 8px;
   border-radius: 6px;
   backdrop-filter: blur(2px);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
 }
 
 .add-domain-card.disabled-card .coming-soon-note p {
@@ -89,19 +101,30 @@
   top: 0;
   height: 100%;
   width: 60%;
-  background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.06), rgba(255,255,255,0));
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0),
+    rgba(255, 255, 255, 0.06),
+    rgba(255, 255, 255, 0)
+  );
   transform: skewX(-12deg);
   animation: shimmer 2.2s linear infinite;
 }
 
 @keyframes shimmer {
-  0% { left: -60%; }
-  100% { left: 120%; }
+  0% {
+    left: -60%;
+  }
+  100% {
+    left: 120%;
+  }
 }
 
 .add-domain-card.disabled-card .tooltip {
   transform-origin: top right;
-  transition: opacity 180ms ease, transform 180ms ease;
+  transition:
+    opacity 180ms ease,
+    transform 180ms ease;
 }
 
 .disabled-disclaimer {
@@ -112,6 +135,12 @@
 }
 
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

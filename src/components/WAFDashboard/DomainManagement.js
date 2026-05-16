@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import WAFDashboardNavbar from '../WAFDashboardNavbar';
 import FadeUpOnScroll from '../FadeUpOnScroll';
-import { getDomainsData, getCurrentWAFUser, updateWAFAPIDomainStatus } from '../../api';
+import {
+  getDomainsData,
+  getCurrentWAFUser,
+  updateWAFAPIDomainStatus,
+} from '../../api';
 import '../../App.css';
 import { toast } from 'sonner';
 
@@ -65,8 +69,6 @@ function DomainManagement() {
     fetchDomainsData();
   }, []);
 
-
-
   // Add Domain (creation is disabled — function removed until backend integration)
 
   const toggleWAF = async (index) => {
@@ -95,7 +97,10 @@ function DomainManagement() {
         )
       );
     } else {
-      toast.error('Unable to update WAF domain status on the backend:', payload);
+      toast.error(
+        'Unable to update WAF domain status on the backend:',
+        payload
+      );
     }
   };
 
@@ -140,14 +145,19 @@ function DomainManagement() {
 
               <div className="coming-soon-note">
                 <p>
-                  Multi-Domain Protection is coming soon. Creating or mapping new
-                  domains is disabled for now.
+                  Multi-Domain Protection is coming soon. Creating or mapping
+                  new domains is disabled for now.
                 </p>
               </div>
 
-              <div className="tooltip" role="tooltip">Multi-Domain Protection coming soon</div>
+              <div className="tooltip" role="tooltip">
+                Multi-Domain Protection coming soon
+              </div>
 
-              <form className="domain-form" onSubmit={(e) => e.preventDefault()}>
+              <form
+                className="domain-form"
+                onSubmit={(e) => e.preventDefault()}
+              >
                 <div className="domain-input-grid">
                   <input
                     type="text"
@@ -165,15 +175,18 @@ function DomainManagement() {
                     disabled
                   />
 
-                  <button disabled title="Disabled until Multi-Domain Protection is available">
+                  <button
+                    disabled
+                    title="Disabled until Multi-Domain Protection is available"
+                  >
                     Add Domain
                   </button>
                 </div>
               </form>
 
               <div className="disabled-disclaimer">
-                This feature will allow mapping multiple protected domains and proxies
-                to a WAF API. It will be available in a future release.
+                This feature will allow mapping multiple protected domains and
+                proxies to a WAF API. It will be available in a future release.
               </div>
             </div>
 
