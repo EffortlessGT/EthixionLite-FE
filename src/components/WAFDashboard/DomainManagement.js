@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import WAFDashboardNavbar from '../WAFDashboardNavbar';
 import FadeUpOnScroll from '../FadeUpOnScroll';
-import { getDomainsData, getCurrentWAFUser } from '../../api';
+import { getDomainsData, getCurrentWAFUser, updateWAFAPIDomainStatus } from '../../api';
 import '../../App.css';
+import { toast } from 'sonner';
 
 function DomainManagement() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -46,7 +47,7 @@ function DomainManagement() {
             domain: domainData.protected_domain || '',
             proxy: domainData.proxy_domain || '',
             ssl: true,
-            waf: true,
+            waf: domainData.waf_api_status === 'Active',
             status: domainData.waf_api_status || 'Inactive',
             created_at: domainData.created_at || '',
           },
@@ -64,36 +65,38 @@ function DomainManagement() {
     fetchDomainsData();
   }, []);
 
-  // Add Domain
-  const addDomain = () => {
-    if (!newDomain.trim() || !newProxy.trim()) return;
 
-    const domainObj = {
-      domain: newDomain.trim(),
-      proxy: newProxy.trim(),
-      ssl: true,
-      waf: true,
-      status: 'Active',
+
+  // Add Domain (creation is disabled — function removed until backend integration)
+
+  const toggleWAF = async (index) => {
+    const domainToUpdate = domains[index];
+    if (!domainToUpdate) return;
+
+    const newStatus = domainToUpdate.waf ? 'Inactive' : 'Active';
+    const payload = {
+      apiname: domainToUpdate.waf_name || domainToUpdate.domain,
+      status: newStatus,
     };
 
-    setDomains((prev) => [...prev, domainObj]);
+    const result = await updateWAFAPIDomainStatus(payload);
 
-    setNewDomain('');
-    setNewProxy('');
-  };
-
-  // Toggle WAF
-  const toggleWAF = (index) => {
-    setDomains((prev) =>
-      prev.map((item, i) =>
-        i === index
-          ? {
-              ...item,
-              waf: !item.waf,
-            }
-          : item
-      )
-    );
+    if (result && result.status === 'success') {
+      toast.success(`WAF status updated to ${newStatus}`);
+      setDomains((prev) =>
+        prev.map((item, i) =>
+          i === index
+            ? {
+                ...item,
+                waf: !item.waf,
+                status: newStatus,
+              }
+            : item
+        )
+      );
+    } else {
+      toast.error('Unable to update WAF domain status on the backend:', payload);
+    }
   };
 
   return (
@@ -122,26 +125,55 @@ function DomainManagement() {
               </p>
             </div>
 
-            {/* Add Domain */}
-            <div className="add-domain-card">
-              <h2>Add Protected Domain</h2>
+            {/* Add Domain (disabled — coming soon) */}
+            <div
+              className="add-domain-card disabled-card"
+              title="Multi-Domain Protection coming soon — creating or mapping domains is disabled."
+              tabIndex={0}
+            >
+              <h2>
+                Add Protected Domain
+                <span className="coming-soon-badge" aria-hidden>
+                  Coming Soon
+                </span>
+              </h2>
 
-              <div className="domain-input-grid">
-                <input
-                  type="text"
-                  placeholder="Protected Domain"
-                  value={newDomain}
-                  onChange={(e) => setNewDomain(e.target.value)}
-                />
+              <div className="coming-soon-note">
+                <p>
+                  Multi-Domain Protection is coming soon. Creating or mapping new
+                  domains is disabled for now.
+                </p>
+              </div>
 
-                <input
-                  type="text"
-                  placeholder="Proxy Domain"
-                  value={newProxy}
-                  onChange={(e) => setNewProxy(e.target.value)}
-                />
+              <div className="tooltip" role="tooltip">Multi-Domain Protection coming soon</div>
 
-                <button onClick={addDomain}>Add Domain</button>
+              <form className="domain-form" onSubmit={(e) => e.preventDefault()}>
+                <div className="domain-input-grid">
+                  <input
+                    type="text"
+                    placeholder="Protected Domain"
+                    value={newDomain}
+                    onChange={(e) => setNewDomain(e.target.value)}
+                    disabled
+                  />
+
+                  <input
+                    type="text"
+                    placeholder="Proxy Domain"
+                    value={newProxy}
+                    onChange={(e) => setNewProxy(e.target.value)}
+                    disabled
+                  />
+
+                  <button disabled title="Disabled until Multi-Domain Protection is available">
+                    Add Domain
+                  </button>
+                </div>
+              </form>
+
+              <div className="disabled-disclaimer">
+                This feature will allow mapping multiple protected domains and proxies
+                to a WAF API. It will be available in a future release.
               </div>
             </div>
 

@@ -802,3 +802,49 @@ export const getDomainsData = async () => {
     toast.error('Unable to reach server. Please try again later.');
   }
 };
+
+export const updateWAFAPIDomainStatus = async (data) => {
+  try {
+    const resp = await fetch(`${addr}/update_waf_api_status`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify(data),
+    });
+
+    const rs = await resp.json();
+    if (resp.ok && rs.status === 'success') {
+      return rs;
+    } else {
+      toast.error(rs.msg || 'Failed to update WAF API domain status.');
+    }
+  } catch (err) {
+    console.error('Error updating WAF API domain status:', err);
+    toast.error('Unable to reach server. Please try again later.');
+  }
+};
+
+export const createWAFAPIDomain = async (data) => {
+  try {
+    const resp = await fetch(`${addr}/create_waf_api_domain`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify(data),
+    });
+
+    const rs = await resp.json();
+    if (resp.ok && rs.status === 'success') {
+      return rs;
+    } else {
+      toast.error(rs.msg || 'Failed to create WAF API domain.');
+    }
+  } catch (err) {
+    console.error('Error creating WAF API domain:', err);
+    toast.error('Unable to reach server. Please try again later.');
+  }
+};

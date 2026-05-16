@@ -36,3 +36,82 @@
     transform: rotate(360deg);
   }
 }
+
+/* --- Animated/Interactive styles for disabled add-domain card --- */
+.add-domain-card.disabled-card {
+  transition: transform 240ms ease, box-shadow 240ms ease, opacity 240ms ease;
+  will-change: transform, box-shadow, opacity;
+  border-radius: 8px;
+}
+
+.add-domain-card.disabled-card:hover,
+.add-domain-card.disabled-card:focus {
+  transform: translateY(-8px) scale(1.01);
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.12);
+}
+
+.coming-soon-badge {
+  display: inline-block;
+  margin-left: 12px;
+  background: linear-gradient(90deg, #ff7a18, #af002d 60%);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(175, 0, 45, 0.18);
+  transform-origin: center;
+  animation: badgePop 1800ms ease-in-out infinite;
+}
+
+@keyframes badgePop {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.06) translateY(-2px); }
+}
+
+.add-domain-card.disabled-card .coming-soon-note {
+  background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.06));
+  padding: 8px;
+  border-radius: 6px;
+  backdrop-filter: blur(2px);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
+}
+
+.add-domain-card.disabled-card .coming-soon-note p {
+  position: relative;
+  overflow: hidden;
+}
+
+.add-domain-card.disabled-card .coming-soon-note p::after {
+  content: '';
+  position: absolute;
+  left: -60%;
+  top: 0;
+  height: 100%;
+  width: 60%;
+  background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.06), rgba(255,255,255,0));
+  transform: skewX(-12deg);
+  animation: shimmer 2.2s linear infinite;
+}
+
+@keyframes shimmer {
+  0% { left: -60%; }
+  100% { left: 120%; }
+}
+
+.add-domain-card.disabled-card .tooltip {
+  transform-origin: top right;
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.disabled-disclaimer {
+  margin-top: 10px;
+  font-size: 12px;
+  color: #888;
+  animation: fadeUp 420ms ease both;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
