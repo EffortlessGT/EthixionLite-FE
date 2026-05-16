@@ -1,10 +1,11 @@
 import FadeUpOnScroll from './FadeUpOnScroll';
 import Footer from './Footer';
 import GT from '../assets/img/GT.jpg';
+import './AboutEthixion.css';
 
 const AboutEthixion = () => {
   return (
-    <main>
+    <main className="about-page-wrapper">
       <div className="about-ethixion">
         <FadeUpOnScroll>
           <section className="section">
