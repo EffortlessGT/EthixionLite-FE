@@ -387,7 +387,7 @@ export const checkASGExistsForCurrentUser = async () => {
     } else {
       toast.error(
         rs.msg ||
-          'No ASG setup found for current user. Please set up ASG to view dashboard insights.'
+        'No ASG setup found for current user. Please set up ASG to view dashboard insights.'
       );
       return false;
     }
@@ -722,7 +722,7 @@ export const checkWAFExistsForCurrentUser = async () => {
     } else {
       toast.error(
         rs.msg ||
-          'No WAF setup found for current user. Please set up WAF to view dashboard insights.'
+        'No WAF setup found for current user. Please set up WAF to view dashboard insights.'
       );
       return false;
     }
@@ -845,6 +845,96 @@ export const createWAFAPIDomain = async (data) => {
     }
   } catch (err) {
     console.error('Error creating WAF API domain:', err);
+    toast.error('Unable to reach server. Please try again later.');
+  }
+};
+
+export const getHTTPMethodRules = async (apiname) => {
+  try {
+    const resp = await fetch(`${addr}/get_http_method_rules/${apiname}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+    });
+
+    const rs = await resp.json();
+    if (resp.ok && rs.status === 'success') {
+      return rs.data;
+    } else {
+      toast.error(rs.msg || 'Failed to fetch HTTP method rules.');
+    }
+  } catch (err) {
+    console.error('Error fetching HTTP method rules:', err);
+    toast.error('Unable to reach server. Please try again later.');
+  }
+};
+
+export const saveHTTPMethodRules = async (apiname, methods) => {
+  try {
+    const resp = await fetch(`${addr}/set_http_method_rules`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify({ apiname, methods }),
+    });
+
+    const rs = await resp.json();
+    if (resp.ok && rs.status === 'success') {
+      return rs;
+    } else {
+      toast.error(rs.msg || 'Failed to update HTTP method rules.');
+    }
+  } catch (err) {
+    console.error('Error updating HTTP method rules:', err);
+    toast.error('Unable to reach server. Please try again later.');
+  }
+};
+
+export const deleteHTTPMethodRule = async (apiname, method) => {
+  try {
+    const resp = await fetch(`${addr}/delete_http_method_rule/${apiname}/${method}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+    });
+
+    const rs = await resp.json();
+    if (resp.ok && rs.status === 'success') {
+      return rs;
+    } else {
+      toast.error(rs.msg || 'Failed to delete HTTP method rule.');
+    }
+  } catch (err) {
+    console.error('Error deleting HTTP method rule:', err);
+    toast.error('Unable to reach server. Please try again later.');
+  }
+};
+
+export const addWAFHTTPRule = async (data) => {
+  try {
+    const resp = await fetch(`${addr}/add_waf_http_rule`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify(data),
+    });
+
+    const rs = await resp.json();
+    if (resp.ok && rs.status === 'success') {
+      return rs;
+    } else {
+      toast.error(rs.msg || 'Failed to add HTTP method rule.');
+    }
+  } catch (err) {
+    console.error('Error adding HTTP method rule:', err);
     toast.error('Unable to reach server. Please try again later.');
   }
 };

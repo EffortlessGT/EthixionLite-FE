@@ -1,9 +1,9 @@
 import React from 'react';
-import user_img from '../assets/img/user_img.png';
+import user_img from '../../assets/img/user_img.png';
 import { Link } from 'react-router-dom';
 import { FiMenu, FiX } from 'react-icons/fi';
 import { Tooltip as ReactTooltip } from 'react-tooltip';
-import '../App.css';
+import '../../App.css';
 
 function WAFDashboardNavbar({ menuOpen, setMenuOpen, userData, wafAPIExists }) {
   return (

@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
+import './WAFPanel.css';
 import {
   checkWAFExistsForCurrentUser,
   getCurrentWAFUser,
   getWAFSecurityTipOfDay,
   getWAFDashboardData,
-} from '../api';
-import FadeUpOnScroll from './FadeUpOnScroll';
+} from '../../api';
+import FadeUpOnScroll from '../FadeUpOnScroll';
 
 import {
   PieChart,

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import WAFDashboardNavbar from '../WAFDashboardNavbar';
+import WAFDashboardNavbar from './WAFDashboardNavbar';
 import FadeUpOnScroll from '../FadeUpOnScroll';
 import {
   getDomainsData,

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import waf_img from '../assets/img/api_img.png';
-import Footer from './Footer';
-import FadeUpOnScroll from './FadeUpOnScroll';
-import { wafapiForm } from '../api';
+import waf_img from '../../assets/img/api_img.png';
+import Footer from '../Footer';
+import FadeUpOnScroll from '../FadeUpOnScroll';
+import { wafapiForm } from '../../api';
 import { toast } from 'react-toastify';
 
 function WAFAPIPage() {

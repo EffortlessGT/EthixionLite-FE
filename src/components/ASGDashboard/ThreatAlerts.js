@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import user_img from '../assets/img/user_img.png';
+import user_img from '../../assets/img/user_img.png';
 import { Link } from 'react-router-dom';
-import FadeUpOnScroll from './FadeUpOnScroll';
+import FadeUpOnScroll from '../FadeUpOnScroll';
 import { FiMenu, FiX } from 'react-icons/fi';
-import { getThreatLogs, getCurrentUser } from '../api';
+import { getThreatLogs, getCurrentUser } from '../../api';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 

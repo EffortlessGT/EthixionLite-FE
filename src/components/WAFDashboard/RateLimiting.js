@@ -1,7 +1,7 @@
 // RateLimiting.jsx
 
 import React, { useState } from 'react';
-import WAFDashboardNavbar from '../WAFDashboardNavbar';
+import WAFDashboardNavbar from './WAFDashboardNavbar';
 import FadeUpOnScroll from '../FadeUpOnScroll';
 import '../../App.css';
 

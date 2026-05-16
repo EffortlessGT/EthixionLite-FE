@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import user_img from '../assets/img/user_img.png';
+import user_img from '../../assets/img/user_img.png';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   checkASGExistsForCurrentUser,
   getCurrentUser,
   getDashboardData,
-} from '../api';
-import FadeUpOnScroll from './FadeUpOnScroll';
+} from '../../api';
+import FadeUpOnScroll from '../FadeUpOnScroll';
 import { FiMenu, FiX } from 'react-icons/fi';
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 import Skeleton from 'react-loading-skeleton';
