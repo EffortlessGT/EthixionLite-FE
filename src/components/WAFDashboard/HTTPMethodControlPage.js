@@ -30,7 +30,7 @@ function HTTPMethodControl() {
       try {
         let currentDomains = domains;
         
-        // Initial load: fetch user and domains
+      
         if (domains.length === 0) {
           const [userData, domainData] = await Promise.all([
             getCurrentWAFUser(),
@@ -43,12 +43,12 @@ function HTTPMethodControl() {
             setDomains(currentDomains);
             if (currentDomains.length > 0 && !selectedDomain) {
               setSelectedDomain(currentDomains[0]);
-              return; // Let the next effect cycle handle rule fetching
+              return; 
             }
           }
         }
 
-        // Fetch rules for selected domain
+       
         if (selectedDomain) {
           const name = selectedDomain.waf_name || selectedDomain.protected_domain;
           const data = await getHTTPMethodRules(name);
@@ -89,6 +89,7 @@ function HTTPMethodControl() {
   };
 
   const handleAddRule = async () => {
+    if (selectedDomain.waf_api_status !== "Inactive") {
     if (!newMethod.method) {
       toast.error('Please select a method');
       return;
@@ -127,6 +128,9 @@ function HTTPMethodControl() {
     } catch (error) {
       console.error('Add rule error:', error);
     }
+  }else{
+    toast.info("API is inactive. Please make it active first!");
+  }
   };
 
   const handleDeleteRule = async (index) => {
@@ -207,6 +211,7 @@ function HTTPMethodControl() {
   };
 
   const saveHTTPConfiguration = async () => {
+    if(selectedDomain.waf_api_status !== "Inactive") {
     if (!selectedDomain) {
       toast.error('Please select a domain to save rules for.');
       return;
@@ -223,6 +228,9 @@ function HTTPMethodControl() {
       console.error('Save error:', error);
       toast.error('Failed to save HTTP rules.');
     }
+  }else {
+    toast.info("API is Inactive, Please update the API Status first!");
+  }
   };
 
   return (
