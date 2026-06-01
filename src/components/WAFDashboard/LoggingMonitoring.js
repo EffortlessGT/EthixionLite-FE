@@ -1,39 +1,71 @@
-// LoggingMonitoring.jsx
-
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import WAFDashboardNavbar from './WAFDashboardNavbar';
 import FadeUpOnScroll from '../FadeUpOnScroll';
+import {getAllTimeWAFTrends, getCurrentWAFUser} from '../../api';
 import '../../App.css';
 
 function LoggingMonitoring() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [userData, setUser] = useState(null);
+  const [logsData, setLogs] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState('All');
+  const [methodFilter, setMethodFilter] = useState('All');
 
-  const [logs] = useState([
-    {
-      time: '09 May 2026 10:22 PM',
-      ip: '192.168.1.10',
-      method: 'POST',
-      endpoint: '/api/login',
-      status: 'Blocked',
-      threat: 'SQL Injection',
-    },
-    {
-      time: '09 May 2026 09:58 PM',
-      ip: '172.16.0.4',
-      method: 'GET',
-      endpoint: '/api/products',
-      status: 'Allowed',
-      threat: 'Safe',
-    },
-    {
-      time: '09 May 2026 09:40 PM',
-      ip: '10.0.0.8',
-      method: 'PUT',
-      endpoint: '/api/admin',
-      status: 'Suspicious',
-      threat: 'Rate Abuse',
-    },
-  ]);
+
+  useEffect(() => {
+    const fetchWAFTrends = async () => {
+      const [rawLogsData, userData] = await Promise.all([
+        getAllTimeWAFTrends(),
+        getCurrentWAFUser(),
+      ]);
+      setUser(userData);
+
+      // normalize possible response shapes
+      let logsArray = [];
+      if (Array.isArray(rawLogsData)) logsArray = rawLogsData;
+      else if (rawLogsData) {
+        if (Array.isArray(rawLogsData.logs)) logsArray = rawLogsData.logs;
+        else if (Array.isArray(rawLogsData.data)) logsArray = rawLogsData.data;
+        else if (Array.isArray(rawLogsData.waf_logs)) logsArray = rawLogsData.waf_logs;
+        else if (Array.isArray(rawLogsData.records)) logsArray = rawLogsData.records;
+      }
+
+      setLogs(logsArray);
+    };
+    fetchWAFTrends();
+  }, []);
+
+  const filteredLogs = useMemo(() => {
+    return logsData.filter((log) => {
+      const query = searchQuery.trim().toLowerCase();
+      const wafName = String(log.waf_name || '').toLowerCase();
+      const timestamp = String(log.timestamp || log.time || '').toLowerCase();
+      const ip = String(log.ip_address || log.ip || '').toLowerCase();
+      const userAgent = String(log.user_agent || log.ua || '').toLowerCase();
+      const method = String(log.method || log.http_method || log.request_method || '').toLowerCase();
+      const requestStatus = String(log.request_status || log.status || '').toLowerCase();
+      const userEmail = String(log.user_email || log.user || '').toLowerCase();
+      const threats = Array.isArray(log.detected_threats)
+        ? log.detected_threats.join(' ').toLowerCase()
+        : String(log.detected_threats || '').toLowerCase();
+
+      if (query) {
+        const haystack = `${wafName} ${timestamp} ${ip} ${userAgent} ${method} ${requestStatus} ${userEmail} ${threats}`;
+        if (!haystack.includes(query)) return false;
+      }
+
+      if (statusFilter && statusFilter !== 'All') {
+        if (requestStatus !== statusFilter.toLowerCase()) return false;
+      }
+
+      if (methodFilter && methodFilter !== 'All') {
+        if (method !== methodFilter.toLowerCase()) return false;
+      }
+
+      return true;
+    });
+  }, [logsData, searchQuery, statusFilter, methodFilter]);
 
   return (
     <FadeUpOnScroll>
@@ -44,6 +76,7 @@ function LoggingMonitoring() {
           <WAFDashboardNavbar
             menuOpen={menuOpen}
             setMenuOpen={setMenuOpen}
+            userData={userData}
             wafAPIExists={true}
           />
 
@@ -90,24 +123,63 @@ function LoggingMonitoring() {
             {/* FILTERS */}
 
             <div className="log-filters">
-              <input type="text" placeholder="Search IP / Endpoint..." />
+              <input
+                type="text"
+                placeholder="Search IP / User / WAF / Method..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
 
-              <select>
-                <option>All Status</option>
-                <option>Allowed</option>
-                <option>Blocked</option>
-                <option>Suspicious</option>
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+              >
+                <option value="All">All</option>
+                <option value="allowed">Allowed</option>
+                <option value="blocked">Blocked</option>
+                <option value="suspicious">Suspicious</option>
               </select>
 
-              <select>
-                <option>All Methods</option>
-                <option>GET</option>
-                <option>POST</option>
-                <option>PUT</option>
-                <option>DELETE</option>
+              <select
+                value={methodFilter}
+                onChange={(e) => setMethodFilter(e.target.value)}
+              >
+                <option value="All">All</option>
+                <option value="get">GET</option>
+                <option value="post">POST</option>
+                <option value="put">PUT</option>
+                <option value="delete">DELETE</option>
+                <option value="patch">PATCH</option>
               </select>
 
-              <button>Export Logs</button>
+              <button
+                onClick={() => {
+                  const csvRows = [];
+                  const headers = ['timestamp', 'ip', 'method', 'endpoint', 'status', 'threat'];
+                  csvRows.push(headers.join(','));
+                  filteredLogs.forEach((l) => {
+                    const row = [
+                      (l.timestamp || l.time || l.created_at || ''),
+                      (l.ip_address || l.ip || l.client_ip || ''),
+                      (l.method || l.http_method || l.request_method || ''),
+                      (l.endpoint || l.path || l.url || ''),
+                      (l.status || l.result || ''),
+                      (l.detected_threats || l.threat || ''),
+                    ];
+                    csvRows.push(row.map((v) => `"${String(v).replace(/"/g, '""')}"`).join(','));
+                  });
+                  const csv = csvRows.join('\n');
+                  const blob = new Blob([csv], { type: 'text/csv' });
+                  const url = URL.createObjectURL(blob);
+                  const a = document.createElement('a');
+                  a.href = url;
+                  a.download = 'waf_logs.csv';
+                  a.click();
+                  URL.revokeObjectURL(url);
+                }}
+              >
+                Export Logs
+              </button>
             </div>
 
             {/* LOG TABLE */}
@@ -116,43 +188,58 @@ function LoggingMonitoring() {
               <table className="logs-table">
                 <thead>
                   <tr>
+                    <th>WAF Name</th>
                     <th>Timestamp</th>
                     <th>IP Address</th>
+                    <th>User Agent</th>
                     <th>Method</th>
-                    <th>Endpoint</th>
                     <th>Status</th>
                     <th>Threat</th>
                   </tr>
                 </thead>
 
                 <tbody>
-                  {logs.map((log, index) => (
-                    <tr key={index}>
-                      <td>{log.time}</td>
-
-                      <td>{log.ip}</td>
-
-                      <td>
-                        <span
-                          className={`method-badge ${log.method.toLowerCase()}`}
-                        >
-                          {log.method}
-                        </span>
+                  {filteredLogs.length === 0 ? (
+                    <tr>
+                      <td colSpan="7" style={{ textAlign: 'center', padding: '1rem' }}>
+                        No logs match your search or filter criteria.
                       </td>
-
-                      <td>{log.endpoint}</td>
-
-                      <td>
-                        <span
-                          className={`status-badge ${log.status.toLowerCase()}`}
-                        >
-                          {log.status}
-                        </span>
-                      </td>
-
-                      <td>{log.threat}</td>
                     </tr>
-                  ))}
+                  ) : (
+                    filteredLogs.map((log, index) => {
+                      const timestamp = log.timestamp;
+                      const ip = log.ip_address;
+                      const userAgent = log.user_agent;
+                      const method = log.method;
+                      const status = log.request_status;
+                      const threat = log.detected_threats;
+                      const WAFName = log.waf_name;
+                      return (
+                        <tr key={index}>
+                          <td>{WAFName}</td>
+                          <td>{timestamp}</td>
+
+                          <td>{ip}</td>
+
+                          <td>
+                            <span className={`method-badge ${userAgent}`}>
+                              {userAgent}
+                            </span>
+                          </td>
+
+                          <td>{method}</td>
+
+                          <td>
+                            <span className={`status-badge ${status}`}>
+                              {status}
+                            </span>
+                          </td>
+
+                          <td>{threat}</td>
+                        </tr>
+                      );
+                    })
+                  )}
                 </tbody>
               </table>
             </div>

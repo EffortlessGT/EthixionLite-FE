@@ -387,7 +387,7 @@ export const checkASGExistsForCurrentUser = async () => {
     } else {
       toast.error(
         rs.msg ||
-        'No ASG setup found for current user. Please set up ASG to view dashboard insights.'
+          'No ASG setup found for current user. Please set up ASG to view dashboard insights.'
       );
       return false;
     }
@@ -722,7 +722,7 @@ export const checkWAFExistsForCurrentUser = async () => {
     } else {
       toast.error(
         rs.msg ||
-        'No WAF setup found for current user. Please set up WAF to view dashboard insights.'
+          'No WAF setup found for current user. Please set up WAF to view dashboard insights.'
       );
       return false;
     }
@@ -896,13 +896,16 @@ export const saveHTTPMethodRules = async (apiname, methods) => {
 
 export const deleteHTTPMethodRule = async (apiname, method) => {
   try {
-    const resp = await fetch(`${addr}/delete_http_method_rule/${apiname}/${method}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include',
-    });
+    const resp = await fetch(
+      `${addr}/delete_http_method_rule/${apiname}/${method}`,
+      {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+      }
+    );
 
     const rs = await resp.json();
     if (resp.ok && rs.status === 'success') {
@@ -935,6 +938,76 @@ export const addWAFHTTPRule = async (data) => {
     }
   } catch (err) {
     console.error('Error adding HTTP method rule:', err);
+    toast.error('Unable to reach server. Please try again later.');
+  }
+};
+
+export const getWAFAPIRateLimitingRules = async (apiname) => {
+  try {
+    const resp = await fetch(`${addr}/get_rate_limiting_rules`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+    });
+
+    const rs = await resp.json();
+    if (resp.ok && rs.status === 'success') {
+      return rs.rate_limit_data || rs.data;
+    } else {
+      toast.error(rs.msg || 'Failed to fetch rate limiting rules.');
+    }
+  } catch (err) {
+    console.error('Error fetching rate limiting rules:', err);
+    toast.error('Unable to reach server. Please try again later.');
+  }
+};
+
+export const setRateLimitingRules = async (data) => {
+  try {
+    const resp = await fetch(`${addr}/set_rate_limiting_rules`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify({
+        "waf_name": data.rate_limit_data[0].waf_name,
+        "rate_limit": data.rate_limit_data[0].rate_limit,
+        "sec": data.rate_limit_data[0].sec,
+        "waf_api_status": data.rate_limit_data[0].waf_api_status
+      }),
+    });
+
+    const rs = await resp.json();
+    if (resp.ok && rs.status === 'success') {
+      return rs;
+    }
+  } catch (err) {
+    console.error('Error setting rate limiting rules:', err);
+    toast.error('Unable to reach server. Please try again later.');
+  }
+};
+
+export const getAllTimeWAFTrends = async (apiname) => {
+  try {
+    const resp = await fetch(`${addr}/retrieve_waf_api_logs`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+    });
+
+    const rs = await resp.json();
+    if (resp.ok && rs.status === 'success') {
+      return rs;
+    } else {
+      toast.error(rs.msg || 'Failed to fetch WAF trends data.');
+    }
+  } catch (err) {
+    console.error('Error fetching WAF trends data:', err);
     toast.error('Unable to reach server. Please try again later.');
   }
 };

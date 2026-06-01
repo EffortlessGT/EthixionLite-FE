@@ -2,7 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { FiTrash2, FiPlus } from 'react-icons/fi';
 import WAFDashboardNavbar from './WAFDashboardNavbar';
 import FadeUpOnScroll from '../FadeUpOnScroll';
-import { getCurrentWAFUser, getDomainsData, getHTTPMethodRules, saveHTTPMethodRules, deleteHTTPMethodRule, addWAFHTTPRule } from '../../api';
+import {
+  getCurrentWAFUser,
+  getDomainsData,
+  getHTTPMethodRules,
+  saveHTTPMethodRules,
+  deleteHTTPMethodRule,
+  addWAFHTTPRule,
+} from '../../api';
 import { toast } from 'sonner';
 import '../../App.css';
 
@@ -21,7 +28,6 @@ function HTTPMethodControl() {
     priority: 1,
   });
 
-
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   useEffect(() => {
@@ -29,8 +35,7 @@ function HTTPMethodControl() {
       setLoading(true);
       try {
         let currentDomains = domains;
-        
-      
+
         if (domains.length === 0) {
           const [userData, domainData] = await Promise.all([
             getCurrentWAFUser(),
@@ -39,18 +44,22 @@ function HTTPMethodControl() {
           setUser(userData);
           if (domainData) {
             const domainInfo = domainData.domainData || domainData;
-            currentDomains = domainInfo.protected_domain ? [domainInfo] : (Array.isArray(domainInfo) ? domainInfo : []);
+            currentDomains = domainInfo.protected_domain
+              ? [domainInfo]
+              : Array.isArray(domainInfo)
+                ? domainInfo
+                : [];
             setDomains(currentDomains);
             if (currentDomains.length > 0 && !selectedDomain) {
               setSelectedDomain(currentDomains[0]);
-              return; 
+              return;
             }
           }
         }
 
-       
         if (selectedDomain) {
-          const name = selectedDomain.waf_name || selectedDomain.protected_domain;
+          const name =
+            selectedDomain.waf_name || selectedDomain.protected_domain;
           const data = await getHTTPMethodRules(name);
           if (data) {
             let rawRules = [];
@@ -60,20 +69,26 @@ function HTTPMethodControl() {
               rawRules = data;
             }
 
-            const mapped = rawRules.map(m => ({
-              method: m.method || m.http_method || '',
-              enabled: m.enabled !== undefined ? m.enabled : (m.status === 'Active' || m.status === 'active'),
-              action: m.action || m.http_method_action || 'Allow',
-              logging: m.logging !== undefined ? m.logging : true,
-              priority: m.priority || 1
-            })).filter(m => m.method !== '');
+            const mapped = rawRules
+              .map((m) => ({
+                method: m.method || m.http_method || '',
+                enabled:
+                  m.enabled !== undefined
+                    ? m.enabled
+                    : m.status === 'Active' || m.status === 'active',
+                action: m.action || m.http_method_action || 'Allow',
+                logging: m.logging !== undefined ? m.logging : true,
+                priority: m.priority || 1,
+              }))
+              .filter((m) => m.method !== '');
 
             setMethods(mapped);
           }
         }
       } catch (error) {
         console.error('Data fetch error:', error);
-        if (domains.length === 0) toast.error('Failed to fetch initial configuration');
+        if (domains.length === 0)
+          toast.error('Failed to fetch initial configuration');
       } finally {
         setLoading(false);
       }
@@ -84,66 +99,78 @@ function HTTPMethodControl() {
 
   const handleDomainChange = (e) => {
     const domainName = e.target.value;
-    const domainObj = domains.find(d => (d.waf_name || d.protected_domain) === domainName);
+    const domainObj = domains.find(
+      (d) => (d.waf_name || d.protected_domain) === domainName
+    );
     setSelectedDomain(domainObj);
   };
 
   const handleAddRule = async () => {
-    if (selectedDomain.waf_api_status !== "Inactive") {
-    if (!newMethod.method) {
-      toast.error('Please select a method');
-      return;
-    }
-    if (!selectedDomain) {
-      toast.error('Please select a domain first');
-      return;
-    }
-
-    const isDuplicate = methods.some(
-      (rule) => rule.method?.toUpperCase() === newMethod.method?.toUpperCase()
-    );
-    if (isDuplicate) {
-      toast.error(`Rule for ${newMethod.method} already exists. Please update the existing rule instead.`);
-      return;
-    }
-
-    const domainName = selectedDomain.waf_name || selectedDomain.protected_domain;
-
-    const payload = {
-      apiname: domainName,
-      http_method: newMethod.method,
-      action: newMethod.action,
-      status: 'Active',
-      priority: parseInt(newMethod.priority) || 1,
-      logging: newMethod.logging,
-    };
-
-    try {
-      const res = await addWAFHTTPRule(payload);
-      if (res && res.status === 'success') {
-        toast.success(res.msg || 'Rule added successfully');
-        setRefreshTrigger(prev => prev + 1);
-        setNewMethod({ method: 'GET', enabled: true, action: 'Allow', logging: true, priority: 1 });
+    if (selectedDomain.waf_api_status !== 'Inactive') {
+      if (!newMethod.method) {
+        toast.error('Please select a method');
+        return;
       }
-    } catch (error) {
-      console.error('Add rule error:', error);
+      if (!selectedDomain) {
+        toast.error('Please select a domain first');
+        return;
+      }
+
+      const isDuplicate = methods.some(
+        (rule) => rule.method?.toUpperCase() === newMethod.method?.toUpperCase()
+      );
+      if (isDuplicate) {
+        toast.error(
+          `Rule for ${newMethod.method} already exists. Please update the existing rule instead.`
+        );
+        return;
+      }
+
+      const domainName =
+        selectedDomain.waf_name || selectedDomain.protected_domain;
+
+      const payload = {
+        apiname: domainName,
+        http_method: newMethod.method,
+        action: newMethod.action,
+        status: 'Active',
+        priority: parseInt(newMethod.priority) || 1,
+        logging: newMethod.logging,
+      };
+
+      try {
+        const res = await addWAFHTTPRule(payload);
+        if (res && res.status === 'success') {
+          toast.success(res.msg || 'Rule added successfully');
+          setRefreshTrigger((prev) => prev + 1);
+          setNewMethod({
+            method: 'GET',
+            enabled: true,
+            action: 'Allow',
+            logging: true,
+            priority: 1,
+          });
+        }
+      } catch (error) {
+        console.error('Add rule error:', error);
+      }
+    } else {
+      toast.info('API is inactive. Please make it active first!');
     }
-  }else{
-    toast.info("API is inactive. Please make it active first!");
-  }
   };
 
   const handleDeleteRule = async (index) => {
     const methodToDelete = methods[index].method;
     if (!selectedDomain) return;
 
-    const domainName = selectedDomain.waf_name || selectedDomain.protected_domain;
+    const domainName =
+      selectedDomain.waf_name || selectedDomain.protected_domain;
 
     try {
       const res = await deleteHTTPMethodRule(domainName, methodToDelete);
       if (res && res.status === 'success') {
         toast.success(res.msg || 'Rule deleted successfully');
-        setRefreshTrigger(prev => prev + 1);
+        setRefreshTrigger((prev) => prev + 1);
       }
     } catch (error) {
       console.error('Delete rule error:', error);
@@ -211,26 +238,27 @@ function HTTPMethodControl() {
   };
 
   const saveHTTPConfiguration = async () => {
-    if(selectedDomain.waf_api_status !== "Inactive") {
-    if (!selectedDomain) {
-      toast.error('Please select a domain to save rules for.');
-      return;
-    }
-
-    const domainName = selectedDomain.waf_name || selectedDomain.protected_domain;
-
-    try {
-      const result = await saveHTTPMethodRules(domainName, methods);
-      if (result && result.status === 'success') {
-        toast.success(`HTTP rules for ${domainName} saved successfully!`);
+    if (selectedDomain.waf_api_status !== 'Inactive') {
+      if (!selectedDomain) {
+        toast.error('Please select a domain to save rules for.');
+        return;
       }
-    } catch (error) {
-      console.error('Save error:', error);
-      toast.error('Failed to save HTTP rules.');
+
+      const domainName =
+        selectedDomain.waf_name || selectedDomain.protected_domain;
+
+      try {
+        const result = await saveHTTPMethodRules(domainName, methods);
+        if (result && result.status === 'success') {
+          toast.success(`HTTP rules for ${domainName} saved successfully!`);
+        }
+      } catch (error) {
+        console.error('Save error:', error);
+        toast.error('Failed to save HTTP rules.');
+      }
+    } else {
+      toast.info('API is Inactive, Please update the API Status first!');
     }
-  }else {
-    toast.info("API is Inactive, Please update the API Status first!");
-  }
   };
 
   return (
@@ -261,14 +289,22 @@ function HTTPMethodControl() {
                   <select
                     id="api-select"
                     className="api-select-dropdown"
-                    value={selectedDomain ? (selectedDomain.waf_name || selectedDomain.protected_domain) : ''}
+                    value={
+                      selectedDomain
+                        ? selectedDomain.waf_name ||
+                          selectedDomain.protected_domain
+                        : ''
+                    }
                     onChange={handleDomainChange}
                   >
                     {domains.length === 0 ? (
                       <option value="">No domains found</option>
                     ) : (
                       domains.map((d, i) => (
-                        <option key={i} value={d.waf_name || d.protected_domain}>
+                        <option
+                          key={i}
+                          value={d.waf_name || d.protected_domain}
+                        >
                           {d.waf_name || d.protected_domain}
                         </option>
                       ))
@@ -280,13 +316,17 @@ function HTTPMethodControl() {
                   <div className="selected-api-details">
                     <div className="detail-item">
                       <span className="detail-label">Status:</span>
-                      <span className={`detail-value status-${selectedDomain.waf_api_status?.toLowerCase()}`}>
+                      <span
+                        className={`detail-value status-${selectedDomain.waf_api_status?.toLowerCase()}`}
+                      >
                         {selectedDomain.waf_api_status || 'Active'}
                       </span>
                     </div>
                     <div className="detail-item">
                       <span className="detail-label">Proxy:</span>
-                      <span className="detail-value">{selectedDomain.proxy_domain || 'N/A'}</span>
+                      <span className="detail-value">
+                        {selectedDomain.proxy_domain || 'N/A'}
+                      </span>
                     </div>
                   </div>
                 )}
@@ -303,7 +343,6 @@ function HTTPMethodControl() {
               </p>
             </div>
 
-
             {/* Add New Rule Form */}
             <div className="http-add-rule-card">
               <h2>Add New Method Rule</h2>
@@ -312,7 +351,9 @@ function HTTPMethodControl() {
                   <label>HTTP Method</label>
                   <select
                     value={newMethod.method}
-                    onChange={(e) => setNewMethod({ ...newMethod, method: e.target.value })}
+                    onChange={(e) =>
+                      setNewMethod({ ...newMethod, method: e.target.value })
+                    }
                   >
                     <option value="GET">GET</option>
                     <option value="POST">POST</option>
@@ -325,7 +366,9 @@ function HTTPMethodControl() {
                   <label>Default Action</label>
                   <select
                     value={newMethod.action}
-                    onChange={(e) => setNewMethod({ ...newMethod, action: e.target.value })}
+                    onChange={(e) =>
+                      setNewMethod({ ...newMethod, action: e.target.value })
+                    }
                   >
                     <option value="Allow">Allow</option>
                     <option value="Block">Block</option>
@@ -338,7 +381,9 @@ function HTTPMethodControl() {
                     min="1"
                     className="priority-form-input"
                     value={newMethod.priority}
-                    onChange={(e) => setNewMethod({ ...newMethod, priority: e.target.value })}
+                    onChange={(e) =>
+                      setNewMethod({ ...newMethod, priority: e.target.value })
+                    }
                   />
                 </div>
                 <div className="form-group checkbox-group">
@@ -346,7 +391,12 @@ function HTTPMethodControl() {
                     <input
                       type="checkbox"
                       checked={newMethod.logging}
-                      onChange={(e) => setNewMethod({ ...newMethod, logging: e.target.checked })}
+                      onChange={(e) =>
+                        setNewMethod({
+                          ...newMethod,
+                          logging: e.target.checked,
+                        })
+                      }
                     />
                     <span className="checkmark"></span>
                     Enable Logging
@@ -386,13 +436,19 @@ function HTTPMethodControl() {
                 <tbody>
                   {loading ? (
                     <tr>
-                      <td colSpan="4" style={{ textAlign: 'center', padding: '20px' }}>
+                      <td
+                        colSpan="4"
+                        style={{ textAlign: 'center', padding: '20px' }}
+                      >
                         Loading rules...
                       </td>
                     </tr>
                   ) : methods.length === 0 ? (
                     <tr>
-                      <td colSpan="4" style={{ textAlign: 'center', padding: '20px' }}>
+                      <td
+                        colSpan="4"
+                        style={{ textAlign: 'center', padding: '20px' }}
+                      >
                         No rules defined for this domain.
                       </td>
                     </tr>
@@ -400,11 +456,21 @@ function HTTPMethodControl() {
                     methods.map((item, index) => (
                       <tr key={index}>
                         <td>
-                          <span className={`method-badge method-${item.method?.toLowerCase() || 'unknown'}`}>{item.method}</span>
+                          <span
+                            className={`method-badge method-${item.method?.toLowerCase() || 'unknown'}`}
+                          >
+                            {item.method}
+                          </span>
                         </td>
 
                         <td>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                          <div
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '10px',
+                            }}
+                          >
                             <label className="switch">
                               <input
                                 type="checkbox"
@@ -413,12 +479,14 @@ function HTTPMethodControl() {
                               />
                               <span className="slider"></span>
                             </label>
-                            <span style={{ 
-                              fontSize: '0.75rem', 
-                              fontWeight: '700',
-                              color: item.enabled ? '#10b981' : '#94a3b8',
-                              textTransform: 'uppercase'
-                            }}>
+                            <span
+                              style={{
+                                fontSize: '0.75rem',
+                                fontWeight: '700',
+                                color: item.enabled ? '#10b981' : '#94a3b8',
+                                textTransform: 'uppercase',
+                              }}
+                            >
                               {item.enabled ? 'Active' : 'Inactive'}
                             </span>
                           </div>
@@ -428,7 +496,9 @@ function HTTPMethodControl() {
                           <select
                             className={`action-select action-${item.action?.toLowerCase() || 'allow'}`}
                             value={item.action}
-                            onChange={(e) => updateAction(index, e.target.value)}
+                            onChange={(e) =>
+                              updateAction(index, e.target.value)
+                            }
                           >
                             <option value="Allow">Allow</option>
                             <option value="Block">Block</option>
@@ -440,20 +510,25 @@ function HTTPMethodControl() {
                             type="number"
                             min="1"
                             className="priority-input"
-                            style={{ 
-                              width: '60px', 
-                              padding: '5px', 
-                              borderRadius: '4px', 
+                            style={{
+                              width: '60px',
+                              padding: '5px',
+                              borderRadius: '4px',
                               border: '1px solid #cbd5e1',
-                              textAlign: 'center'
+                              textAlign: 'center',
                             }}
                             value={item.priority}
-                            onChange={(e) => updatePriority(index, e.target.value)}
+                            onChange={(e) =>
+                              updatePriority(index, e.target.value)
+                            }
                           />
                         </td>
 
                         <td>
-                          <label className="custom-checkbox-container" style={{ justifyContent: 'center' }}>
+                          <label
+                            className="custom-checkbox-container"
+                            style={{ justifyContent: 'center' }}
+                          >
                             <input
                               type="checkbox"
                               checked={item.logging}
