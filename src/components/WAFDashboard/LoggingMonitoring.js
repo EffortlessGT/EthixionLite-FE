@@ -1,25 +1,34 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import WAFDashboardNavbar from './WAFDashboardNavbar';
 import FadeUpOnScroll from '../FadeUpOnScroll';
-import {getAllTimeWAFTrends, getCurrentWAFUser} from '../../api';
+import {
+  getAllTimeWAFTrends,
+  getCurrentWAFUser,
+  loggingMontoringDashData,
+} from '../../api';
 import '../../App.css';
 
 function LoggingMonitoring() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [userData, setUser] = useState(null);
+  const [insights, setInsights] = useState(null);
   const [logsData, setLogs] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
   const [methodFilter, setMethodFilter] = useState('All');
-
+  const [logTypeFilter, setLogTypeFilter] = useState('full');
 
   useEffect(() => {
     const fetchWAFTrends = async () => {
-      const [rawLogsData, userData] = await Promise.all([
+      const [rawLogsData, userData, dashboardInsights] = await Promise.all([
         getAllTimeWAFTrends(),
         getCurrentWAFUser(),
+        loggingMontoringDashData(),
       ]);
       setUser(userData);
+      setInsights(dashboardInsights);
+      console.log('Raw logs data:', rawLogsData);
+      console.log('Dashboard insights:', dashboardInsights);
 
       // normalize possible response shapes
       let logsArray = [];
@@ -27,8 +36,10 @@ function LoggingMonitoring() {
       else if (rawLogsData) {
         if (Array.isArray(rawLogsData.logs)) logsArray = rawLogsData.logs;
         else if (Array.isArray(rawLogsData.data)) logsArray = rawLogsData.data;
-        else if (Array.isArray(rawLogsData.waf_logs)) logsArray = rawLogsData.waf_logs;
-        else if (Array.isArray(rawLogsData.records)) logsArray = rawLogsData.records;
+        else if (Array.isArray(rawLogsData.waf_logs))
+          logsArray = rawLogsData.waf_logs;
+        else if (Array.isArray(rawLogsData.records))
+          logsArray = rawLogsData.records;
       }
 
       setLogs(logsArray);
@@ -43,15 +54,20 @@ function LoggingMonitoring() {
       const timestamp = String(log.timestamp || log.time || '').toLowerCase();
       const ip = String(log.ip_address || log.ip || '').toLowerCase();
       const userAgent = String(log.user_agent || log.ua || '').toLowerCase();
-      const method = String(log.method || log.http_method || log.request_method || '').toLowerCase();
-      const requestStatus = String(log.request_status || log.status || '').toLowerCase();
+      const method = String(
+        log.method || log.http_method || log.request_method || ''
+      ).toLowerCase();
+      const requestStatus = String(
+        log.request_status || log.status || ''
+      ).toLowerCase();
       const userEmail = String(log.user_email || log.user || '').toLowerCase();
       const threats = Array.isArray(log.detected_threats)
         ? log.detected_threats.join(' ').toLowerCase()
         : String(log.detected_threats || '').toLowerCase();
+      const logType = String(log.log_type || '').toLowerCase();
 
       if (query) {
-        const haystack = `${wafName} ${timestamp} ${ip} ${userAgent} ${method} ${requestStatus} ${userEmail} ${threats}`;
+        const haystack = `${wafName} ${logType} ${timestamp} ${ip} ${userAgent} ${method} ${requestStatus} ${userEmail} ${threats}`;
         if (!haystack.includes(query)) return false;
       }
 
@@ -63,9 +79,13 @@ function LoggingMonitoring() {
         if (method !== methodFilter.toLowerCase()) return false;
       }
 
+      if (logTypeFilter && logTypeFilter !== 'All') {
+        if (logType !== logTypeFilter.toLowerCase()) return false;
+      }
+
       return true;
     });
-  }, [logsData, searchQuery, statusFilter, methodFilter]);
+  }, [logsData, searchQuery, statusFilter, methodFilter, logTypeFilter]);
 
   return (
     <FadeUpOnScroll>
@@ -101,22 +121,22 @@ function LoggingMonitoring() {
             <div className="monitor-stats">
               <div className="monitor-card">
                 <h3>Total Requests</h3>
-                <span>42,381</span>
+                <span>{insights?.total_requests || 0}</span>
               </div>
 
               <div className="monitor-card blocked">
                 <h3>Blocked Threats</h3>
-                <span>1,204</span>
+                <span>{insights?.blocked_threats || 0}</span>
               </div>
 
               <div className="monitor-card suspicious">
                 <h3>Suspicious Requests</h3>
-                <span>382</span>
+                <span>{insights?.suspicious_requests || 0}</span>
               </div>
 
               <div className="monitor-card success">
                 <h3>Allowed Requests</h3>
-                <span>40,795</span>
+                <span>{insights?.allowed_requests || 0}</span>
               </div>
             </div>
 
@@ -141,6 +161,14 @@ function LoggingMonitoring() {
               </select>
 
               <select
+                value={logTypeFilter}
+                onChange={(e) => setLogTypeFilter(e.target.value)}
+              >
+                <option value="full">Full</option>
+                <option value="threat_only">Threat Only</option>
+              </select>
+
+              <select
                 value={methodFilter}
                 onChange={(e) => setMethodFilter(e.target.value)}
               >
@@ -155,18 +183,29 @@ function LoggingMonitoring() {
               <button
                 onClick={() => {
                   const csvRows = [];
-                  const headers = ['timestamp', 'ip', 'method', 'endpoint', 'status', 'threat'];
+                  const headers = [
+                    'timestamp',
+                    'ip',
+                    'method',
+                    'endpoint',
+                    'status',
+                    'threat',
+                  ];
                   csvRows.push(headers.join(','));
                   filteredLogs.forEach((l) => {
                     const row = [
-                      (l.timestamp || l.time || l.created_at || ''),
-                      (l.ip_address || l.ip || l.client_ip || ''),
-                      (l.method || l.http_method || l.request_method || ''),
-                      (l.endpoint || l.path || l.url || ''),
-                      (l.status || l.result || ''),
-                      (l.detected_threats || l.threat || ''),
+                      l.timestamp || l.time || l.created_at || '',
+                      l.ip_address || l.ip || l.client_ip || '',
+                      l.method || l.http_method || l.request_method || '',
+                      l.endpoint || l.path || l.url || '',
+                      l.status || l.result || '',
+                      l.detected_threats || l.threat || '',
                     ];
-                    csvRows.push(row.map((v) => `"${String(v).replace(/"/g, '""')}"`).join(','));
+                    csvRows.push(
+                      row
+                        .map((v) => `"${String(v).replace(/"/g, '""')}"`)
+                        .join(',')
+                    );
                   });
                   const csv = csvRows.join('\n');
                   const blob = new Blob([csv], { type: 'text/csv' });
@@ -189,6 +228,7 @@ function LoggingMonitoring() {
                 <thead>
                   <tr>
                     <th>WAF Name</th>
+                    <th>Log Type</th>
                     <th>Timestamp</th>
                     <th>IP Address</th>
                     <th>User Agent</th>
@@ -201,7 +241,10 @@ function LoggingMonitoring() {
                 <tbody>
                   {filteredLogs.length === 0 ? (
                     <tr>
-                      <td colSpan="7" style={{ textAlign: 'center', padding: '1rem' }}>
+                      <td
+                        colSpan="7"
+                        style={{ textAlign: 'center', padding: '1rem' }}
+                      >
                         No logs match your search or filter criteria.
                       </td>
                     </tr>
@@ -214,9 +257,15 @@ function LoggingMonitoring() {
                       const status = log.request_status;
                       const threat = log.detected_threats;
                       const WAFName = log.waf_name;
+                      const logType = log.log_type;
                       return (
                         <tr key={index}>
-                          <td>{WAFName}</td>
+                          <td>
+                            <span className={`waf-badge ${WAFName}`}>
+                              {WAFName}
+                            </span>
+                          </td>
+                          <td>{logType}</td>
                           <td>{timestamp}</td>
 
                           <td>{ip}</td>

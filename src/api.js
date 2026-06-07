@@ -735,11 +735,10 @@ export const checkWAFExistsForCurrentUser = async () => {
 export const getWAFDashboardData = async () => {
   try {
     const resp = await fetch(`${addr}/waf_dashboard_insights`, {
-      method: 'POST',
+      method: 'GET',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({}),
       credentials: 'include',
     });
     const rs = await resp.json();
@@ -973,10 +972,10 @@ export const setRateLimitingRules = async (data) => {
       },
       credentials: 'include',
       body: JSON.stringify({
-        "waf_name": data.rate_limit_data[0].waf_name,
-        "rate_limit": data.rate_limit_data[0].rate_limit,
-        "sec": data.rate_limit_data[0].sec,
-        "waf_api_status": data.rate_limit_data[0].waf_api_status
+        waf_name: data.rate_limit_data[0].waf_name,
+        rate_limit: data.rate_limit_data[0].rate_limit,
+        sec: data.rate_limit_data[0].sec,
+        waf_api_status: data.rate_limit_data[0].waf_api_status,
       }),
     });
 
@@ -1008,6 +1007,25 @@ export const getAllTimeWAFTrends = async (apiname) => {
     }
   } catch (err) {
     console.error('Error fetching WAF trends data:', err);
+    toast.error('Unable to reach server. Please try again later.');
+  }
+};
+
+export const loggingMontoringDashData = async () => {
+  try {
+    const data = await fetch(`${addr}/waf_dashboard_insights`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+    });
+    const rs = await data.json();
+    if (rs.status === 'success' && rs.data) {
+      return rs.data;
+    }
+  } catch (err) {
+    console.error('Error fetching logging and monitoring dashboard data:', err);
     toast.error('Unable to reach server. Please try again later.');
   }
 };

@@ -68,7 +68,7 @@ function WAFDashboardNavbar({ menuOpen, setMenuOpen, userData, wafAPIExists }) {
                 <h3>Alerts</h3>
               </Link>
 
-              <Link to="/dashboard">
+              <Link to="/asg_dashboard">
                 <h3>ASG Dashboard</h3>
               </Link>
             </>

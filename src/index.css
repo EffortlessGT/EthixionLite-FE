@@ -1441,6 +1441,17 @@ input:-webkit-autofill {
   color: #475569;
 }
 
+.waf-badge {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background-color: #eeeff2;
+  color: #475569;
+}
+
 .method-get {
   background-color: #dcfce7;
   color: #166534;

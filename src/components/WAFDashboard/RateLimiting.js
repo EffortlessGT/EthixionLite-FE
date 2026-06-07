@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import WAFDashboardNavbar from './WAFDashboardNavbar';
 import FadeUpOnScroll from '../FadeUpOnScroll';
-import { getCurrentWAFUser, getWAFAPIRateLimitingRules, setRateLimitingRules } from '../../api';
+import {
+  getCurrentWAFUser,
+  getWAFAPIRateLimitingRules,
+  setRateLimitingRules,
+} from '../../api';
 import { toast } from 'sonner';
 import '../../App.css';
 
@@ -62,7 +66,9 @@ function RateLimiting() {
   };
 
   const showFreePlanToast = () => {
-    toast.error('Free plan limit does not allow rate limitting for Req/Seconds.');
+    toast.error(
+      'Free plan limit does not allow rate limitting for Req/Seconds.'
+    );
   };
 
   const toggleRule = (index) => {
@@ -95,8 +101,10 @@ function RateLimiting() {
       const resp = await setRateLimitingRules(payload);
       const msgArr = [...perRowMessage];
       if (resp && resp.status === 'success') {
-        toast.success(`Rate Limit Rule for \`${rateLimits[index].apiname}\` WAF API saved successfully.`);
-      setPerRowMessage(msgArr);
+        toast.success(
+          `Rate Limit Rule for \`${rateLimits[index].apiname}\` WAF API saved successfully.`
+        );
+        setPerRowMessage(msgArr);
       }
     } catch (err) {
       console.error('Error saving single rate limit:', err);
@@ -217,7 +225,9 @@ function RateLimiting() {
                             {perRowSaving[index] ? 'Saving...' : 'Save'}
                           </button>
                           {perRowMessage[index] && (
-                            <div className="row-message">{perRowMessage[index]}</div>
+                            <div className="row-message">
+                              {perRowMessage[index]}
+                            </div>
                           )}
                         </td>
                       </tr>
