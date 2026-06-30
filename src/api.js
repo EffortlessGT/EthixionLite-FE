@@ -1,6 +1,6 @@
 import { toast } from 'sonner';
 
-const addr = process.env.REACT_APP_PROD_BACKEND_URL;
+const addr = process.env.REACT_APP_ROCKET_BACKEND_URL_DESKTOP;
 console.log('Backend URL:', addr);
 export const loginForm = async (data) => {
   try {
