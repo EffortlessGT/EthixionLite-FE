@@ -1,32 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import WAFDashboardNavbar from './WAFDashboardNavbar';
 import FadeUpOnScroll from '../FadeUpOnScroll';
+import { getCurrentWAFUser, fetchAPIKeysData } from '../../api';
 import '../../App.css';
 
 function APIKeysManagement() {
   const [menuOpen, setMenuOpen] = useState(false);
-
-  const [apiKeys, setApiKeys] = useState([
-    {
-      name: 'Production Key',
-      key: 'ethx_live_x82jd92jd2',
-      permissions: 'Full Access',
-      status: true,
-    },
-    {
-      name: 'Frontend Client',
-      key: 'ethx_pub_92jd82jd92',
-      permissions: 'Read Only',
-      status: true,
-    },
-    {
-      name: 'Testing Key',
-      key: 'ethx_test_22jd92jd91',
-      permissions: 'Limited',
-      status: false,
-    },
-  ]);
-
+  const [userData, setUser] = useState(null);
+  const [apiKeys, setApiKeys] = useState([]);
+  
   const toggleStatus = (index) => {
     const updated = [...apiKeys];
     updated[index].status = !updated[index].status;
@@ -59,6 +41,22 @@ function APIKeysManagement() {
     alert('API Keys Saved!');
   };
 
+  useEffect(() => {
+    const fetchAPIData = async () => {
+      try {
+        const [userData, apiKeysData] = await Promise.all([
+          getCurrentWAFUser(),
+          fetchAPIKeysData(),
+        ]);
+        setUser(userData);
+        setApiKeys(apiKeysData);
+      } catch (error) {
+        console.error('Error fetching API keys:', error);
+      }
+    };
+
+    fetchAPIData();
+  }, []);
   return (
     <FadeUpOnScroll>
       <main className="dashboard">
@@ -69,6 +67,7 @@ function APIKeysManagement() {
             menuOpen={menuOpen}
             setMenuOpen={setMenuOpen}
             wafAPIExists={true}
+            userData={userData}
           />
 
           <div className="dash-dataContainer">
@@ -105,43 +104,42 @@ function APIKeysManagement() {
               <table className="apikey-table">
                 <thead>
                   <tr>
-                    <th>Key Name</th>
+                    <th>Key Owner</th>
                     <th>API Key</th>
                     <th>Permissions</th>
                     <th>Status</th>
+                    <th>Created At</th>
+                    <th>Updated At</th>
+                    <th>Last Rotated</th>
+                    
                   </tr>
                 </thead>
 
                 <tbody>
                   {apiKeys.map((item, index) => (
                     <tr key={index}>
-                      {/* NAME */}
 
                       <td>
                         <input
                           type="text"
-                          value={item.name}
+                          value={item.waf_name}
                           onChange={(e) =>
-                            updateField(index, 'name', e.target.value)
+                            updateField(index, 'waf_name', e.target.value)
                           }
                           className="apikey-input"
                         />
                       </td>
 
-                      {/* API KEY */}
-
                       <td>
                         <input
                           type="text"
-                          value={item.key}
+                          value={item.api_key}
                           onChange={(e) =>
                             updateField(index, 'key', e.target.value)
                           }
                           className="apikey-input"
                         />
                       </td>
-
-                      {/* PERMISSIONS */}
 
                       <td>
                         <select
@@ -158,8 +156,6 @@ function APIKeysManagement() {
                         </select>
                       </td>
 
-                      {/* STATUS */}
-
                       <td>
                         <label className="switch">
                           <input
@@ -171,6 +167,12 @@ function APIKeysManagement() {
                           <span className="slider"></span>
                         </label>
                       </td>
+
+                      <td>{item.created_at ? new Date(item.created_at).toLocaleDateString() : 'N/A'}</td>
+
+                      <td>{item.last_used_at ? new Date(item.last_used_at).toLocaleDateString() : 'Not Used Yet!'}</td>
+
+                      <td>{item.last_rotated_at ? new Date(item.last_rotated_at).toLocaleDateString() : 'Not Rotated Yet!'}</td>
                     </tr>
                   ))}
                 </tbody>
