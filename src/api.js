@@ -1054,3 +1054,26 @@ export const fetchAPIKeysData = async () => {
     return [];
   }
 };
+
+export const retrieveWAFAPIKeyByAuthentication = async (data) => {
+  try {
+    const resp = await fetch(`${addr}/get_waf_api_key`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify(data),
+    });
+
+    const rs = await resp.json();
+    if (resp.ok && rs.status === 'success') {
+      return rs;
+    } else {
+      toast.error(rs.msg || 'Failed to retrieve WAF API key.');
+    }
+  } catch (err) {
+    console.error('Error retrieving WAF API key:', err);
+    toast.error('Unable to reach server. Please try again later.');
+  }
+};
