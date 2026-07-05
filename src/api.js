@@ -1,6 +1,6 @@
 import { toast } from 'sonner';
 
-const addr = process.env.REACT_APP_PROD_BACKEND_URL;
+const addr = process.env.REACT_APP_ROCKET_BACKEND_URL_DESKTOP;
 console.log('Backend URL:', addr);
 export const loginForm = async (data) => {
   try {
@@ -185,14 +185,15 @@ export const wafapiForm = async (data) => {
       toast.error('No Active user session found. Kindly login again!');
       window.location.href = '/action';
     }
+    let res = await resp.json();
 
-    if (resp.ok && resp.status === 'success') {
+    if (resp.ok && res.status === 'success') {
       toast.success(
         'Ethixion WAF API Creation Successful. Kindly head to dashboard to manage API.'
       );
     } else {
       toast.error(
-        'Failure Occured due to ' + (resp.message ? `: ${resp.message}` : '.')
+        'Failure Occured due to ' + (res.message ? `: ${res.message}` : '.')
       );
     }
 
@@ -1026,6 +1027,53 @@ export const loggingMontoringDashData = async () => {
     }
   } catch (err) {
     console.error('Error fetching logging and monitoring dashboard data:', err);
+    toast.error('Unable to reach server. Please try again later.');
+  }
+};
+
+export const fetchAPIKeysData = async () => {
+  try {
+    const resp = await fetch(`${addr}/get_waf_api_key_management_data`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+    });
+
+    const rs = await resp.json();
+    if (resp.ok && rs.status === 'success') {
+      return rs.data;
+    } else {
+      toast.error(rs.msg || 'Failed to fetch API keys.');
+      return [];
+    }
+  } catch (err) {
+    console.error('Error fetching API keys:', err);
+    toast.error('Unable to reach server. Please try again later.');
+    return [];
+  }
+};
+
+export const retrieveWAFAPIKeyByAuthentication = async (data) => {
+  try {
+    const resp = await fetch(`${addr}/get_waf_api_key`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify(data),
+    });
+
+    const rs = await resp.json();
+    if (resp.ok && rs.status === 'success') {
+      return rs;
+    } else {
+      toast.error(rs.msg || 'Failed to retrieve WAF API key.');
+    }
+  } catch (err) {
+    console.error('Error retrieving WAF API key:', err);
     toast.error('Unable to reach server. Please try again later.');
   }
 };
