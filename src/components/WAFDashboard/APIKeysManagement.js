@@ -35,38 +35,41 @@ export const parseWAFApiKeyResponse = (response) => {
 function APIKeysManagement() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [userData, setUser] = useState(null);
-  const [apiKeys, setApiKeys] = useState([]);
+  const [updatedAPIData, setUpdatedAPIData] = useState([]);
   const [isRevealModalOpen, setIsRevealModalOpen] = useState(false);
   const [modalForm, setModalForm] = useState({ email: '', password: '', api_id: '' });
+  const [isDataModified, setIsDataModified] = useState(false);
   
   const toggleStatus = (index) => {
-    const updated = [...apiKeys];
+    const updated = [...updatedAPIData];
     updated[index].status = !updated[index].status;
 
-    setApiKeys(updated);
+    setUpdatedAPIData(updated);
   };
 
   const updateField = (index, field, value) => {
-    const updated = [...apiKeys];
-    updated[index][field] = value;
-
-    setApiKeys(updated);
+  const updated = [...updatedAPIData];
+  updated[index] = {
+    ...updated[index],
+    [field]: value,
   };
 
-  const addAPIKey = () => {
-    setApiKeys([
-      ...apiKeys,
-      {
-        permissions: 'Read Only',
-        status: true,
-      },
-    ]);
-  };
+  setUpdatedAPIData(updated);
+};
 
   const saveAPIKeys = () => {
-    console.log(apiKeys);
+    console.log(updatedAPIData);
+    const hasInvalidPermission = updatedAPIData.some(
+    (item) => !item.permissions
+  );
+
+  if (hasInvalidPermission) {
+    toast.error("Please select a permission for all API keys.");
+    return;
+  }
 
     alert('API Keys Saved!');
+    setIsDataModified(false);
   };
 
   const handleCopyKey = async (value) => {
@@ -135,7 +138,7 @@ function APIKeysManagement() {
       if (parsedRecords.length > 0) {
         const revealedKey = parsedRecords[0].api_key;
 
-        setApiKeys((prev) =>
+        setUpdatedAPIData((prev) =>
           prev.map((item) => {
             if (String(item.waf_api_id) === String(submittedApiId)) {
               return { ...item, api_key: revealedKey };
@@ -164,7 +167,7 @@ function APIKeysManagement() {
           fetchAPIKeysData(),
         ]);
         setUser(userData);
-        setApiKeys(apiKeysData);
+        setUpdatedAPIData(apiKeysData);
       } catch (error) {
         console.error('Error fetching API keys:', error);
       }
@@ -205,11 +208,7 @@ function APIKeysManagement() {
             {/* ACTIONS */}
 
             <div className="apikey-actions">
-              <button className="add-key-btn" onClick={addAPIKey}>
-                Generate API Key
-              </button>
-
-              <button className="save-key-btn" onClick={saveAPIKeys}>
+              <button className="save-key-btn" onClick={saveAPIKeys} disabled={!isDataModified}>
                 Save Changes
               </button>
             </div>
@@ -232,7 +231,7 @@ function APIKeysManagement() {
                 </thead>
 
                 <tbody>
-                  {apiKeys.map((item, index) => (
+                  {updatedAPIData.map((item, index) => (
                     <tr key={index}>
 
                       <td>
@@ -282,15 +281,17 @@ function APIKeysManagement() {
                       <td>
                         <select
                           value={item.permissions}
-                          onChange={(e) =>
-                            updateField(index, 'permissions', e.target.value)
-                          }
+                          onChange={(e) => {
+                            updateField(index, 'permissions', e.target.value);
+                            setIsDataModified(true);
+                          }}
                         >
-                          <option>Full Access</option>
+                          <option value="">Select Permission</option>
+                          <option value="full">Full Access</option>
 
-                          <option>Read Only</option>
+                          <option value="read_only">Read Only</option>
 
-                          <option>Limited</option>
+                          <option value="limited">Limited</option>
                         </select>
                       </td>
 
