@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import WAFDashboardNavbar from './WAFDashboardNavbar';
 import FadeUpOnScroll from '../FadeUpOnScroll';
-import { getCurrentWAFUser, fetchAPIKeysData, retrieveWAFAPIKeyByAuthentication } from '../../api';
+import {
+  getCurrentWAFUser,
+  fetchAPIKeysData,
+  retrieveWAFAPIKeyByAuthentication,
+  set_api_key_config,
+} from '../../api';
 import { toast } from 'sonner';
 import { FiCopy, FiEye, FiShield, FiX } from 'react-icons/fi';
 import '../../App.css';
@@ -20,7 +25,8 @@ export const parseWAFApiKeyResponse = (response) => {
     }
 
     if (entry && typeof entry === 'object') {
-      const apiId = entry.waf_api_id ?? entry.api_id ?? entry.id ?? entry[0] ?? null;
+      const apiId =
+        entry.waf_api_id ?? entry.api_id ?? entry.id ?? entry[0] ?? null;
       const apiKey = entry.api_key ?? entry.key ?? entry[1] ?? null;
 
       if (apiId != null && apiKey) {
@@ -37,39 +43,67 @@ function APIKeysManagement() {
   const [userData, setUser] = useState(null);
   const [updatedAPIData, setUpdatedAPIData] = useState([]);
   const [isRevealModalOpen, setIsRevealModalOpen] = useState(false);
-  const [modalForm, setModalForm] = useState({ email: '', password: '', api_id: '' });
+  const [modalForm, setModalForm] = useState({
+    email: '',
+    password: '',
+    api_id: '',
+  });
   const [isDataModified, setIsDataModified] = useState(false);
-  
+  const [selectedRecordIndex, setSelectedRecordIndex] = useState(0);
+
   const toggleStatus = (index) => {
+    if (index !== selectedRecordIndex) return;
+
     const updated = [...updatedAPIData];
-    updated[index].status = !updated[index].status;
+    updated[index].status =
+      updated[index].status === 'Active' ? 'Inactive' : 'Active';
 
     setUpdatedAPIData(updated);
+    setIsDataModified(true);
   };
 
   const updateField = (index, field, value) => {
-  const updated = [...updatedAPIData];
-  updated[index] = {
-    ...updated[index],
-    [field]: value,
+    if (index !== selectedRecordIndex) return;
+
+    const updated = [...updatedAPIData];
+    updated[index] = {
+      ...updated[index],
+      [field]: value,
+    };
+
+    setUpdatedAPIData(updated);
+    setIsDataModified(true);
   };
 
-  setUpdatedAPIData(updated);
-};
+  const saveAPIKeys = async () => {
+    const selectedRecord = updatedAPIData[selectedRecordIndex];
 
-  const saveAPIKeys = () => {
-    console.log(updatedAPIData);
-    const hasInvalidPermission = updatedAPIData.some(
-    (item) => !item.permissions
-  );
+    if (!selectedRecord) {
+      toast.error('No record selected.');
+      return;
+    }
 
-  if (hasInvalidPermission) {
-    toast.error("Please select a permission for all API keys.");
-    return;
-  }
+    if (!selectedRecord.permissions) {
+      toast.error('Please select a permission for this API key.');
+      return;
+    }
+    const recordToSave = {
+      ...selectedRecord,
+      waf_api_status: selectedRecord.status,
+    };
 
-    alert('API Keys Saved!');
-    setIsDataModified(false);
+    try {
+      const response = await set_api_key_config(recordToSave);
+      if (response && response.status === 'success') {
+        toast.success('API Key Updated Successfully!');
+        setIsDataModified(false);
+      } else {
+        toast.error(response?.msg || 'Failed to update API key configuration.');
+      }
+    } catch (error) {
+      console.error('Error saving API key configuration:', error);
+      toast.error('Unable to save API key configuration.');
+    }
   };
 
   const handleCopyKey = async (value) => {
@@ -147,9 +181,10 @@ function APIKeysManagement() {
           })
         );
         toast.success('API key revealed successfully.');
-
       } else {
-        toast.error('The API key could not be retrieved from the server response.');
+        toast.error(
+          'The API key could not be retrieved from the server response.'
+        );
       }
     } catch (error) {
       console.error('Error revealing API key:', error);
@@ -208,7 +243,11 @@ function APIKeysManagement() {
             {/* ACTIONS */}
 
             <div className="apikey-actions">
-              <button className="save-key-btn" onClick={saveAPIKeys} disabled={!isDataModified}>
+              <button
+                className="save-key-btn"
+                onClick={saveAPIKeys}
+                disabled={!isDataModified}
+              >
                 Save Changes
               </button>
             </div>
@@ -219,6 +258,7 @@ function APIKeysManagement() {
               <table className="apikey-table">
                 <thead>
                   <tr>
+                    <th>Select</th>
                     <th>Key Owner</th>
                     <th>API Key</th>
                     <th>Permissions</th>
@@ -226,13 +266,29 @@ function APIKeysManagement() {
                     <th>Created At</th>
                     <th>Updated At</th>
                     <th>Last Rotated</th>
-                    
                   </tr>
                 </thead>
 
                 <tbody>
                   {updatedAPIData.map((item, index) => (
-                    <tr key={index}>
+                    <tr
+                      key={index}
+                      className={
+                        selectedRecordIndex === index ? 'selected-row' : ''
+                      }
+                    >
+                      <td>
+                        <label className="checkbox-wrapper">
+                          <input
+                            type="checkbox"
+                            name="api-record-selection"
+                            checked={selectedRecordIndex === index}
+                            onChange={() => setSelectedRecordIndex(index)}
+                            title="Select this API record to edit"
+                          />
+                          <span className="checkmark"></span>
+                        </label>
+                      </td>
 
                       <td>
                         <input
@@ -242,7 +298,7 @@ function APIKeysManagement() {
                             updateField(index, 'waf_name', e.target.value)
                           }
                           className="apikey-input"
-                          disabled
+                          disabled={selectedRecordIndex !== index}
                         />
                       </td>
 
@@ -255,7 +311,7 @@ function APIKeysManagement() {
                               updateField(index, 'api_key', e.target.value)
                             }
                             className="apikey-input"
-                            disabled
+                            disabled={selectedRecordIndex !== index}
                           />
 
                           <button
@@ -263,6 +319,7 @@ function APIKeysManagement() {
                             className="apikey-icon-btn"
                             onClick={() => handleCopyKey(item.api_key)}
                             title="Copy API key"
+                            disabled={selectedRecordIndex !== index}
                           >
                             <FiCopy size={16} />
                           </button>
@@ -270,8 +327,14 @@ function APIKeysManagement() {
                           <button
                             type="button"
                             className="apikey-icon-btn"
-                            onClick={() => handleRevealRequest(item.waf_api_id, userData.email)}
+                            onClick={() =>
+                              handleRevealRequest(
+                                item.waf_api_id,
+                                userData.email
+                              )
+                            }
                             title="Reveal secure access"
+                            disabled={selectedRecordIndex !== index}
                           >
                             <FiEye size={16} />
                           </button>
@@ -283,15 +346,13 @@ function APIKeysManagement() {
                           value={item.permissions}
                           onChange={(e) => {
                             updateField(index, 'permissions', e.target.value);
-                            setIsDataModified(true);
                           }}
+                          disabled={selectedRecordIndex !== index}
                         >
                           <option value="">Select Permission</option>
-                          <option value="full">Full Access</option>
+                          <option value="monitor_only">Monitor Only</option>
 
-                          <option value="read_only">Read Only</option>
-
-                          <option value="limited">Limited</option>
+                          <option value="block">Block</option>
                         </select>
                       </td>
 
@@ -299,19 +360,32 @@ function APIKeysManagement() {
                         <label className="switch">
                           <input
                             type="checkbox"
-                            checked={item.status}
+                            checked={item.status === 'Active'}
                             onChange={() => toggleStatus(index)}
+                            disabled={selectedRecordIndex !== index}
                           />
 
                           <span className="slider"></span>
                         </label>
                       </td>
 
-                      <td>{item.created_at ? new Date(item.created_at).toLocaleDateString() : 'N/A'}</td>
+                      <td>
+                        {item.created_at
+                          ? new Date(item.created_at).toLocaleDateString()
+                          : 'N/A'}
+                      </td>
 
-                      <td>{item.last_used_at ? new Date(item.last_used_at).toLocaleDateString() : 'Not Used Yet!'}</td>
+                      <td>
+                        {item.last_used_at
+                          ? new Date(item.last_used_at).toLocaleDateString()
+                          : 'Not Used Yet!'}
+                      </td>
 
-                      <td>{item.last_rotated_at ? new Date(item.last_rotated_at).toLocaleDateString() : 'Not Rotated Yet!'}</td>
+                      <td>
+                        {item.last_rotated_at
+                          ? new Date(item.last_rotated_at).toLocaleDateString()
+                          : 'Not Rotated Yet!'}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -344,7 +418,9 @@ function APIKeysManagement() {
                 </div>
                 <div>
                   <h3 id="reveal-modal-title">Ethixion WAF Secure Access</h3>
-                  <p>Enter your credentials to confirm access to the API key.</p>
+                  <p>
+                    Enter your credentials to confirm access to the API key.
+                  </p>
                 </div>
               </div>
 

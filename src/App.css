@@ -56,7 +56,10 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: transform 180ms ease, background 180ms ease, border-color 180ms ease;
+  transition:
+    transform 180ms ease,
+    background 180ms ease,
+    border-color 180ms ease;
 }
 
 .apikey-icon-btn:hover {
@@ -91,7 +94,11 @@
   width: min(92vw, 460px);
   padding: 24px;
   border-radius: 18px;
-  background: linear-gradient(135deg, rgba(15, 23, 42, 0.97), rgba(30, 41, 59, 0.95));
+  background: linear-gradient(
+    135deg,
+    rgba(15, 23, 42, 0.97),
+    rgba(30, 41, 59, 0.95)
+  );
   border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: 0 20px 45px rgba(2, 6, 23, 0.35);
   color: #f8fafc;
@@ -130,7 +137,11 @@
   border-radius: 50%;
   display: grid;
   place-items: center;
-  background: linear-gradient(135deg, rgba(255, 122, 24, 0.25), rgba(175, 0, 45, 0.3));
+  background: linear-gradient(
+    135deg,
+    rgba(255, 122, 24, 0.25),
+    rgba(175, 0, 45, 0.3)
+  );
   color: #ffb36b;
 }
 
@@ -192,7 +203,9 @@
   padding: 10px 14px;
   font-weight: 600;
   cursor: pointer;
-  transition: transform 180ms ease, opacity 180ms ease;
+  transition:
+    transform 180ms ease,
+    opacity 180ms ease;
 }
 
 .apikey-modal-cancel {
@@ -208,6 +221,117 @@
 .apikey-modal-cancel:hover,
 .apikey-modal-submit:hover {
   transform: translateY(-1px);
+}
+
+/* Checkbox Wrapper and Styling */
+.checkbox-wrapper {
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+}
+
+.checkbox-wrapper input[type='checkbox'] {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  cursor: pointer;
+}
+
+.checkmark {
+  width: 20px;
+  height: 20px;
+  background-color: rgba(30, 41, 59, 0.6);
+  border: 2px solid rgba(148, 163, 184, 0.4);
+  border-radius: 6px;
+  display: inline-block;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.checkbox-wrapper:hover .checkmark {
+  border-color: rgba(59, 130, 246, 0.6);
+  background-color: rgba(30, 41, 59, 0.9);
+}
+
+.checkbox-wrapper input:checked + .checkmark {
+  background: linear-gradient(
+    135deg,
+    rgba(59, 130, 246, 0.9),
+    rgba(37, 99, 235, 0.9)
+  );
+  border-color: rgba(59, 130, 246, 0.8);
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
+}
+
+.checkmark::after {
+  content: '';
+  position: absolute;
+  display: none;
+  left: 5px;
+  top: 2px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.checkbox-wrapper input:checked + .checkmark::after {
+  display: block;
+}
+
+/* Selected Row Styling */
+.apikey-table tbody tr.selected-row {
+  background-color: rgba(59, 130, 246, 0.05);
+  border-left: 3px solid rgba(59, 130, 246, 0.6);
+  transition: all 200ms ease;
+}
+
+.apikey-table tbody tr.selected-row:hover {
+  background-color: rgba(59, 130, 246, 0.08);
+}
+/* Disabled State for Checkbox */
+input[type='checkbox'][name='api-record-selection']:disabled,
+.checkbox-wrapper input:disabled + .checkmark {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.apikey-table select {
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  color: #f8fafc;
+  border-radius: 10px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition:
+    border-color 200ms ease,
+    background-color 200ms ease,
+    box-shadow 200ms ease;
+  font-size: 0.95rem;
+}
+
+.apikey-table select:hover:not(:disabled) {
+  border-color: rgba(255, 122, 24, 0.4);
+  box-shadow: 0 0 8px rgba(255, 122, 24, 0.15);
+}
+
+.apikey-table select:focus {
+  outline: none;
+  border-color: rgba(255, 122, 24, 0.6);
+  box-shadow: 0 0 12px rgba(255, 122, 24, 0.3);
+}
+
+.apikey-table select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: rgba(15, 23, 42, 0.5);
+}
+
+/* Select dropdown option styling */
+.apikey-table select option {
+  background: #0f172a;
+  color: #f8fafc;
 }
 
 @keyframes App-logo-spin {

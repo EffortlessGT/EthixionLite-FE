@@ -1,6 +1,6 @@
 import { toast } from 'sonner';
 
-const addr = process.env.REACT_APP_ROCKET_BACKEND_URL_DESKTOP;
+const addr = process.env.REACT_APP_PROD_BACKEND_URL;
 console.log('Backend URL:', addr);
 export const loginForm = async (data) => {
   try {
@@ -1074,6 +1074,33 @@ export const retrieveWAFAPIKeyByAuthentication = async (data) => {
     }
   } catch (err) {
     console.error('Error retrieving WAF API key:', err);
+    toast.error('Unable to reach server. Please try again later.');
+  }
+};
+
+export const set_api_key_config = async (data) => {
+  try {
+    const resp = await fetch(`${addr}/update_waf_keys_config`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify({
+        apiname: data.waf_name,
+        permission: data.permissions,
+        status: data.waf_api_status,
+      }),
+    });
+
+    const rs = await resp.json();
+    if (resp.ok && rs.status === 'success') {
+      return rs;
+    } else {
+      toast.error(rs.msg || 'Failed to set API key configuration.');
+    }
+  } catch (err) {
+    console.error('Error setting API key configuration:', err);
     toast.error('Unable to reach server. Please try again later.');
   }
 };
