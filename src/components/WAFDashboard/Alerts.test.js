@@ -3,7 +3,10 @@ import { normalizeAlert } from './Alerts';
 describe('normalizeAlert', () => {
   it('preserves backend threat details and risk score', () => {
     const payload = {
-      detected_threats: ['Disallowed HTTP method: PATCH', 'Disabled API Access Attempt'],
+      detected_threats: [
+        'Disallowed HTTP method: PATCH',
+        'Disabled API Access Attempt',
+      ],
       final_risk_score: 41.99995865891852,
       id: 58,
       ip_address: '127.0.0.1',
