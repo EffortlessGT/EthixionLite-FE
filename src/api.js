@@ -1104,3 +1104,55 @@ export const set_api_key_config = async (data) => {
     toast.error('Unable to reach server. Please try again later.');
   }
 };
+
+export const getWAFAPIAlertsSummary = async (apiname) => {
+  try {
+    const resp = await fetch(`${addr}/api/waf/alerts_summary`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+    });
+
+    const rs = await resp.json();
+    if (resp.ok && rs.status === 'success') {
+      return rs;
+    } else {
+      toast.error(rs.msg || 'Failed to fetch WAF API alerts.');
+      return null;
+    }
+  } catch (err) {
+    console.error('Error fetching WAF API alerts:', err);
+    toast.error('Unable to reach server. Please try again later.');
+    return [];
+  }
+};
+
+export const getWAFAPIAlertsData = async (apiname) => {
+  try {
+    const resp = await fetch(`${addr}/api/waf/alerts`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+    });
+
+    const rs = await resp.json();
+    if (resp.ok && rs.status === 'success') {
+      return Array.isArray(rs.alerts)
+        ? rs.alerts
+        : Array.isArray(rs.alertsData)
+          ? rs.alertsData
+          : [];
+    } else {
+      toast.error(rs.msg || 'Failed to fetch WAF API alerts data.');
+      return [];
+    }
+  } catch (err) {
+    console.error('Error fetching WAF API alerts data:', err);
+    toast.error('Unable to reach server. Please try again later.');
+    return [];
+  }
+};
