@@ -2,13 +2,21 @@ import React, { useEffect, useMemo, useState } from 'react';
 import WAFDashboardNavbar from './WAFDashboardNavbar';
 import FadeUpOnScroll from '../FadeUpOnScroll';
 import '../../App.css';
-import { getCurrentUser, getWAFAPIAlertsSummary, getWAFAPIAlertsData } from '../../api';
+import {
+  getCurrentUser,
+  getWAFAPIAlertsSummary,
+  getWAFAPIAlertsData,
+} from '../../api';
 
 const defaultAlerts = [];
 
 const getSeverityFromAlert = (alert, fallbackSeverity = null) => {
   const explicitSeverity = String(
-    alert?.severity || alert?.risk_level || alert?.level || alert?.priority || ''
+    alert?.severity ||
+      alert?.risk_level ||
+      alert?.level ||
+      alert?.priority ||
+      ''
   )
     .trim()
     .toLowerCase();
@@ -36,7 +44,11 @@ const getSeverityFallbackFromSummary = (summaryFromResponse, alertCount) => {
   ];
 
   const nonZeroBuckets = buckets.filter((entry) => entry.value > 0);
-  if (nonZeroBuckets.length === 1 && nonZeroBuckets[0].value === Number(summaryFromResponse.total || alertCount || 0)) {
+  if (
+    nonZeroBuckets.length === 1 &&
+    nonZeroBuckets[0].value ===
+      Number(summaryFromResponse.total || alertCount || 0)
+  ) {
     return `${nonZeroBuckets[0].key[0].toUpperCase()}${nonZeroBuckets[0].key.slice(1)}`;
   }
 
@@ -53,7 +65,8 @@ export const normalizeAlert = (alert, index, fallbackSeverity = null) => {
   return {
     threat: threatLabel,
     severity,
-    endpoint: alert?.path || alert?.endpoint || alert?.request_path || '/unknown',
+    endpoint:
+      alert?.path || alert?.endpoint_url || alert?.request_path || '/unknown',
     method: (alert?.method || 'GET').toUpperCase(),
     sourceIp: alert?.ip_address || 'N/A',
     actionTaken: alert?.request_status || 'Blocked',
@@ -109,11 +122,12 @@ function Alerts({ initialAlerts = defaultAlerts }) {
 
     const loadAlertsData = async () => {
       try {
-        const [currentUser, alertsSummaryResponse, alertsDataResponse] = await Promise.all([
-          getCurrentUser(),
-          getWAFAPIAlertsSummary(),
-          getWAFAPIAlertsData(),
-        ]);
+        const [currentUser, alertsSummaryResponse, alertsDataResponse] =
+          await Promise.all([
+            getCurrentUser(),
+            getWAFAPIAlertsSummary(),
+            getWAFAPIAlertsData(),
+          ]);
 
         if (!isMounted) return;
 
@@ -125,7 +139,8 @@ function Alerts({ initialAlerts = defaultAlerts }) {
             ? alertsDataResponse.alerts
             : [];
 
-        const summaryFromResponse = alertsSummaryResponse?.alerts_summary ||
+        const summaryFromResponse =
+          alertsSummaryResponse?.alerts_summary ||
           alertsSummaryResponse?.summary ||
           alertsSummaryResponse?.counts ||
           null;
@@ -145,7 +160,9 @@ function Alerts({ initialAlerts = defaultAlerts }) {
             critical: Number(summaryFromResponse.critical || 0),
             high: Number(summaryFromResponse.high || 0),
             medium: Number(summaryFromResponse.medium || 0),
-            total: Number(summaryFromResponse.total || normalizedAlerts.length || 0),
+            total: Number(
+              summaryFromResponse.total || normalizedAlerts.length || 0
+            ),
           });
         } else {
           setSummary(getSummaryFromAlerts(normalizedAlerts));
@@ -345,7 +362,8 @@ function Alerts({ initialAlerts = defaultAlerts }) {
                 <div>
                   <p className="detail-label">Risk Score</p>
                   <strong>
-                    {selectedAlert.riskScore !== null && selectedAlert.riskScore !== undefined
+                    {selectedAlert.riskScore !== null &&
+                    selectedAlert.riskScore !== undefined
                       ? `${selectedAlert.riskScore.toFixed(2)}`
                       : 'N/A'}
                   </strong>
