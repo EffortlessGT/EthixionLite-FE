@@ -34,6 +34,7 @@ import 'react-loading-skeleton/dist/skeleton.css';
 import { Toaster, toast } from 'sonner';
 import { SetService } from './components/ServiceAccifier';
 import RateLimiting from './components/WAFDashboard/RateLimiting';
+import Loader from './components/Assets/Loader';
 
 function RouteSecurityHandler({ children }) {
   const [isValidated, setIsValidated] = useState(null);
@@ -61,7 +62,7 @@ function RouteSecurityHandler({ children }) {
   }, []);
 
   if (isValidated === null) {
-    return <div>Loading...</div>;
+    return <Loader />;
   }
 
   if (!isValidated) {
@@ -97,7 +98,7 @@ function WAFRoutesSecurityHandler({ children }) {
   }, []);
 
   if (isValidated === null) {
-    return <div>Loading...</div>;
+    return <Loader />;
   }
 
   if (!isValidated) {
