@@ -213,7 +213,10 @@ export const ChangeUserPassword = async (data) => {
         'Content-Type': 'application/json',
       },
       credentials: 'include',
-      body: JSON.stringify(data),
+      body: JSON.stringify({
+        token: data.token,
+        new_password: data.newPassword,
+      }),
     });
 
     const rs = await resp.json();
@@ -539,7 +542,7 @@ export const checkASGExistsForCurrentUser = async () => {
     } else {
       toast.error(
         rs.msg ||
-          'No ASG setup found for current user. Please set up ASG to view dashboard insights.'
+        'No ASG setup found for current user. Please set up ASG to view dashboard insights.'
       );
       return false;
     }
@@ -874,7 +877,7 @@ export const checkWAFExistsForCurrentUser = async () => {
     } else {
       toast.error(
         rs.msg ||
-          'No WAF setup found for current user. Please set up WAF to view dashboard insights.'
+        'No WAF setup found for current user. Please set up WAF to view dashboard insights.'
       );
       return false;
     }

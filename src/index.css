@@ -566,8 +566,8 @@ input::placeholder {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 20px;
-  margin-bottom: 20px;
+  margin-top: 16px;
+  margin-bottom: 16px;
   width: 100%;
   padding: 0;
 }
@@ -594,10 +594,23 @@ input::placeholder {
 }
 
 @media (max-width: 768px) {
+  .action-container {
+    min-height: calc(100vh - 70px);
+    padding: 24px 16px;
+    box-sizing: border-box;
+  }
+
+  .action-container .signin,
+  .action-container .signup {
+    width: min(100%, 420px);
+    padding: 26px 20px;
+    box-sizing: border-box;
+  }
+
   .google-login-wrapper {
-    width: 80%;
-    margin: 10px auto;
-    padding: 0 5px;
+    width: 100%;
+    margin: 12px 0;
+    padding: 0;
   }
 
   .google-login-wrapper > div {
@@ -611,6 +624,47 @@ input::placeholder {
 }
 
 @media (max-width: 480px) {
+  .action-container {
+    padding: 16px 12px;
+  }
+
+  .action-container .signin,
+  .action-container .signup {
+    width: 100%;
+    padding: 22px 16px;
+    border-radius: 14px;
+  }
+
+  .signin h1,
+  .signup h1 {
+    font-size: 24px;
+    margin-bottom: 14px;
+  }
+
+  .signin input[type='email'],
+  .signin input[type='password'],
+  .signup input[type='text'],
+  .signup input[type='password'],
+  .signup input[type='email'] {
+    height: 48px;
+    font-size: 16px; /* Prevents auto-zoom on iOS Safari */
+    padding: 12px 16px;
+  }
+
+  .signin button,
+  .signup button {
+    height: 48px;
+    font-size: 16px;
+    border-radius: 12px;
+    padding: 12px 0;
+  }
+
+  .auth-link {
+    font-size: 14px;
+    padding: 6px 0;
+    margin: 6px 0 2px;
+  }
+
   .google-login-wrapper > div {
     max-width: 100% !important;
     border-radius: 8px;
@@ -618,6 +672,18 @@ input::placeholder {
 
   .google-login-wrapper iframe {
     border-radius: 8px !important;
+  }
+}
+
+@media (max-width: 360px) {
+  .action-container .signin,
+  .action-container .signup {
+    padding: 18px 12px;
+  }
+
+  .signin h1,
+  .signup h1 {
+    font-size: 22px;
   }
 }
 
@@ -643,8 +709,17 @@ input::placeholder {
   color: #fff;
   outline: none;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  height: 44px;
   box-sizing: border-box;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.signin input[type='email']:focus,
+.signin input[type='password']:focus,
+.signup input[type='text']:focus,
+.signup input[type='password']:focus,
+.signup input[type='email']:focus {
+  border-color: #64ffda;
+  box-shadow: 0 0 0 3px rgba(100, 255, 218, 0.12);
 }
 
 .signin button,
@@ -697,6 +772,135 @@ input:-webkit-autofill {
 
 .forgot-password-card form {
   width: 100%;
+}
+
+/* ── Verify Reset Password page ─────────────────────────────── */
+
+.verify-reset-page {
+  min-height: calc(100vh - 70px);
+  padding: 32px 16px;
+  box-sizing: border-box;
+}
+
+.verify-reset-card {
+  width: min(100%, 440px) !important;
+  margin: 0 auto !important;
+  padding: 36px 32px !important;
+  box-sizing: border-box;
+}
+
+.verify-reset-card h1 {
+  font-size: clamp(22px, 5vw, 30px);
+  text-align: center;
+  margin: 0 0 18px;
+}
+
+.verify-reset-msg {
+  font-size: clamp(13px, 3.5vw, 15px);
+  line-height: 1.55;
+  text-align: center;
+  word-break: break-word;
+  margin-bottom: 10px;
+}
+
+.verify-reset-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+  margin-top: 8px;
+}
+
+.verify-reset-input-group {
+  width: 100%;
+}
+
+.verify-reset-input-group input[type='password'] {
+  width: 100%;
+  height: 48px;
+  padding: 12px 18px;
+  border-radius: 999px;
+  background-color: #1f305e;
+  font-size: 15px;
+  font-family: MyFont;
+  color: #fff;
+  outline: none;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-sizing: border-box;
+  transition: border-color 0.25s ease;
+}
+
+.verify-reset-input-group input[type='password']:focus {
+  border-color: #64ffda;
+  box-shadow: 0 0 0 3px rgba(100, 255, 218, 0.12);
+}
+
+.verify-reset-email-disabled {
+  width: 100%;
+  height: 48px;
+  padding: 12px 18px;
+  border-radius: 999px;
+  background-color: rgba(31, 48, 94, 0.55);
+  font-size: 15px;
+  font-family: MyFont;
+  color: rgba(255, 255, 255, 0.55);
+  outline: none;
+  border: 1px dashed rgba(100, 255, 218, 0.3);
+  box-sizing: border-box;
+  cursor: not-allowed;
+  opacity: 0.75;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+
+/* ── Responsive overrides ───────────────────────────────────── */
+
+@media (max-width: 600px) {
+  .verify-reset-page {
+    padding: 20px 12px;
+  }
+
+  .verify-reset-card {
+    width: 100% !important;
+    border-radius: 14px !important;
+    padding: 28px 18px !important;
+  }
+
+  .verify-reset-card h1 {
+    font-size: 22px;
+  }
+
+  .verify-reset-msg {
+    font-size: 13.5px;
+  }
+
+  .verify-reset-input-group input[type='password'] {
+    height: 50px;
+    font-size: 16px; /* prevents iOS zoom-in */
+  }
+
+  .verify-reset-form button[type='submit'] {
+    padding: 15px 0;
+    font-size: 15px;
+    border-radius: 12px;
+  }
+}
+
+@media (max-width: 380px) {
+  .verify-reset-card {
+    padding: 22px 14px !important;
+  }
+
+  .verify-reset-card h1 {
+    font-size: 20px;
+  }
+
+  .verify-reset-input-group input[type='password'] {
+    height: 52px;
+    padding: 12px 14px;
+  }
 }
 
 .action-container .signup {

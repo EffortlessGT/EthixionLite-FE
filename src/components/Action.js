@@ -140,6 +140,9 @@ function Action() {
                   placeholder="Email"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
+                  autoComplete="email"
+                  id="signin-email"
+                  required
                 />
 
                 <input
@@ -147,6 +150,9 @@ function Action() {
                   placeholder="Password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  autoComplete="current-password"
+                  id="signin-password"
+                  required
                 />
 
                 <button type="submit">Login</button>
@@ -162,10 +168,19 @@ function Action() {
                 <p
                   className="auth-link"
                   onClick={() => setShowForgotPassword(true)}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => e.key === 'Enter' && setShowForgotPassword(true)}
                 >
                   Forgot Password?
                 </p>
-                <p className="auth-link" onClick={handleFlip}>
+                <p
+                  className="auth-link"
+                  onClick={handleFlip}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => e.key === 'Enter' && handleFlip()}
+                >
                   Don't have an account? Sign Up
                 </p>
               </form>
@@ -181,6 +196,9 @@ function Action() {
                   placeholder="Full Name"
                   value={fullname}
                   onChange={(e) => setFullname(e.target.value)}
+                  autoComplete="name"
+                  id="signup-fullname"
+                  required
                 />
 
                 <input
@@ -188,6 +206,9 @@ function Action() {
                   placeholder="Email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  autoComplete="email"
+                  id="signup-email"
+                  required
                 />
 
                 <input
@@ -195,6 +216,9 @@ function Action() {
                   placeholder="Password"
                   value={mypwd}
                   onChange={(e) => setMyPassword(e.target.value)}
+                  autoComplete="new-password"
+                  id="signup-password"
+                  required
                 />
 
                 <input
@@ -202,10 +226,19 @@ function Action() {
                   placeholder="Confirm Password"
                   value={mypwdII}
                   onChange={(e) => setPasswordII(e.target.value)}
+                  autoComplete="new-password"
+                  id="signup-confirm-password"
+                  required
                 />
                 <button type="submit">Register</button>
 
-                <p className="auth-link" onClick={handleFlip}>
+                <p
+                  className="auth-link"
+                  onClick={handleFlip}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => e.key === 'Enter' && handleFlip()}
+                >
                   Already have an account? Sign In
                 </p>
               </form>
@@ -222,11 +255,17 @@ function Action() {
                 placeholder="Email"
                 value={resetEmail}
                 onChange={(e) => setResetEmail(e.target.value)}
+                autoComplete="email"
+                id="forgot-email"
+                required
               />
               <button type="submit">Send Reset Link</button>
               <p
                 className="auth-link"
                 onClick={() => setShowForgotPassword(false)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => e.key === 'Enter' && setShowForgotPassword(false)}
               >
                 Back to Sign In
               </p>
