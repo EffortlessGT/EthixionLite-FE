@@ -2,8 +2,44 @@ import { toast } from 'sonner';
 
 const addr = process.env.REACT_APP_PROD_BACKEND_URL;
 console.log('Backend URL:', addr);
+
+const checkBackendReachability = async () => {
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 4000);
+
+    const response = await fetch(`${addr}/server_status`, {
+      method: 'GET',
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeoutId);
+    if (response.ok && response.status === 200) {
+      return true;
+    }
+    return false;
+  } catch (err) {
+    return false;
+  }
+};
+
+const ensureBackendReachable = async () => {
+  const isReachable = await checkBackendReachability();
+  if (!isReachable) {
+    toast.error('Unable to reach the backend server. Please try again later.');
+    return false;
+  }
+
+  return true;
+};
+
 export const loginForm = async (data) => {
   try {
+    const isReachable = await ensureBackendReachable();
+    if (!isReachable) {
+      return null;
+    }
+
     const resp = await fetch(`${addr}/login`, {
       method: 'POST',
       headers: {
@@ -42,6 +78,11 @@ export const loginForm = async (data) => {
 };
 export const loginFormII = async (data) => {
   try {
+    const isReachable = await ensureBackendReachable();
+    if (!isReachable) {
+      return null;
+    }
+
     const resp = await fetch(`${addr}/google_login`, {
       method: 'POST',
       headers: {
@@ -75,6 +116,11 @@ export const loginFormII = async (data) => {
 
 export const registrationForm = async (data) => {
   try {
+    const isReachable = await ensureBackendReachable();
+    if (!isReachable) {
+      return null;
+    }
+
     const resp = await fetch(`${addr}/registration`, {
       method: 'POST',
       headers: {
@@ -100,6 +146,11 @@ export const registrationForm = async (data) => {
 
 export const VerifyUserAccount = async (token) => {
   try {
+    const isReachable = await ensureBackendReachable();
+    if (!isReachable) {
+      return null;
+    }
+
     const resp = await fetch(
       `${addr}/verify_account?token=${encodeURIComponent(token)}`,
       {
@@ -122,8 +173,96 @@ export const VerifyUserAccount = async (token) => {
   }
 };
 
+export const ResetUserPassword = async (data) => {
+  try {
+    const isReachable = await ensureBackendReachable();
+    if (!isReachable) {
+      return null;
+    }
+
+    const resp = await fetch(`${addr}/forgot_password`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+    const rs = await resp.json();
+    if (resp.ok && rs.status === 'success') {
+      return rs;
+    } else {
+      toast.error(rs.msg || 'Password reset failed');
+      return rs;
+    }
+  } catch (err) {
+    console.error('Error during password reset:', err);
+    toast.error('Unable to reach server. Please try again later.');
+  }
+};
+
+export const ChangeUserPassword = async (data) => {
+  try {
+    const isReachable = await ensureBackendReachable();
+    if (!isReachable) {
+      return null;
+    }
+
+    const resp = await fetch(`${addr}/change_password`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify({
+        token: data.token,
+        new_password: data.newPassword,
+      }),
+    });
+
+    const rs = await resp.json();
+
+    if (resp.ok && rs.status === 'success') {
+      return rs;
+    }
+
+    return rs;
+  } catch (err) {
+    console.error('Error during password change:', err);
+    toast.error('Unable to reach server. Please try again later.');
+    return null;
+  }
+};
+
+export const VerifyResetPasswordToken = async (token) => {
+  try {
+    const isReachable = await ensureBackendReachable();
+    if (!isReachable) {
+      return null;
+    }
+
+    const resp = await fetch(`${addr}/verify_reset_password?token=${encodeURIComponent(token)}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    const rs = await resp.json();
+    return rs;
+  } catch (err) {
+    console.error('Error during reset token verification:', err);
+    toast.error('Unable to reach server. Please try again later.');
+    return null;
+  }
+};
+
 export const apiForm = async (data) => {
   try {
+    const isReachable = await ensureBackendReachable();
+    if (!isReachable) {
+      return null;
+    }
+
     const resp = await fetch(`${addr}/api`, {
       method: 'POST',
       headers: {
@@ -173,6 +312,11 @@ export const apiForm = async (data) => {
 };
 export const wafapiForm = async (data) => {
   try {
+    const isReachable = await ensureBackendReachable();
+    if (!isReachable) {
+      return null;
+    }
+
     const resp = await fetch(`${addr}/waf_api_handler`, {
       method: 'POST',
       headers: {
@@ -210,6 +354,11 @@ export const wafapiForm = async (data) => {
 
 export const validateActiveUser = async (data) => {
   try {
+    const isReachable = await ensureBackendReachable();
+    if (!isReachable) {
+      return false;
+    }
+
     const usertoken = 'current_user';
     const resp = await fetch(`${addr}/validate_active_user`, {
       method: 'POST',
@@ -237,6 +386,11 @@ export const validateActiveUser = async (data) => {
 
 export const validateActiveWAFUser = async (data) => {
   try {
+    const isReachable = await ensureBackendReachable();
+    if (!isReachable) {
+      return false;
+    }
+
     const usertoken = 'current_user';
     const resp = await fetch(`${addr}/validate_active_waf_user`, {
       method: 'POST',
@@ -388,7 +542,7 @@ export const checkASGExistsForCurrentUser = async () => {
     } else {
       toast.error(
         rs.msg ||
-          'No ASG setup found for current user. Please set up ASG to view dashboard insights.'
+        'No ASG setup found for current user. Please set up ASG to view dashboard insights.'
       );
       return false;
     }
@@ -723,7 +877,7 @@ export const checkWAFExistsForCurrentUser = async () => {
     } else {
       toast.error(
         rs.msg ||
-          'No WAF setup found for current user. Please set up WAF to view dashboard insights.'
+        'No WAF setup found for current user. Please set up WAF to view dashboard insights.'
       );
       return false;
     }
