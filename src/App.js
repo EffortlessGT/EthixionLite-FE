@@ -19,6 +19,7 @@ import AboutEthixion from './components/AboutEthixion';
 import TrafficMonitorPage from './components/ASGDashboard/TrafficMonitorPage';
 import APISettings from './components/ASGDashboard/APISettings';
 import VerifyAccount from './components/VerifyAccount';
+import VerifyResetPassword from './components/VerifyResetPassword';
 import WAFPanel from './components/WAFDashboard/WAFPanel';
 import WAFAPIPage from './components/WAFDashboard/WAFAPIPage';
 import HTTPMethodControlPage from './components/WAFDashboard/HTTPMethodControlPage';
@@ -288,6 +289,15 @@ const router = createBrowserRouter([
       <>
         <Nav />
         <VerifyAccount />
+      </>
+    ),
+  },
+  {
+    path: '/verify_reset_password',
+    element: (
+      <>
+        <Nav />
+        <VerifyResetPassword />
       </>
     ),
   },
